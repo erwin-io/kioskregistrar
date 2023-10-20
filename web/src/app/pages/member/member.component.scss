@@ -2,82 +2,88 @@
   margin: 0 !important;
 }
 
-.top-header {
-  background: #1565c0;
-  text-align: center;
-  .mat-toolbar {
-    position: relative;
-    height: 60px !important;
-    #title {
-        margin: 0 10px!important;
+::ng-deep app-member {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+
+  .top-header {
+    background: #1565c0;
+    text-align: center;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+    .mat-toolbar {
+      position: relative;
+      #title {
+          @media only screen and (max-width: 280px)  { 
+              display: none!important;
+          }
+      }
+      .mat-mdc-button {
+        font-size: 1em;
+        &.active {
+          background-color: #0D47A1!important;
+        }
+      }
     }
   }
-}
-
-.header {
-  height: 62px !important;
-  background: #1565c0;
-  color: #f1f1f1;
-  .header-container {
-    height: 100% !important;
-    ::ng-deep .mat-mdc-tab-nav-bar {
-      flex-grow: 1 !important;
-      .mat-mdc-tab-links {
-        height: 100% !important;
-        .mat-mdc-tab-link {
-          height: 100% !important;
-          text-decoration: none !important;
-          min-width: 200px;
-          .mdc-tab__text-label {
-            color: #c0bbdb !important;
-          }
-          &.active-link {
-            .mdc-tab__text-label {
-              color: #fff !important;
-            }
-            .mdc-tab-indicator__content {
-              border-color: #fff !important;
-              opacity: 1 !important;
-            }
+  
+  
+  ::ng-deep .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    .page-container {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        max-width: 100%!important;
+        flex-grow: 1;
+        width: 100%;
+        .page-content {
+          max-width: 1280px!important;
+          align-self: center;
+          padding: 15px;
+          margin-left: auto!important;
+          margin-right: auto!important;
+        }
+    }
+  }
+  
+  
+  ::ng-deep .mat-mdc-tab-nav-bar {
+    bottom: 0;
+    width: 100%;
+    position: fixed!important;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    height: 60px;
+    background-color: #fff;
+    box-shadow: 0px 1px 11px 0px rgba(0,0,0,0.3);
+    z-index: 99;
+    .mat-mdc-tab-links {
+      height: 100%;
+      flex-grow: 1;
+      .mat-mdc-tab-link {
+        height: 100%;
+        flex-grow: 1;
+        text-decoration: none!important;
+        &.active-link {
+          font-weight: 600!important;
+          .mdc-tab__text-label{
+            color: #448AFF;
           }
         }
       }
-      .mat-mdc-tab-header-pagination-chevron {
-        border-color: #fff!important;
-      }
-      .mat-mdc-tab-header-pagination-disabled {
-        opacity: 0!important;
-      }
     }
   }
-}
-
-.content {
-  padding: 16px;
-}
-
-.header,
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.header-container,
-.page-container {
-  display: flex;
-  flex-direction: column;
-  max-width: 1280px;
-  flex-grow: 1;
-  width: 100%;
-}
-
-.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-.sticky + .content {
-  padding-top: 80px;
+  
 }

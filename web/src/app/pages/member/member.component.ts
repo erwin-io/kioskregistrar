@@ -1,7 +1,27 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { Title } from '@angular/platform-browser';
-import { Router, ResolveEnd, ActivatedRouteSnapshot, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import {
+  Router,
+  ResolveEnd,
+  ActivatedRouteSnapshot,
+  RouterEvent,
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError,
+} from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,63 +29,60 @@ import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 
-const titlePrefix = "SIATON MARKET STALL RENTALS";
+const titlePrefix = 'SIATON MARKET STALL RENTALS';
 @Component({
   selector: 'app-member',
   templateUrl: './member.component.html',
-  styleUrls: ['./member.component.scss']
+  styleUrls: ['./member.component.scss'],
 })
-export class MemberComponent implements OnInit, AfterViewInit {
+export class MemberComponent implements OnInit {
   title = '';
-  layout = 'main';
-  loading = false;
-  @ViewChild('header', {static: false}) header: ElementRef<HTMLDivElement>;
-  sticky;
+  view: 'mobile' | 'tablet' | 'desktop';
+  @ViewChild('userAccountMenuTrigger', {static: false }) userAccountMenuTrigger: MatMenuTrigger;
   constructor(
-    private titleService:Title,
+    private titleService: Title,
     private authService: AuthService,
     private storageService: StorageService,
     private dialog: MatDialog,
     private spinner: SpinnerVisibilityService,
-    private router: Router
-    ) {
-      this.setupTitleListener();
+    private router: Router,
+    private bottomSheet: MatBottomSheet
+  ) {
+    this.onResize();
+    this.onScroll();
+    this.setupTitleListener();
   }
-  ngOnInit(): void {
-  }
-  ngAfterViewInit() {
-    this.sticky = this.header.nativeElement.offsetTop > document.getElementById("top-header").clientHeight ? document.getElementById("top-header").clientHeight : this.header.nativeElement.offsetTop;
-  }
+  ngOnInit(): void {}
   onActivate(event) {
     // window.scroll(0,0);
-
-    if(this.header && this.sticky) {
-      window.scroll({ 
-              top: this.sticky > window.pageYOffset ? window.pageYOffset : this.sticky, 
-              left: 0, 
-              behavior: 'smooth' 
-       });
-    }
- 
-  }
-  private setupTitleListener() {
-    this.router.events.pipe(filter(e => e instanceof ResolveEnd)).subscribe((e: any) => {
-      const { data } = this.getDeepestChildSnapshot(e.state.root);
-      if(data?.['title']){
-        this.title = data['title'];
-        this.layout = data['layout'];
-        this.titleService.setTitle(`${this.title} ${titlePrefix}`);
-      }
-      this.navigationInterceptor(e);
+    console.log(event);
+    this.onResize();
+    this.onScroll();
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
     });
   }
-  
+  private setupTitleListener() {
+    this.router.events
+      .pipe(filter((e) => e instanceof ResolveEnd))
+      .subscribe((e: any) => {
+        const { data } = this.getDeepestChildSnapshot(e.state.root);
+        if (data?.['title']) {
+          this.title = data['title'];
+          this.titleService.setTitle(`${this.title} ${titlePrefix}`);
+        }
+        this.navigationInterceptor(e);
+      });
+  }
+
   getDeepestChildSnapshot(snapshot: ActivatedRouteSnapshot) {
     let deepestChild = snapshot.firstChild;
     while (deepestChild?.firstChild) {
-      deepestChild = deepestChild.firstChild
-    };
-    return deepestChild || snapshot
+      deepestChild = deepestChild.firstChild;
+    }
+    return deepestChild || snapshot;
   }
   // Shows and hides the loading spinner during RouterEvent changes
   navigationInterceptor(event: RouterEvent): void {
@@ -84,8 +101,18 @@ export class MemberComponent implements OnInit, AfterViewInit {
       this.spinner.hide();
     }
   }
+  
+  openUserAccountMenuSheet() {
+    const sheet = this.bottomSheet.open(UserAccountSheetComponent, {
+      closeOnNavigation: true
+    });
+    sheet.instance.logOut.subscribe(res=> {
+      sheet.dismiss();
+      this.logOut();
+    });
+  }
 
-  signOut() {
+  public logOut() {
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
     dialogData.message = 'Are you sure you want to logout?';
@@ -106,19 +133,54 @@ export class MemberComponent implements OnInit, AfterViewInit {
     dialogRef.componentInstance.alertDialogConfig = dialogData;
     dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
       // subscribe
-      this.onScroll = null;
       const user = this.storageService.getLoginUser();
       this.storageService.saveLoginUser(null);
-      this.authService.redirectUser(user, true)
+      this.authService.redirectUser(user, true);
       dialogRef.close();
     });
   }
-  @HostListener('window:scroll', ['$event']) // for window scroll events
-  onScroll(event) {
-    if (this.sticky && window.pageYOffset > this.sticky) {
-      this.header.nativeElement.classList.add("sticky");
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    if(window.innerWidth <= 480 ) {
+      this.view = "mobile";
+      if(this.userAccountMenuTrigger) this.userAccountMenuTrigger.closeMenu();
+    } else if(window.innerWidth >= 481 && window.innerWidth <= 600) {
+      this.view = "tablet";
+      if(this.userAccountMenuTrigger) this.userAccountMenuTrigger.closeMenu();
     } else {
-      this.header.nativeElement.classList.remove("sticky");
+      if(this.bottomSheet) this.bottomSheet.dismiss();
+      this.view = "desktop";
     }
   }
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event?) {}
+}
+
+
+@Component({
+  selector: 'app-user-account-sheet',
+  template: `
+  <mat-nav-list>
+    <a mat-list-item>
+      <span matListItemTitle>My Account</span>
+    </a>
+
+    <a mat-list-item>
+      <span matListItemTitle>Settings</span>
+    </a>
+
+    <a mat-list-item>
+      <span matListItemTitle>Help</span>
+    </a>
+
+    <a mat-list-item (click)="logOut.emit()">
+      <span matListItemTitle>Logout</span>
+    </a>
+  </mat-nav-list>
+  `,
+  styles: [`
+  `]
+})
+export class UserAccountSheetComponent {
+  @Output() logOut = new EventEmitter();
 }

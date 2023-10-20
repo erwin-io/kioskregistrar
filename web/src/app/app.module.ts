@@ -15,11 +15,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppComponent } from './app.component'
 import { AuthGuard } from './guard/auth.guard';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { MaterialModule } from './shared/material.module';
+import { MaterialModule } from './shared/material/material.module';
 import { CommonModule } from '@angular/common';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { AdminComponent } from './pages/admin/admin.component';
-import { MemberComponent } from './pages/member/member.component';
+import { MemberComponent, UserAccountSheetComponent } from './pages/member/member.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthComponent } from './auth/auth.component';
@@ -37,7 +37,8 @@ import { CustomHttpInterceptor } from './interceptors/custom-http.interceptors';
     ProfileComponent,
     AuthComponent,
     AlertDialogComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    UserAccountSheetComponent
   ],
   imports: [
     BrowserModule,

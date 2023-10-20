@@ -104,9 +104,6 @@ p, label, input, textarea, span, div, button {
 #banner {
     width: 40px;
     height: 40px;
-    @media only screen and (max-width: 540px)  { 
-        display: none!important;
-    }
 }
 
 app-auth {

@@ -4,7 +4,7 @@ import { LoginComponent } from './login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { MaterialModule } from 'src/app/shared/material.module';
+import { MaterialModule } from 'src/app/shared/material/material.module';
 
 export const routes: Routes = [
   {
