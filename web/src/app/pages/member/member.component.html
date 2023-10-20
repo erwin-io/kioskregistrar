@@ -1,0 +1,47 @@
+<div class="top-header" id="top-header">
+    <mat-toolbar color="primary">
+        <img id="banner" src="../../../assets/img/banner.png">
+        <span id="title">NORSU</span>
+        <span class="toolbar-item-spacer"></span>
+        <button mat-icon-button matTooltip="Notifications">
+            <mat-icon>notifications</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="My Account" [matMenuTriggerFor]="userAccountMenu">
+            <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
+            <button mat-menu-item routerLink="/">
+                <mat-icon>person</mat-icon><span>My Account</span>
+            </button>
+            <button mat-menu-item routerLink="/">
+                <mat-icon>settings</mat-icon><span>Settings</span>
+            </button>
+            <button mat-menu-item routerLink="/">
+                <mat-icon>help</mat-icon><span>Help</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="signOut()">
+                <mat-icon>exit_to_app</mat-icon>Logout
+            </button>
+        </mat-menu>
+    </mat-toolbar>
+</div>
+
+<div class="header mat-elevation-z5" id="header" #header>
+    <div class="header-container">
+        <nav mat-tab-nav-bar ngClass = "tabs">
+            <a mat-tab-link routerLink="home" routerLinkActive="active-link">Home</a>
+            <a mat-tab-link routerLink="document-request" routerLinkActive="active-link">Request</a>
+            <a mat-tab-link routerLink="archived-documents" routerLinkActive="active-link">Archived</a>
+         </nav>  
+    </div>
+</div>
+
+<div class="content">
+  <div class="page-wrapper">
+    <div class="page-container">
+        <router-outlet (activate)="onActivate($event)">
+        </router-outlet>
+    </div>
+  </div>
+</div>

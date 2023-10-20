@@ -1,0 +1,39 @@
+{
+  "reservationConfig": {
+    "maxCancellation": "3",
+    "daysCancellationLimitReset": "5",
+    "timeSlotHours": {
+      "start": "08:00",
+      "end": "17:00"
+    },
+    "timeSlotNotAvailableHours": ["12:00"],
+    "dayOfWeekNotAvailable": ["Sunday", "Wednesday", "Saturday"]
+  },
+  "tableColumns": {
+  },
+  "sessionConfig": {
+    "sessionTimeout": "60"
+  },
+  "lookup": {
+    "reservationStatus": ["Pending", "Approved", "Completed", "Cancelled"]
+  },
+  "apiEndPoints": {
+    "auth": {
+      "login": {
+        "admin": "/auth/login/admin",
+        "member": "/auth/login/member"
+      },
+      "registerMember": "/auth/register/member"
+    },
+    "user": {
+    },
+    "role": "/roles/",
+    "request": {
+    },
+    "dashboard": {
+    },
+    "message": {
+      "create": "/message/"
+    }
+  }
+}
