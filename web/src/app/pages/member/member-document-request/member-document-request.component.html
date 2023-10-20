@@ -1,66 +1,82 @@
-<mat-tab-group>
+<mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
   <mat-tab label="Pending">
     <div class="page-content">
-      <h3>Pending Request</h3>
-      <p>
-        The header will stick to the top when you reach its scroll position.
-      </p>
-      <p>Scroll back up to remove the sticky effect.</p>
-      <p>
-        Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
-        definitiones no quo, maluisset concludaturque et eum, altera fabulas
-        ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
-        Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
-        Eum no molestiae voluptatibus.
-      </p>
+      <div class="intro">
+        <h3 class="intro-title">Pending</h3>
+        <p class="intro-sub-title">
+          You can view all your pending document requests here.
+        </p>
+      </div>
+      <div class="">
+        <p>Scroll back up to remove the sticky effect.</p>
+        <p>
+          Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
+          definitiones no quo, maluisset concludaturque et eum, altera fabulas
+          ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
+          Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
+          Eum no molestiae voluptatibus.
+        </p>
+      </div>
     </div>
   </mat-tab>
   <mat-tab label="To pay">
     <div class="page-content">
-      <h3>To Pay</h3>
-      <p>
-        The header will stick to the top when you reach its scroll position.
-      </p>
-      <p>Scroll back up to remove the sticky effect.</p>
-      <p>
-        Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
-        definitiones no quo, maluisset concludaturque et eum, altera fabulas
-        ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
-        Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
-        Eum no molestiae voluptatibus.
-      </p>
+      <div class="intro">
+        <h3 class="intro-title">To Pay</h3>
+        <p class="intro-sub-title">
+          You can check here for all pending payments for document requests.
+        </p>
+      </div>
+      <div class="">
+        <p>Scroll back up to remove the sticky effect.</p>
+        <p>
+          Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
+          definitiones no quo, maluisset concludaturque et eum, altera fabulas
+          ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
+          Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
+          Eum no molestiae voluptatibus.
+        </p>
+      </div>
     </div>
   </mat-tab>
   <mat-tab label="Processing">
     <div class="page-content">
-      <h3>Processing</h3>
-      <p>
-        The header will stick to the top when you reach its scroll position.
-      </p>
-      <p>Scroll back up to remove the sticky effect.</p>
-      <p>
-        Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
-        definitiones no quo, maluisset concludaturque et eum, altera fabulas
-        ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
-        Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
-        Eum no molestiae voluptatibus.
-      </p>
+      <div class="intro">
+        <h3 class="intro-title">Processing</h3>
+        <p class="intro-sub-title">
+          You can view here all the document request the are being processed.
+        </p>
+      </div>
+      <div class="">
+        <p>Scroll back up to remove the sticky effect.</p>
+        <p>
+          Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
+          definitiones no quo, maluisset concludaturque et eum, altera fabulas
+          ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
+          Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
+          Eum no molestiae voluptatibus.
+        </p>
+      </div>
     </div>
   </mat-tab>
   <mat-tab label="To Claim">
     <div class="page-content">
-      <h3>To Claim</h3>
-      <p>
-        The header will stick to the top when you reach its scroll position.
-      </p>
-      <p>Scroll back up to remove the sticky effect.</p>
-      <p>
-        Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
-        definitiones no quo, maluisset concludaturque et eum, altera fabulas
-        ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
-        Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
-        Eum no molestiae voluptatibus.
-      </p>
+      <div class="intro">
+        <h3 class="intro-title">To Claim</h3>
+        <p class="intro-sub-title">
+          You can check here for all the ready-to-claim document requests.
+        </p>
+      </div>
+      <div class="">
+        <p>Scroll back up to remove the sticky effect.</p>
+        <p>
+          Some text to enable scrolling.. Lorem ipsum dolor sit amet, illum
+          definitiones no quo, maluisset concludaturque et eum, altera fabulas
+          ut quo. Atqui causae gloriatur ius te, id agam omnis evertitur eum.
+          Affert laboramus repudiandae nec et. Inciderint efficiantur his ad.
+          Eum no molestiae voluptatibus.
+        </p>
+      </div>
     </div>
   </mat-tab>
 </mat-tab-group>

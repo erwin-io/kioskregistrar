@@ -17,11 +17,6 @@
     z-index: 999;
     .mat-toolbar {
       position: relative;
-      #title {
-          @media only screen and (max-width: 280px)  { 
-              display: none!important;
-          }
-      }
       .mat-mdc-button {
         font-size: 1em;
         &.active {
@@ -46,16 +41,41 @@
         max-width: 100%!important;
         flex-grow: 1;
         width: 100%;
+        app-member-home,app-member-document-request,app-member-archived {
+          height: 100%!important;
+          display: flex;
+          flex-direction: column;
+          box-sizing: border-box;
+        }
         .page-content {
           max-width: 1280px!important;
           align-self: center;
-          padding: 15px;
           margin-left: auto!important;
           margin-right: auto!important;
+          width: 100%;
+          padding-bottom: 60px!important;
+          h1, h2 ,h3, h4, h5, h6, p, label, span {
+              color: #272d65
+          }
+          .intro {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            .intro-title {
+                margin: 0!important;
+            }
+            .intro-sub-title {
+                margin: 0!important;
+            }
+          }
+          @media only screen and (max-width: 1280px)  {
+            margin-left: 0!important;
+            margin-right: 0!important;
+            width: 100%!important;
+          }
         }
     }
   }
-  
   
   ::ng-deep .mat-mdc-tab-nav-bar {
     bottom: 0;

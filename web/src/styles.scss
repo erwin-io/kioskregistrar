@@ -69,7 +69,7 @@ h4 {
 
 h1, h2 ,h3, h4, h5, h6,
 p, label, input, textarea, span, div, button {
-    font-family: Roboto, sans-serif!important; 
+    font-family: Roboto, sans-serif!important;
 }
 
 .mat-toolbar {
@@ -104,6 +104,13 @@ p, label, input, textarea, span, div, button {
 #banner {
     width: 40px;
     height: 40px;
+}
+#title {
+    margin-left: 10px!important;
+    margin-right: 10px!important;
+    @media only screen and (max-width: 280px)  { 
+        display: none!important;
+    }
 }
 
 app-auth {
