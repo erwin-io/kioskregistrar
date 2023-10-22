@@ -1,9 +1,9 @@
 /** source/controllers/posts.ts */
 import { Router, Request, Response, NextFunction } from "express";
 import axios, { AxiosResponse } from "axios";
-import { Access } from "../db/entities/Access";
+import { Access } from "../../src/db/entities/Access";
 import { getManager, getRepository } from "typeorm";
-import FileMiddleware from "../middleware/file-middleware";
+import FileMiddleware from "../../src/middleware/file-middleware";
 
 export const accessRouter = Router();
 

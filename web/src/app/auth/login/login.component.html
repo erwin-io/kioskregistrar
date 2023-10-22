@@ -9,10 +9,10 @@
                 <form [formGroup]="logInForm" (ngSubmit)="onSubmit()" class="form">
                     <fieldset [disabled]="isProcessing" class="fieldset">
                         <mat-form-field appearance="outline">
-                            <mat-label>Mobile number</mat-label>
+                            <mat-label>Username</mat-label>
                             <input
                             matInput
-                            placeholder="Mobile number"
+                            placeholder="Username"
                             formControlName="userName">
                             <mat-error *ngIf="logInForm.controls.userName.errors !== (null || undefined)">{{
                                 (logInForm.controls.userName.errors && logInForm.controls.userName.errors['required'] ? 'Please enter your mobile number' : '')
@@ -41,9 +41,9 @@
                             <span>Forgot password? Click  
                                 <a [routerLink]="admin ? '/auth/admin/forgot-password' : '/auth/member/forgot-password'">here</a>
                             </span>
-                            <span *ngIf="!admin" >
+                            <!-- <span *ngIf="!admin" >
                                 <a routerLink="/auth/member/register">Create account</a>
-                            </span>
+                            </span> -->
                         </div>
                     </fieldset>
                 </form>
