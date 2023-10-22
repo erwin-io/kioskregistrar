@@ -4,11 +4,12 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  Inject,
   OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Title } from '@angular/platform-browser';
@@ -28,6 +29,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
+import { OptionSheetComponent } from 'src/app/shared/option-sheet/option-sheet.component';
 
 const titlePrefix = 'SIATON MARKET STALL RENTALS';
 @Component({
@@ -54,8 +56,8 @@ export class MemberComponent implements OnInit {
   }
   ngOnInit(): void {}
   onActivate(event) {
-    // window.scroll(0,0);
-    console.log(event);
+    const title = this.titleService.getTitle();
+    this.title = title ? title.replace(titlePrefix, "").trim() : title;
     this.onResize();
     this.onScroll();
     window.scroll({
@@ -103,40 +105,57 @@ export class MemberComponent implements OnInit {
   }
   
   openUserAccountMenuSheet() {
-    const sheet = this.bottomSheet.open(UserAccountSheetComponent, {
-      closeOnNavigation: true
+    const sheet = this.bottomSheet.open(OptionSheetComponent, {
+      closeOnNavigation: true, 
+      data: { isUserAccount: true },
     });
-    sheet.instance.logOut.subscribe(res=> {
+    sheet.instance.confirmLogOut.subscribe(res=> {
       sheet.dismiss();
       this.logOut();
     });
   }
 
   public logOut() {
-    const dialogData = new AlertDialogModel();
-    dialogData.title = 'Confirm';
-    dialogData.message = 'Are you sure you want to logout?';
-    dialogData.confirmButton = {
-      visible: true,
-      text: 'yes',
-      color: 'primary',
-    };
-    dialogData.dismissButton = {
-      visible: true,
-      text: 'cancel',
-    };
-    const dialogRef = this.dialog.open(AlertDialogComponent, {
-      maxWidth: '400px',
-      closeOnNavigation: true,
-    });
+    // const dialogData = new AlertDialogModel();
+    // dialogData.title = 'Confirm';
+    // dialogData.message = 'Are you sure you want to logout?';
+    // dialogData.confirmButton = {
+    //   visible: true,
+    //   text: 'yes',
+    //   color: 'primary',
+    // };
+    // dialogData.dismissButton = {
+    //   visible: true,
+    //   text: 'cancel',
+    // };
+    // const dialogRef = this.dialog.open(AlertDialogComponent, {
+    //   maxWidth: '400px',
+    //   closeOnNavigation: true,
+    // });
 
-    dialogRef.componentInstance.alertDialogConfig = dialogData;
-    dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
-      // subscribe
-      const user = this.storageService.getLoginUser();
-      this.storageService.saveLoginUser(null);
-      this.authService.redirectUser(user, true);
-      dialogRef.close();
+    // dialogRef.componentInstance.alertDialogConfig = dialogData;
+    // dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
+    //   // subscribe
+    //   const profile = this.storageService.getLoginProfile();
+    //   this.storageService.saveLoginProfile(null);
+    //   this.authService.redirectToPage(profile, true);
+    //   dialogRef.close();
+    // });
+
+    
+    const sheet = this.bottomSheet.open(OptionSheetComponent, {
+      closeOnNavigation: true, 
+      data: { isConfirmYesNoCancel: true },
+    });
+    sheet.instance.confirmYesNoCancel.subscribe(res=> {
+      if(res && res.toString().toLowerCase() === "yes") {
+        const profile = this.storageService.getLoginProfile();
+        this.storageService.saveLoginProfile(null);
+        this.authService.redirectToPage(profile, true);
+        this.bottomSheet.dismiss();
+      } else {
+        this.bottomSheet.dismiss();
+      }
     });
   }
   @HostListener('window:resize', ['$event'])
@@ -154,33 +173,4 @@ export class MemberComponent implements OnInit {
   }
   @HostListener('window:scroll', ['$event'])
   onScroll(event?) {}
-}
-
-
-@Component({
-  selector: 'app-user-account-sheet',
-  template: `
-  <mat-nav-list>
-    <a mat-list-item>
-      <span matListItemTitle>My Account</span>
-    </a>
-
-    <a mat-list-item>
-      <span matListItemTitle>Settings</span>
-    </a>
-
-    <a mat-list-item>
-      <span matListItemTitle>Help</span>
-    </a>
-
-    <a mat-list-item (click)="logOut.emit()">
-      <span matListItemTitle>Logout</span>
-    </a>
-  </mat-nav-list>
-  `,
-  styles: [`
-  `]
-})
-export class UserAccountSheetComponent {
-  @Output() logOut = new EventEmitter();
 }

@@ -1,22 +1,22 @@
 /** source/controllers/posts.ts */
 import { Router, Request, Response, NextFunction } from "express";
 import axios, { AxiosResponse } from "axios";
-import { Roles } from "../../src/db/entities/Roles";
+import { Access } from "../db/entities/Access";
 import { getManager, getRepository } from "typeorm";
 import FileMiddleware from "../middleware/file-middleware";
 
-export const rolesRouter = Router();
+export const accessRouter = Router();
 
 
-rolesRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
+accessRouter.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let roless: Roles[] = await getRepository(Roles).find({
+    let accesss: Access[] = await getRepository(Access).find({
       where: {
         active: true
       }
     });
     return res.status(200).json({
-      data: roless,
+      data: accesss,
     });
   } catch (ex) {
     return res.status(500).json({
@@ -25,17 +25,17 @@ rolesRouter.get("/", async (req: Request, res: Response, next: NextFunction) => 
   }
 });
 
-rolesRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+accessRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    let roles: Roles = await getRepository(Roles).findOne({
+    let access: Access = await getRepository(Access).findOne({
       where: {
-        roleId: id,
+        accessId: id,
         active: true
       },
     });
     return res.status(200).json({
-      message: roles,
+      message: access,
     });
   } catch (ex) {
     return res.status(500).json({
@@ -44,19 +44,19 @@ rolesRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-rolesRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
+accessRouter.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.body && req.body.name) {
       const { name } = req.body;
-      let roles = new Roles();
-      roles.name = name.toString().toUpperCase();
-      roles = await getManager().transaction(
+      let access = new Access();
+      access.name = name.toString().toUpperCase();
+      access = await getManager().transaction(
         async (transactionalEntityManager) => {
-          return await transactionalEntityManager.save(roles);
+          return await transactionalEntityManager.save(access);
         },
       );
       return res.status(200).json({
-        data: roles,
+        data: access,
       });
     } else {
       return res.status(404).json({
@@ -70,27 +70,27 @@ rolesRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-rolesRouter.put("/:id", async (req: Request,res: Response,next: NextFunction,) => {
+accessRouter.put("/:id", async (req: Request,res: Response,next: NextFunction,) => {
 
   try {
     if (req.body && req.body.name && req.params && req.params.id) {
       let { name, id } = { ...req.body as any, ...req.params as any } as any;
-      let roles: Roles = await getRepository(Roles).findOne({
+      let access: Access = await getRepository(Access).findOne({
         where: {
-          roleId: id,
+          accessId: id,
           active: true
         },
       });
-      if(roles) {
-        roles.name = name.toString().toUpperCase();
-        roles = await getManager().transaction(
+      if(access) {
+        access.name = name.toString().toUpperCase();
+        access = await getManager().transaction(
           async (transactionalEntityManager) => {
-            return await transactionalEntityManager.save(roles);
+            return await transactionalEntityManager.save(access);
           },
         );
         return res.status(200).json({
-          message: "roles updated successfully",
-          data: roles,
+          message: "access updated successfully",
+          data: access,
         });
       } else {
         return res.status(404).json({
@@ -109,27 +109,27 @@ rolesRouter.put("/:id", async (req: Request,res: Response,next: NextFunction,) =
   }
 });
 
-rolesRouter.delete("/:id", async ( req: Request, res: Response, next: NextFunction,) => {
+accessRouter.delete("/:id", async ( req: Request, res: Response, next: NextFunction,) => {
   try {
     if (req.params && req.params.id) {
       let { id } = req.params;
-      let roles: Roles = await getRepository(Roles).findOne({
+      let access: Access = await getRepository(Access).findOne({
         where: {
-          roleId: id,
+          accessId: id,
           active: true
         },
       });
       
-      if(roles) {
-        roles.active = false;
-        roles = await getManager().transaction(
+      if(access) {
+        access.active = false;
+        access = await getManager().transaction(
           async (transactionalEntityManager) => {
-            return await transactionalEntityManager.save(roles);
+            return await transactionalEntityManager.save(access);
           },
         );
         return res.status(200).json({
-          message: "roles deleted successfully",
-          data: roles,
+          message: "access deleted successfully",
+          data: access,
         });
       } else {
         return res.status(404).json({

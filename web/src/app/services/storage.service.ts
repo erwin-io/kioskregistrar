@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Users } from '../model/users';
+import { Member } from '../model/member';
+import { Admin } from '../model/admin';
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +11,15 @@ export class StorageService {
   constructor() { }
 
 
-  getLoginUser(): Users {
-    const user = this.get('loginUser');
-    if(user !== null && user !== ''){
-      return JSON.parse(user);
+  getLoginProfile(): Admin | Member {
+    const profile = this.get('loginProfile');
+    if(profile !== null && profile !== ''){
+      return JSON.parse(profile);
     }
     else {return null;}
   }
-  saveLoginUser(value: Users){
-    return this.set('loginUser', JSON.stringify(value));
+  saveLoginProfile(value: Admin | Member){
+    return this.set('loginProfile', JSON.stringify(value));
   }
   getAccessToken(){
     return this.get('accessToken');

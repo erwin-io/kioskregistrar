@@ -1,17 +1,25 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Admin } from "./Admin";
+import { Member } from "./Member";
+import { Files } from "./Files";
 
-@Index("u_user", ["active", "mobileNumber"], { unique: true })
+@Index("u_user", ["active", "userName"], { unique: true })
 @Index("pk_users_1557580587", ["userId"], { unique: true })
 @Entity("Users", { schema: "dbo" })
 export class Users {
   @PrimaryGeneratedColumn({ type: "bigint", name: "UserId" })
   userId: string;
 
-  @Column("character varying", { name: "Name" })
-  name: string;
-
-  @Column("character varying", { name: "MobileNumber" })
-  mobileNumber: string;
+  @Column("character varying", { name: "UserName" })
+  userName: string;
 
   @Column("character varying", { name: "Password" })
   password: string;
@@ -20,12 +28,25 @@ export class Users {
   userType: string;
 
   @Column("int8", {
-    name: "Roles",
+    name: "Access",
     array: true,
     default: () => "ARRAY[]::bigint[]",
   })
-  roles: string[];
+  access: string[];
 
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
+
+  @Column("boolean", { name: "AccessGranted", default: () => "false" })
+  accessGranted: boolean;
+
+  @OneToMany(() => Admin, (admin) => admin.user)
+  admins: Admin[];
+
+  @OneToMany(() => Member, (member) => member.user)
+  members: Member[];
+
+  @ManyToOne(() => Files, (files) => files.users)
+  @JoinColumn([{ name: "ProfileFileId", referencedColumnName: "fileId" }])
+  profileFile: Files;
 }

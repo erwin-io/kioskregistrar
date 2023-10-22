@@ -1,10 +1,11 @@
+import { Files } from "./files";
+
 export class Users {
     userId: string;
-    name: string;
-  
-    mobileNumber: string;
-    password: string;
+    userName: string;
     userType: string;
-    roles: string[];
+    access: string[];
+    accessGranted: boolean;
     active: boolean;
+    profileFile: Files;
   }

@@ -7,7 +7,7 @@ import * as dotenv from "dotenv";
 import { createConnection } from "typeorm";
 import * as typeOrmConfig from "./db/typeorm";
 import { usersRouter } from "./controllers/users";
-import { rolesRouter } from "./controllers/roles";
+import { accessRouter } from "./controllers/access";
 import { authRouter } from "./controllers/auth";
 
 const app: Express = express();
@@ -40,7 +40,7 @@ createConnection(dbConfig)
 const routePrefix = "api/";
 app.use("/" + routePrefix + "auth", authRouter);
 app.use("/" + routePrefix + "users", usersRouter);
-app.use("/" + routePrefix + "roles", rolesRouter);
+app.use("/" + routePrefix + "access", accessRouter);
 /** Error handling */
 app.use((req, res, next) => {
   const error = new Error("not found");

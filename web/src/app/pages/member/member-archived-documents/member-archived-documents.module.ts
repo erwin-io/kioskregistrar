@@ -4,12 +4,14 @@ import { MemberArchivedDocumentsComponent } from './member-archived-documents.co
 import { ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/shared/material/material.module';
+import { MemberAuthGuard } from 'src/app/guard/member-auth.guard';
 
 
 export const routes: Routes = [
   {
     path: '',
     component: MemberArchivedDocumentsComponent,
+    canActivate: [MemberAuthGuard],
     pathMatch: 'full'
   }
 ];

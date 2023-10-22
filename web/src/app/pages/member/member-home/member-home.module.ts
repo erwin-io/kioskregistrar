@@ -4,6 +4,7 @@ import { MemberHomeComponent } from './member-home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MemberAuthGuard } from 'src/app/guard/member-auth.guard';
 
 export const routes: Routes = [
   {

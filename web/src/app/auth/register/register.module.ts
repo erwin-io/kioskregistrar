@@ -22,7 +22,6 @@ export const routes: Routes = [
   imports: [
     CommonModule,
     MaterialModule,
-    NgApexchartsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
   ]

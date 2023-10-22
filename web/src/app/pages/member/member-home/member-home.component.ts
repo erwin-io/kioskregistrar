@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Admin } from 'src/app/model/admin';
+import { Member } from 'src/app/model/member';
 import { Users } from 'src/app/model/users';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -8,8 +10,8 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./member-home.component.scss']
 })
 export class MemberHomeComponent {
-  user: Users;
+  profile: Admin | Member;
   constructor(private storageService: StorageService) {
-    this.user = this.storageService.getLoginUser();
+    this.profile = this.storageService.getLoginProfile();
   }
 }

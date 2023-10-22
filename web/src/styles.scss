@@ -83,10 +83,25 @@ p, label, input, textarea, span, div, button {
 .app-container {
     height: 100%;
     margin: 0;
+    .mat-sidenav {
+        width: 230px!important;
+        &.mat-drawer-opened {
+            &:not(.mat-drawer-over) {
+                border: none!important;
+                background-color: #fafafa!important;
+            }
+        }
+        .mat-mdc-nav-list {
+            .mat-mdc-list-item {
+                &.active-link {
+                    background-color: rgba($color: (#000000), $alpha: 0.12)!important;
+                }
+            }
+        }
+    }
 }  
-.app-sidenav {
-    width: 230px;
-}
+
+
 .app-sidenav-content {
     display: flex;
     height: 100%;
@@ -112,7 +127,6 @@ p, label, input, textarea, span, div, button {
         display: none!important;
     }
 }
-
 app-auth {
     display: flex;
     width: 100%;

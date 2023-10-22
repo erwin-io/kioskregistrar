@@ -4,37 +4,38 @@ import { MemberDocumentRequestComponent } from './member-document-request.compon
 import { ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { MaterialModule } from 'src/app/shared/material/material.module';
-import { AuthGuard } from 'src/app/guard/auth.guard';
+import { MemberAuthGuard } from 'src/app/guard/member-auth.guard';
 
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'pending',
+    canActivate: [MemberAuthGuard],
     data: { admin: false, tab: 0 },
   },
   {
     path: 'pending',
     component: MemberDocumentRequestComponent,
-    canActivate: [AuthGuard],
+    canActivate: [MemberAuthGuard],
     data: { admin: false, tab: 0 },
   },
   {
     path: 'to-pay',
     component: MemberDocumentRequestComponent,
-    canActivate: [AuthGuard],
+    canActivate: [MemberAuthGuard],
     data: { admin: false, tab: 1 },
   },
   {
     path: 'processing',
     component: MemberDocumentRequestComponent,
-    canActivate: [AuthGuard],
+    canActivate: [MemberAuthGuard],
     data: { admin: false, tab: 2 },
   },
   {
     path: 'to-claim',
     component: MemberDocumentRequestComponent,
-    canActivate: [AuthGuard],
+    canActivate: [MemberAuthGuard],
     data: { admin: false, tab: 3 },
   }
 ];

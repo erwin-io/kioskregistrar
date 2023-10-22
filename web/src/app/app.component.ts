@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
-import { Spinkit } from 'ng-http-loader';
+import { Title } from '@angular/platform-browser';
+import { Router, ResolveEnd, ActivatedRouteSnapshot, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, RouterEvent } from '@angular/router';
+import { Spinkit, SpinnerVisibilityService } from 'ng-http-loader';
+import { filter } from 'rxjs';
+const titlePrefix = "SIATON MARKET STALL RENTALS";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,6 +11,46 @@ import { Spinkit } from 'ng-http-loader';
 })
 export class AppComponent {
   public spinkit = Spinkit;
-  constructor() {
+  title;
+  constructor(
+    private titleService:Title,
+    private spinner: SpinnerVisibilityService,
+    private router: Router) {
+    this.setupTitleListener();
+  }
+  private setupTitleListener() {
+    this.router.events.pipe(filter(e => e instanceof ResolveEnd)).subscribe((e: any) => {
+      const { data } = this.getDeepestChildSnapshot(e.state.root);
+      if(data?.['title']){
+        this.title = data['title'];
+        this.titleService.setTitle(`${this.title} ${titlePrefix}`);
+      }
+      this.navigationInterceptor(e);
+    });
+  }
+  
+  getDeepestChildSnapshot(snapshot: ActivatedRouteSnapshot) {
+    let deepestChild = snapshot.firstChild;
+    while (deepestChild?.firstChild) {
+      deepestChild = deepestChild.firstChild
+    };
+    return deepestChild || snapshot
+  }
+  // Shows and hides the loading spinner during RouterEvent changes
+  navigationInterceptor(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.spinner.show();
+    }
+    if (event instanceof NavigationEnd) {
+      this.spinner.hide();
+    }
+
+    // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    if (event instanceof NavigationCancel) {
+      this.spinner.hide();
+    }
+    if (event instanceof NavigationError) {
+      this.spinner.hide();
+    }
   }
 }

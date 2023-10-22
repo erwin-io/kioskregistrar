@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
 import { ApiResponse } from '../model/api-response.model';
 import { Users } from '../model/users';
+import { Admin } from '../model/admin';
+import { Member } from '../model/member';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +27,7 @@ export class AuthService implements IServices {
     private storageService: StorageService,
     private appconfig: AppConfigService) { }
 
-  login(data: any, userType: "ADMIN" | "MEMBER") : Observable<ApiResponse<Users>> {
+  login(data: any, userType: "ADMIN" | "MEMBER") : Observable<ApiResponse<Admin | Member>> {
     if(userType === "ADMIN") {
       return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.login.admin, data)
       .pipe(
@@ -49,10 +51,10 @@ export class AuthService implements IServices {
     );
   }
 
-  redirectUser(user: Users, auth: boolean) {
-    if (user && user !== undefined && user.userType === "ADMIN") {
+  redirectToPage(profile: Admin | Member, auth: boolean) {
+    if (profile && profile !== undefined && profile.user && profile.user.userType === "ADMIN") {
         this.router.navigate([auth ? 'auth/admin' : 'admin'], { replaceUrl: true });
-    } else if(user && user !== undefined && user.userType === "MEMBER") {
+    } else if(profile && profile !== undefined && profile.user.userType === "MEMBER") {
       this.router.navigate([auth ? 'auth/member' : 'member'], { replaceUrl: true,  onSameUrlNavigation: "reload" });
     }
   }

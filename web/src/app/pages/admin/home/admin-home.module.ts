@@ -10,7 +10,8 @@ export const routes: Routes = [
   {
     path: '',
     component: AdminHomeComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
+    data: { title: "Dashboard" }
   }
 ];
 

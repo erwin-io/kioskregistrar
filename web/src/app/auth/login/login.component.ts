@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { ViewEncapsulation } from '@angular/compiler';
 import { Component } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,7 +17,7 @@ import { environment } from 'src/environments/environment.prod';
 })
 export class LoginComponent {
   logInForm = this.formBuilder.group({
-    mobileNumber: ['', Validators.required],
+    userName: ['', Validators.required],
     password: ['', Validators.required]
 });;
   admin = false;
@@ -35,10 +36,10 @@ export class LoginComponent {
     private router: Router) {
       // redirect to home if already logged in
 
-      this.admin = route.snapshot.data && route.snapshot.data["admin"];
-      const user = this.storageService.getLoginUser();
+      this.admin = this.route.snapshot.data && route.snapshot.data["admin"];
+      const user = this.storageService.getLoginProfile();
       if(user) {
-        this.authService.redirectUser(user, false);
+        this.authService.redirectToPage(user, false);
       }
     }
 
@@ -54,8 +55,8 @@ export class LoginComponent {
       this.authService.login(params, this.admin ? "ADMIN" : "MEMBER")
         .subscribe(async res => {
           if (res.success) {
-            this.storageService.saveLoginUser(res.data);
-            this.authService.redirectUser(res.data, false);
+            this.storageService.saveLoginProfile(res.data);
+            this.authService.redirectToPage(res.data, false);
           } else {
             this.error = Array.isArray(res.message) ? res.message[0] : res.message;
             this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});

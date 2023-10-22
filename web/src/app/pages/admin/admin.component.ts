@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { Router, ResolveEnd, ActivatedRouteSnapshot, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import { Router, ResolveEnd, ActivatedRouteSnapshot, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, ActivatedRoute } from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -26,49 +26,18 @@ export class AdminComponent {
     private authService: AuthService,
     private storageService: StorageService,
     private dialog: MatDialog,
-    private spinner: SpinnerVisibilityService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
     ) {
-      this.setupTitleListener();
       this.onResize();
+    
   }
   ngOnInit(): void {
   }
-  private setupTitleListener() {
-    this.router.events.pipe(filter(e => e instanceof ResolveEnd)).subscribe((e: any) => {
-      const { data } = this.getDeepestChildSnapshot(e.state.root);
-      if(data?.['title']){
-        this.title = data['title'];
-        this.layout = data['layout'];
-        this.titleService.setTitle(`${this.title} ${titlePrefix}`);
-      }
-      this.navigationInterceptor(e);
-    });
-  }
-  
-  getDeepestChildSnapshot(snapshot: ActivatedRouteSnapshot) {
-    let deepestChild = snapshot.firstChild;
-    while (deepestChild?.firstChild) {
-      deepestChild = deepestChild.firstChild
-    };
-    return deepestChild || snapshot
-  }
-  // Shows and hides the loading spinner during RouterEvent changes
-  navigationInterceptor(event: RouterEvent): void {
-    if (event instanceof NavigationStart) {
-      this.spinner.show();
-    }
-    if (event instanceof NavigationEnd) {
-      this.spinner.hide();
-    }
 
-    // Set loading state to false in both of the below events to hide the spinner in case a request fails
-    if (event instanceof NavigationCancel) {
-      this.spinner.hide();
-    }
-    if (event instanceof NavigationError) {
-      this.spinner.hide();
-    }
+  onActivate(event) {
+    const title = this.titleService.getTitle();
+    this.title = title ? title.replace(titlePrefix, "").trim() : title;
   }
 
   signOut() {
@@ -91,9 +60,9 @@ export class AdminComponent {
 
     dialogRef.componentInstance.alertDialogConfig = dialogData;
     dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
-      const user = this.storageService.getLoginUser();
-      this.storageService.saveLoginUser(null);
-      this.authService.redirectUser(user, true)
+      const profile = this.storageService.getLoginProfile();
+      this.storageService.saveLoginProfile(null);
+      this.authService.redirectToPage(profile, true)
       dialogRef.close();
     });
   }

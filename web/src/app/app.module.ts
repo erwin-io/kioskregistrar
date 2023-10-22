@@ -13,13 +13,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AppComponent } from './app.component'
-import { AuthGuard } from './guard/auth.guard';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './shared/material/material.module';
 import { CommonModule } from '@angular/common';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { AdminComponent } from './pages/admin/admin.component';
-import { MemberComponent, UserAccountSheetComponent } from './pages/member/member.component';
+import { MemberComponent } from './pages/member/member.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthComponent } from './auth/auth.component';
@@ -28,6 +27,7 @@ import { AppConfigService } from './services/app-config.service';
 import { AlertDialogComponent } from './shared/alert-dialog/alert-dialog.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { CustomHttpInterceptor } from './interceptors/custom-http.interceptors';
+import { OptionSheetComponent } from './shared/option-sheet/option-sheet.component';
 
 @NgModule({
   declarations: [ 
@@ -38,7 +38,7 @@ import { CustomHttpInterceptor } from './interceptors/custom-http.interceptors';
     AuthComponent,
     AlertDialogComponent,
     PageNotFoundComponent,
-    UserAccountSheetComponent
+    OptionSheetComponent
   ],
   imports: [
     BrowserModule,
