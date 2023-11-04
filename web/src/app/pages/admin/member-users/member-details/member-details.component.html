@@ -1,0 +1,289 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+    <span id="title">{{isReadOnly ? 'Details' : 'Edit member'}}</span>
+    <span class="toolbar-item-spacer"></span>
+    <div class="toolbar-action">
+      <button mat-stroked-button matTooltip="Cancel" [routerLink]="isReadOnly ? '/admin/members/' : isNew ? '/admin/members/': '/admin/members/' + id">
+        {{isReadOnly? 'Back' : 'Cancel'}}
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        matTooltip="Save"
+        *ngIf="pageAccess.modify && !isReadOnly"
+        form="memberForm"
+        type="submit">
+        Save
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        matTooltip="Save"
+        *ngIf="pageAccess.modify && isReadOnly"
+        routerLink="/admin/members/{{id}}/edit"
+        replaceUrl="true"
+      >
+        Edit
+      </button>
+    </div>
+  </mat-toolbar>
+  <div class="content">
+    <div class="inner-content">
+      <h4 class="inner-content-title">Identity</h4>
+      <mat-card>
+        <mat-card-content>
+          <div fxFlex="100" class="content-inner" fxLayout="column">
+            <form
+              [formGroup]="memberForm"
+              fxLayout="row wrap"
+              id="memberForm"
+              (ngSubmit)="onSubmit()"
+              [ngClass]="{'readonly' : isReadOnly}"
+            >
+              <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+                <div
+                  fxFlex="100"
+                  fxLayout="column"
+                  fxLayout.gt-sm="row"
+                  style="gap: 16px"
+                >
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  >
+                    <mat-label>First name</mat-label>
+                    <input
+                      matInput
+                      placeholder="First name"
+                      formControlName="firstName"
+                    />
+                    <mat-error
+                      *ngIf="getError('firstName') !== (null || undefined)"
+                      >{{
+                        (getError("firstName") &&
+                        getError("firstName")["required"]
+                          ? "Please enter first name"
+                          : "") ||
+                          (getError("firstName") &&
+                          getError("firstName")["pattern"]
+                            ? "Invalid input"
+                            : "")
+                      }}</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  >
+                    <mat-label>Last name</mat-label>
+                    <input
+                      matInput
+                      placeholder="Last name"
+                      formControlName="lastName"
+                    />
+                    <mat-error
+                      *ngIf="getError('lastName') !== (null || undefined)"
+                      >{{
+                        (getError("lastName") && getError("lastName")["required"]
+                          ? "Please enter last name"
+                          : "") ||
+                          (getError("lastName") && getError("lastName")["pattern"]
+                            ? "Invalid input"
+                            : "")
+                      }}</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div
+                  fxFlex="100"
+                  fxLayout="column"
+                  fxLayout.gt-sm="row"
+                  style="gap: 16px"
+                >
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  >
+                    <mat-label>Mobile number</mat-label>
+                    <input
+                      matInput
+                      placeholder="Mobile number"
+                      formControlName="mobileNumber"
+                    />
+                    <mat-error
+                      *ngIf="getError('mobileNumber') !== (null || undefined)"
+                      >{{
+                        (getError("mobileNumber") &&
+                        getError("mobileNumber").required
+                          ? "Please enter your mobile number"
+                          : "") ||
+                          (getError("mobileNumber") &&
+                          getError("mobileNumber").minlength
+                            ? "Please enter a valid mobile number"
+                            : "") ||
+                          (getError("mobileNumber") &&
+                          getError("mobileNumber").maxlength
+                            ? "Please enter a valid 11 digit mobile number"
+                            : "")
+                      }}</mat-error
+                    >
+                  </mat-form-field>
+                  <div
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  ></div>
+                </div>
+                <div
+                  fxFlex="100"
+                  fxLayout="column"
+                  fxLayout.gt-sm="row"
+                  style="gap: 16px"
+                >
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                    *ngIf="isReadOnly"
+                    class="readonly"
+                  >
+                    <mat-label>Username</mat-label>
+                    <input
+                      matInput
+                      placeholder="Username"
+                      (input)="memberForm.controls['userName'].setValue(formData.userName.toLowerCase())"
+                      formControlName="userName"
+                      role="presentation" autocomplete="off" 
+                    />
+                    <mat-error
+                      *ngIf="getError('userName') !== (null || undefined)"
+                      >{{
+                        (getError("userName") && getError("userName").required
+                          ? "Please enter your username"
+                          : "") ||
+                          (getError("userName") &&
+                          getError("userName").notAvailable
+                            ? "The username entered is not available. Try another one"
+                            : "") ||
+                          (getError("userName") && getError("userName").pattern
+                            ? "Invalid username, allowed characters: 1. small letters 2. numbers"
+                            : "")
+                      }}</mat-error
+                    >
+                  </mat-form-field>
+                  <div
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  ></div>
+                </div>
+                <div
+                  fxFlex="100"
+                  fxLayout="column"
+                  fxLayout.gt-sm="row"
+                  style="gap: 16px"
+                  *ngIf="isNew"
+                >
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  >
+                    <mat-label>Password</mat-label>
+                    <input
+                      matInput
+                      #password
+                      type="password"
+                      placeholder="Password"
+                      formControlName="password"
+                      role="presentation" autocomplete="off" 
+                    />
+                    <mat-icon
+                      class="icon-right"
+                      (click)="
+                        password.type =
+                          password.type === 'password' ? 'text' : 'password'
+                      "
+                      style="cursor: pointer"
+                      matSuffix
+                      >{{
+                        password.type === "password"
+                          ? "visibility"
+                          : "visibility_off"
+                      }}</mat-icon
+                    >
+                    <mat-error
+                      *ngIf="getError('password') !== (null || undefined)"
+                      >{{
+                        (getError("password") && getError("password").required
+                          ? "Please enter your password"
+                          : "") ||
+                          (getError("password") && getError("password").minlength
+                            ? "Please enter atleast 6 charcters"
+                            : "") ||
+                          (getError("password") && getError("password").maxlength
+                            ? "Only maximum of 16 characters are allowed"
+                            : "")
+                      }}</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="50%"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  >
+                    <mat-label>Confirm Password</mat-label>
+                    <input
+                      matInput
+                      type="password"
+                      #confirmPassword
+                      placeholder="Confirm password"
+                      formControlName="confirmPassword"
+                      [errorStateMatcher]="matcher"
+                      role="presentation" autocomplete="off" 
+                    />
+                    <mat-icon
+                      class="icon-right"
+                      (click)="
+                        confirmPassword.type =
+                          confirmPassword.type === 'password'
+                            ? 'text'
+                            : 'password'
+                      "
+                      style="cursor: pointer"
+                      matSuffix
+                    >
+                      {{
+                        confirmPassword.type === "password"
+                          ? "visibility"
+                          : "visibility_off"
+                      }}
+                    </mat-icon>
+                    <mat-error
+                      *ngIf="getError('confirmPassword') !== (null || undefined)"
+                    >
+                      {{
+                        getError("confirmPassword") &&
+                        getError("confirmPassword").notMatched
+                          ? "Please confirm your password"
+                          : ""
+                      }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  

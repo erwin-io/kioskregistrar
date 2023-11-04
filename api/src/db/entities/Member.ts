@@ -4,10 +4,12 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Files } from "./Files";
 import { Users } from "./Users";
+import { Request } from "./Request";
 
 @Index("Member_pkey", ["memberId"], { unique: true })
 @Entity("Member", { schema: "dbo" })
@@ -18,8 +20,8 @@ export class Member {
   @Column("character varying", { name: "FirstName" })
   firstName: string;
 
-  @Column("character varying", { name: "MiddleName" })
-  middleName: string;
+  @Column("character varying", { name: "MiddleName", nullable: true })
+  middleName: string | null;
 
   @Column("character varying", { name: "LastName" })
   lastName: string;
@@ -63,6 +65,9 @@ export class Member {
   @Column("character varying", { name: "SecondarySYGraduated", nullable: true })
   secondarySyGraduated: string | null;
 
+  @Column("character varying", { name: "FullName", default: () => "''" })
+  fullName: string;
+
   @ManyToOne(() => Files, (files) => files.members)
   @JoinColumn([{ name: "BirthCertFileId", referencedColumnName: "fileId" }])
   birthCertFile: Files;
@@ -70,4 +75,7 @@ export class Member {
   @ManyToOne(() => Users, (users) => users.members)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
   user: Users;
+
+  @OneToMany(() => Request, (request) => request.member)
+  requests: Request[];
 }

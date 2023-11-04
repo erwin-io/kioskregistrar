@@ -1,42 +1,69 @@
-/** source/controllers/posts.ts */
 import { Router, Request, Response, NextFunction, response } from "express";
 import axios, { AxiosResponse } from "axios";
 import { Users } from "../../src/db/entities/Users";
-import { In, getManager, getRepository } from "typeorm";
-import { Access } from "../../src/db/entities/Access";
+import { Between, FindOptionsWhere, ILike, In, getManager, getRepository } from "typeorm";
 import { CONST_USERTYPE } from "../../src/utils/constant";
-import { compare, hash } from "../../src/utils/utils";
-import { CreateAdminUser, UpdateAdminUser } from "../../src/dto/users";
+import { columnDefToTypeORMCondition, compare, convertColumnNotationToObject, getFullName, hash } from "../../src/utils/utils";
+import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto } from "../../src/dto/users";
 import { Admin } from "../../src/db/entities/Admin";
-import { validatorDto } from "../../src/middleware/validator";
+import { validatorDto } from "../utils/validator";
 import { Member } from "../../src/db/entities/Member";
+import moment from "moment";
+import { format } from 'date-fns';
 
 export const usersRouter = Router();
 
-usersRouter.get(
-  "/:type",
+usersRouter.post(
+  "/:type/page",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { type } = req.params;
-      if(!["ADMIN", "MEMBER"].some(x=>x === type.toUpperCase())) {
+      let { type, pageSize, pageIndex, order, columnDef } = { ...req.params, ...req.body } as any;
+      const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
+      const take = Number(pageSize);
+      if(!CONST_USERTYPE.some(x=>x === type.toUpperCase())) {
         throw Error("Invalid type");
       }
-      let data: Admin[] | Member[] = await getRepository(type.toUpperCase() === "ADMIN" ? Admin : Member).find({
-        where: {
-          user: {
-            userType: type.toUpperCase(),
-            active: true,
-          }
+      let condition = columnDefToTypeORMCondition(columnDef);
+      if(!condition.user || condition.user === undefined) {
+        condition.user ={
+          userType: type.toUpperCase(),
+          active: true,
+        }
+      } else {
+        condition.user.userType = type.toUpperCase();
+        condition.user.active = true;
+      }
+      let [results, total] = await Promise.all([
+        getRepository(type.toUpperCase() === "ADMIN" ? Admin : Member).find({
+          select: {
+            user: {
+              userId: true,
+              userName: true,
+              userType: true,
+              active: true,
+              accessGranted: true,
+              profileFile: {
+                fileId: true,
+                fileName: true,
+                url: true
+            }
+          },
         },
+        where: condition,
         relations: {
           user: true
-        }
-      });
+        },
+        skip,
+        take,
+        order
+      }),
+      getRepository(type.toUpperCase() === "ADMIN" ? Admin : Member).count({ where: condition}),
+    ])
       return res.status(200).json({
-        data: data.map((x) => {
-          delete x.user.password;
-          return x;
-        }),
+        data: {
+          results: results,
+          total
+        },
         success: true,
       });
     } catch (ex) {
@@ -48,17 +75,17 @@ usersRouter.get(
 );
 
 usersRouter.get(
-  "/:type/:id",
+  "/:type/:userId",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, type } = req.params;
-      if(!["ADMIN", "MEMBER"].some(x=>x === type.toUpperCase())) {
+      const { userId, type } = req.params;
+      if(!CONST_USERTYPE.some(x=>x === type.toUpperCase())) {
         throw Error("Invalid type");
       }
       let result: Admin | Member = await getRepository(type.toUpperCase() === "ADMIN" ? Admin : Member).findOne({
         where:  {
           user: {
-            userType: type.toUpperCase(),
+            userId: userId,
             active: true,
           }
         },
@@ -89,17 +116,18 @@ usersRouter.post(
   "/admin/",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const body = req.body as CreateAdminUser;
-      await validatorDto(CreateAdminUser, body);
+      const body = req.body as CreateAdminUserDto;
+      await validatorDto(CreateAdminUserDto, body);
       let user = new Users();
       user.userName = body.userName;
       user.password = await hash(body.password);
       user.userType = "ADMIN";
-      user.access = body.access;
+      user.access = JSON.parse(JSON.stringify(body.access));
       user.accessGranted = true;
       let admin = new Admin();
       admin.firstName = body.firstName;
       admin.lastName = body.lastName;
+      admin.fullName = getFullName(body.firstName, "", body.lastName);
       admin.mobileNumber = body.mobileNumber;
       admin = await getManager().transaction(
         async (transactionalEntityManager) => {
@@ -122,15 +150,15 @@ usersRouter.post(
 );
 
 usersRouter.put(
-  "/admin/:id",
+  "/admin/:userId",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const body = { ...req.body, ...req.params } as UpdateAdminUser;
-      await validatorDto(UpdateAdminUser, body);
+      const body = { ...req.body, ...req.params } as UpdateAdminUserDto;
+      await validatorDto(UpdateAdminUserDto, body);
       let admin: Admin = await getRepository(Admin).findOne({
         where: {
           user: {
-            userId: body.id,
+            userId: body.userId,
             userType: "ADMIN",
             active: true,
           },
@@ -144,12 +172,14 @@ usersRouter.put(
       if (admin) {
         admin.firstName = body.firstName;
         admin.lastName = body.lastName;
+        admin.fullName = getFullName(body.firstName, "", body.lastName);
         admin.mobileNumber = body.mobileNumber;
-        admin.user.access = body.access;
-        admin.user.access = body.access;
+        let user: Users = admin.user;
+        user.access = JSON.parse(JSON.stringify(body.access));
         admin = await getManager().transaction(
           async (transactionalEntityManager) => {
-            return await transactionalEntityManager.save(admin);
+            user = await transactionalEntityManager.save(Users, user);
+            return await transactionalEntityManager.save(Admin, admin);
           }
         );
         delete admin.user.password;
@@ -172,42 +202,97 @@ usersRouter.put(
 );
 
 usersRouter.put(
-  "/admin/:id/changePassword",
+  "/member/:userId",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (req.params && req.params.id && req.body && req.body.password) {
-        let { password, id } = {
-          ...(req.body as any),
-          ...(req.params as any),
-        } as any;
-        let user: Users = await getRepository(Users).findOne({
-          where: {
-            userId: id,
-            userType: "ADMIN",
+      const body = { ...req.body, ...req.params } as UpdateMemberUserDto;
+      await validatorDto(UpdateMemberUserDto, body);
+      let member: Member = await getRepository(Member).findOne({
+        where: {
+          user: {
+            userId: body.userId,
+            userType: "MEMBER",
             active: true,
           },
-        });
-        if (user) {
-          user.password = await hash(password);
-          user = await getManager().transaction(
-            async (transactionalEntityManager) => {
-              return await transactionalEntityManager.save(user);
-            }
-          );
-          delete user.password;
-          return res.status(200).json({
-            message: "user updated successfully",
-            data: user,
-            success: true,
-          });
-        } else {
-          return res.status(404).json({
-            message: "Not Found!",
-          });
+        },
+        relations: {
+          user: {
+            profileFile: true
+          },
         }
+      });
+      if (member) {
+        member.firstName = body.firstName;
+        member.middleName = body.middleName;
+        member.lastName = body.lastName;
+        member.fullName = getFullName(body.firstName, body.middleName, body.lastName);
+        member.email = body.email;
+        member.mobileNumber = body.mobileNumber;
+        member.birthDate = moment(body.birthDate.toString()).format(
+          "YYYY-MM-DD"
+        );
+        member.address = body.address;
+        member.gender = body.gender;
+        member.courseTaken = body.courseTaken;
+        member.major = body.major;
+        member.isAlumni = body.isAlumni;
+        member.schoolYearLastAttended = body.schoolYearLastAttended;
+        member.primarySchoolName = body.primarySchoolName;
+        member.primarySyGraduated = body.primarySyGraduated;
+        member.secondarySchoolName = body.secondarySchoolName;
+        member.secondarySyGraduated = body.secondarySyGraduated;
+        member = await getManager().transaction(
+          async (transactionalEntityManager) => {
+            return await transactionalEntityManager.save(Member, member);
+          }
+        );
+        delete member.user.password;
+        return res.status(200).json({
+          message: "user updated successfully",
+          data: member,
+          success: true,
+        });
       } else {
-        return res.status(400).json({
-          message: "Bad request!",
+        return res.status(404).json({
+          message: "Not Found!",
+        });
+      }
+    } catch (ex) {
+      return res.status(500).json({
+        message: ex.message,
+      });
+    }
+  }
+);
+
+usersRouter.put(
+  "/:userId/resetPassword",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = { ...req.body, ...req.params } as UpdateAdminUserResetPasswordDto;
+      await validatorDto(UpdateAdminUserResetPasswordDto, body);
+      let user: Users = await getRepository(Users).findOne({
+        where: {
+          userId: body.userId,
+          active: true,
+        },
+      });
+      if (user) {
+        user.password = await hash(body.password);
+        user = await getManager().transaction(
+          async (transactionalEntityManager) => {
+            return await transactionalEntityManager.save(user);
+          }
+        );
+        delete user.password;
+        return res.status(200).json({
+          message: "user password updated successfully",
+          data: user,
+          success: true,
+        });
+      } else {
+        return res.status(404).json({
+          message: "Not Found!",
         });
       }
     } catch (ex) {
@@ -219,27 +304,26 @@ usersRouter.put(
 );
 
 usersRouter.delete(
-  "/admin/:id",
+  "/:userId",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (req.params && req.params.id) {
-        let { id } = req.params;
+      if (req.params && req.params.userId) {
+        let { userId } = req.params;
         let user: Users = await getRepository(Users).findOne({
           where: {
-            userId: id,
+            userId: userId,
             active: true,
-            userType: "ADMIN"
           },
         });
 
         if (user) {
-          delete user.password;
           user.active = false;
           user = await getManager().transaction(
             async (transactionalEntityManager) => {
               return await transactionalEntityManager.save(user);
             }
           );
+          delete user.password;
           return res.status(200).json({
             message: "user deleted successfully",
             data: user,

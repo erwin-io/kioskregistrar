@@ -4,9 +4,11 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Users } from "./Users";
+import { Request } from "./Request";
 
 @Index("Admin_pkey", ["adminId"], { unique: true })
 @Entity("Admin", { schema: "dbo" })
@@ -23,7 +25,13 @@ export class Admin {
   @Column("character varying", { name: "MobileNumber" })
   mobileNumber: string;
 
+  @Column("character varying", { name: "FullName", default: () => "''" })
+  fullName: string;
+
   @ManyToOne(() => Users, (users) => users.admins)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
   user: Users;
+
+  @OneToMany(() => Request, (request) => request.assignedAdmin)
+  requests: Request[];
 }

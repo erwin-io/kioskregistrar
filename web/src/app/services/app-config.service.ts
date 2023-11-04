@@ -3,6 +3,7 @@ import { catchError, take, throwError } from 'rxjs';
 
 import { Injectable, APP_INITIALIZER } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AppConfig } from '../model/config';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 export class AppConfigService {
   private static readonly configPath = "../../assets/config.json";
 
-  private appConfig: any;
+  private appConfig: AppConfig;
   constructor(private http: HttpClient) {
   }
 
@@ -24,14 +25,14 @@ export class AppConfigService {
         } )
       )
       .subscribe((configResponse: object) => {
-        this.appConfig = configResponse;
+        this.appConfig = configResponse as AppConfig;
         resolve(true);
       })
     })
 
   }
 
-  get config() : any {
+  get config() : AppConfig {
     return this.appConfig;
   }
 }

@@ -10,7 +10,6 @@ export class StorageService {
 
   constructor() { }
 
-
   getLoginProfile(): Admin | Member {
     const profile = this.get('loginProfile');
     if(profile !== null && profile !== ''){

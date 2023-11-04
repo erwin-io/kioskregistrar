@@ -1,0 +1,9 @@
+::ng-deep .table-container {
+  .table {
+    .mat-column-fullName {
+      flex: 0 0 30% !important;
+      width: 30% !important;
+    }
+  }
+}
+

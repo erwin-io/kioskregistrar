@@ -1,4 +1,5 @@
 {
+  "appName": "NORSU Registrar",
   "reservationConfig": {
     "maxCancellation": "3",
     "daysCancellationLimitReset": "5",
@@ -6,16 +7,239 @@
       "start": "08:00",
       "end": "17:00"
     },
-    "timeSlotNotAvailableHours": ["12:00"],
-    "dayOfWeekNotAvailable": ["Sunday", "Wednesday", "Saturday"]
+    "timeSlotNotAvailableHours": [
+      "12:00"
+    ],
+    "dayOfWeekNotAvailable": [
+      "Sunday",
+      "Wednesday",
+      "Saturday"
+    ]
   },
   "tableColumns": {
+    "requestType": [
+      {
+        "name": "name",
+        "label": "Request type name",
+        "apiNotation": "name",
+        "sticky": true,
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Request type name"
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "authorizeACopy",
+        "label": "Authorize a copy",
+        "apiNotation": "authorizeACopy",
+        "type": "boolean",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Authorize a copy",
+          "type": "option-yes-no"
+        }
+      },
+      {
+        "name": "fee",
+        "label": "Fee",
+        "apiNotation": "fee",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Fee"
+        }
+      },
+      {
+        "name": "isPaymentRequired",
+        "label": "Payment required",
+        "apiNotation": "isPaymentRequired",
+        "type": "boolean",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Payment required",
+          "type": "option-yes-no"
+        }
+      }
+    ],
+    "admin": [
+      {
+        "name": "fullName",
+        "label": "Full name",
+        "apiNotation": "fullName",
+        "sticky": true,
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Full name"
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "userName",
+        "label": "Username",
+        "apiNotation": "user.userName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Username"
+        }
+      },
+      {
+        "name": "mobileNumber",
+        "label": "Mobile number",
+        "apiNotation": "mobileNumber",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Mobile number"
+        }
+      }
+    ],
+    "members": [
+      {
+        "name": "fullName",
+        "label": "Full name",
+        "apiNotation": "fullName",
+        "sticky": true,
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Full name"
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "courseTaken",
+        "label": "Course taken",
+        "apiNotation": "courseTaken",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Course taken"
+        }
+      },
+      {
+        "name": "email",
+        "label": "Email",
+        "apiNotation": "email",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Email"
+        }
+      },
+      {
+        "name": "mobileNumber",
+        "label": "Mobile number",
+        "apiNotation": "mobileNumber",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Mobile number"
+        }
+      },
+      {
+        "name": "birthDate",
+        "label": "Birth date",
+        "apiNotation": "birthDate",
+        "type": "date",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "YYYY-MM-DD",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "address",
+        "label": "Address",
+        "apiNotation": "address",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Address"
+        }
+      },
+      {
+        "name": "isAlumni",
+        "label": "Alumni",
+        "apiNotation": "isAlumni",
+        "type": "boolean",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "eg. Yes, No",
+          "type": "option-yes-no"
+        }
+      }
+    ]
   },
   "sessionConfig": {
     "sessionTimeout": "60"
   },
   "lookup": {
-    "reservationStatus": ["Pending", "Approved", "Completed", "Cancelled"]
+    "access": [
+      {
+        "page": "Dashboard",
+        "view": true,
+        "modify": true,
+        "rights": [
+          "Request",
+          "Support"
+        ]
+      },
+      {
+        "page": "Admin access",
+        "view": false,
+        "modify": false,
+        "rights": [
+          "Access",
+          "Rights"
+        ]
+      },
+      {
+        "page": "Members",
+        "view": false,
+        "modify": false,
+        "rights": []
+      },
+      {
+        "page": "Request Type",
+        "view": false,
+        "modify": false,
+        "rights": [
+          "Requirements"
+        ]
+      },
+      {
+        "page": "Request Management",
+        "view": false,
+        "modify": false,
+        "rights": [
+          "Approval"
+        ]
+      },
+      {
+        "page": "Support Management",
+        "view": false,
+        "modify": false,
+        "rights": [
+          "Approval"
+        ]
+      }
+    ]
   },
   "apiEndPoints": {
     "auth": {
@@ -26,12 +250,29 @@
       "registerMember": "/auth/register/member"
     },
     "user": {
+      "getAdminById": "/users/admin/",
+      "getMemberById": "/users/member/",
+      "createAdmin": "/users/admin/",
+      "updateAdmin": "/users/admin/",
+      "getAdminByAdvanceSearch": "/users/admin/page",
+      "getMemberByAdvanceSearch": "/users/member/page/"
     },
-    "role": "/roles/",
-    "request": {
+    "requestType": {
+      "getByAdvanceSearch": "/requestType/page/",
+      "getById": "/requestType/",
+      "create": "/requestType/",
+      "update": "/requestType/",
+      "delete": "/requestType/"
     },
-    "dashboard": {
+    "requestRequirements": {
+      "get": "/requestRequirements/findByRequestType/",
+      "getById": "/requestRequirements/",
+      "create": "/requestRequirements/",
+      "update": "/requestRequirements/",
+      "delete": "/requestRequirements/"
     },
+    "request": {},
+    "dashboard": {},
     "message": {
       "create": "/message/"
     }

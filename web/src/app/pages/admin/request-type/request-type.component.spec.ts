@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DocumentTypeComponent } from './document-type.component';
+import { RequestTypeComponent } from './request-type.component';
 
-describe('DocumentTypeComponent', () => {
-  let component: DocumentTypeComponent;
-  let fixture: ComponentFixture<DocumentTypeComponent>;
+describe('RequestTypeComponent', () => {
+  let component: RequestTypeComponent;
+  let fixture: ComponentFixture<RequestTypeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DocumentTypeComponent ]
+      declarations: [ RequestTypeComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DocumentTypeComponent);
+    fixture = TestBed.createComponent(RequestTypeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

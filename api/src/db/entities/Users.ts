@@ -27,18 +27,14 @@ export class Users {
   @Column("character varying", { name: "UserType" })
   userType: string;
 
-  @Column("int8", {
-    name: "Access",
-    array: true,
-    default: () => "ARRAY[]::bigint[]",
-  })
-  access: string[];
-
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
 
   @Column("boolean", { name: "AccessGranted", default: () => "false" })
   accessGranted: boolean;
+
+  @Column("json", { name: "Access", default: [] })
+  access: object;
 
   @OneToMany(() => Admin, (admin) => admin.user)
   admins: Admin[];

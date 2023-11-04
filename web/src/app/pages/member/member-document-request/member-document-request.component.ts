@@ -14,7 +14,6 @@ export class MemberDocumentRequestComponent {
     this.selectedTabIndex = this.route.snapshot.data && this.route.snapshot.data["tab"];
   }
   onTabChanged(event) {
-    console.log(event);
     const route = routes.find(x=>x.data["tab"] === event.index && x.path !== "");
     if(route) {
       // this.router.navigate([`/member/document-request/${route.path}`]);

@@ -1,0 +1,68 @@
+import { ColumnDefinition } from "./table"
+
+export interface AppConfig {
+    appName: string;
+    reservationConfig: {
+      maxCancellation: string;
+      daysCancellationLimitReset: string;
+      timeSlotHours: {
+        start: string;
+        end: string;
+      };
+      timeSlotNotAvailableHours: string[];
+      dayOfWeekNotAvailable: string[];
+    };
+    tableColumns: {
+      admin: ColumnDefinition[];
+      members: ColumnDefinition[];
+      requestType: ColumnDefinition[];
+    };
+    sessionConfig: {
+      sessionTimeout: string;
+    };
+    lookup: {
+      access: {
+        page: string;
+        view: boolean;
+        modify: boolean;
+        rights: string[];
+      }[];
+    };
+    apiEndPoints: {
+      auth: {
+        login: {
+          admin: string;
+          member: string;
+        }
+        registerMember: string;
+      };
+      user: {
+        getAdminById: string;
+        getMemberById: string;
+        createAdmin: string;
+        updateAdmin: string;
+        getAdminByAdvanceSearch: string;
+        getMemberByAdvanceSearch: string;
+        updateAdminPassword: string;
+        changePassword: string;
+        toggleGrantAccess: string;
+      };
+      requestType: {
+        getByAdvanceSearch: string;
+        getById: string;
+        create: string;
+        update: string;
+        delete: string;
+      };
+      requestRequirements: {
+        get: string;
+        getById: string;
+        create: string;
+        update: string;
+        delete: string;
+      };
+      request: {};
+      dashboard: {};
+      message: { create: string };
+    };
+  }

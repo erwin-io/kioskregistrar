@@ -3,7 +3,8 @@ import { Title } from '@angular/platform-browser';
 import { Router, ResolveEnd, ActivatedRouteSnapshot, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, RouterEvent } from '@angular/router';
 import { Spinkit, SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
-const titlePrefix = "SIATON MARKET STALL RENTALS";
+import { RouteService } from './services/route.service';
+import { AppConfigService } from './services/app-config.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,15 +16,18 @@ export class AppComponent {
   constructor(
     private titleService:Title,
     private spinner: SpinnerVisibilityService,
-    private router: Router) {
+    private router: Router,
+    private appconfig: AppConfigService,
+    private routeService: RouteService) {
     this.setupTitleListener();
   }
   private setupTitleListener() {
     this.router.events.pipe(filter(e => e instanceof ResolveEnd)).subscribe((e: any) => {
       const { data } = this.getDeepestChildSnapshot(e.state.root);
+      this.routeService.changeData(data);
       if(data?.['title']){
         this.title = data['title'];
-        this.titleService.setTitle(`${this.title} ${titlePrefix}`);
+        this.titleService.setTitle(`${this.title} | ${this.appconfig.config.appName}`);
       }
       this.navigationInterceptor(e);
     });

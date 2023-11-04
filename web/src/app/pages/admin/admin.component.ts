@@ -4,23 +4,27 @@ import { Title } from '@angular/platform-browser';
 import { Router, ResolveEnd, ActivatedRouteSnapshot, RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, ActivatedRoute } from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
+import { Admin } from 'src/app/model/admin';
+import { Member } from 'src/app/model/member';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { RouteService } from 'src/app/services/route.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 
-const titlePrefix = "SIATON MARKET STALL RENTALS";
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
-  title = '';
-  layout = 'main';
+  appName = "";
+  title = "";
   loading = false;
   drawerDefaultOpened = false;
-
+  details = false;
+  profile: Admin | Member;
   constructor(
     private titleService:Title,
     private authService: AuthService,
@@ -28,16 +32,24 @@ export class AdminComponent {
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
+    private routeService: RouteService
     ) {
+      this.profile = this.storageService.getLoginProfile();
       this.onResize();
-    
+      this.routeService.data$.subscribe((res: { title: string; admin: boolean; details: boolean }) => {
+        this.title = res.title;
+        this.details = res.details;
+      });
   }
   ngOnInit(): void {
   }
 
   onActivate(event) {
-    const title = this.titleService.getTitle();
-    this.title = title ? title.replace(titlePrefix, "").trim() : title;
+    this.onResize();
+  }
+
+  showMenu(page: string) {
+    return this.profile.user && this.profile.user.access.some(x=>x.page.toLowerCase() === page.toLowerCase() && x.view);
   }
 
   signOut() {

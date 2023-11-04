@@ -25,6 +25,8 @@ export const validatorDto = async <T extends ClassConstructor<any>>(
   // errors is an array of validation errors
   if (errors.length > 0 && errors[0]["constraints"] && Object.keys(errors[0]["constraints"]).length > 0 && Object.keys(errors[0]["constraints"])[0]) {
     throw new Error(errors[0]["constraints"][Object.keys(errors[0]["constraints"])[0]]);
+  } else if(errors.length > 0 && errors[0]["children"].length > 0 && errors[0]["children"][0]["constraints"] && Object.keys(errors[0]["children"][0]["constraints"]).length > 0 && Object.keys(errors[0]["children"][0]["constraints"])[0]) {
+    throw new Error(errors[0]["children"][0]["constraints"][Object.keys(errors[0]["children"][0]["constraints"])[0]]);
   }
   
 };

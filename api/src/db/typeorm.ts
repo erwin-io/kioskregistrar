@@ -2,10 +2,12 @@ import "reflect-metadata";
 import { ConnectionOptions } from "typeorm";
 import { SystemConfig } from "../../src/db/entities/SystemConfig";
 import { Users } from "../../src/db/entities/Users";
-import { Access } from "../../src/db/entities/Access";
 import { Admin } from "../../src/db/entities/Admin";
 import { Member } from "../../src/db/entities/Member";
 import { Files } from "../../src/db/entities/Files";
+import { RequestType } from "./entities/RequestType";
+import { RequestRequirements } from "./entities/RequestRequirements";
+import { Request } from "./entities/Request";
 
 export function createConfig(): ConnectionOptions {
    const ssl = process.env.SSL;
@@ -16,7 +18,7 @@ export function createConfig(): ConnectionOptions {
     database: process.env.DATABASE_NAME,
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
-    entities: [SystemConfig, Users, Access, Admin, Member, Files],
+    entities: [SystemConfig, Users, Admin, Member, Files, RequestType, RequestRequirements, Request],
     synchronize: false,
     ssl: ssl.toLocaleLowerCase().includes("true"),
     extra: {

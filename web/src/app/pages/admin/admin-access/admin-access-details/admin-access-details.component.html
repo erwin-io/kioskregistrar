@@ -1,0 +1,375 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <span id="title">{{isReadOnly ? 'Details' : 'Edit admin access'}}</span>
+  <span class="toolbar-item-spacer"></span>
+  <div class="toolbar-action">
+    <button mat-stroked-button matTooltip="Cancel" [routerLink]="isReadOnly ? '/admin/admin-access/' : isNew ? '/admin/admin-access/': '/admin/admin-access/' + id">
+      {{isReadOnly? 'Back' : 'Cancel'}}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      matTooltip="Save"
+      *ngIf="pageAccess.modify && !isReadOnly"
+      form="adminAccessForm"
+      type="submit">
+      Save
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      matTooltip="Save"
+      *ngIf="pageAccess.modify && isReadOnly"
+      routerLink="/admin/admin-access/{{id}}/edit"
+      replaceUrl="true"
+    >
+      Edit
+    </button>
+  </div>
+</mat-toolbar>
+<div class="content">
+  <div class="inner-content">
+    <h4 class="inner-content-title">Identity</h4>
+    <mat-card>
+      <mat-card-content>
+        <div fxFlex="100" class="content-inner" fxLayout="column">
+          <form
+            [formGroup]="adminAccessForm"
+            fxLayout="row wrap"
+            id="adminAccessForm"
+            (ngSubmit)="onSubmit()"
+            [ngClass]="{'readonly' : isReadOnly}"
+          >
+            <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+              <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayout.gt-sm="row"
+                style="gap: 16px"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                >
+                  <mat-label>First name</mat-label>
+                  <input
+                    matInput
+                    placeholder="First name"
+                    formControlName="firstName"
+                  />
+                  <mat-error
+                    *ngIf="getError('firstName') !== (null || undefined)"
+                    >{{
+                      (getError("firstName") &&
+                      getError("firstName")["required"]
+                        ? "Please enter first name"
+                        : "") ||
+                        (getError("firstName") &&
+                        getError("firstName")["pattern"]
+                          ? "Invalid input"
+                          : "")
+                    }}</mat-error
+                  >
+                </mat-form-field>
+                <mat-form-field
+                  appearance="outline"
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                >
+                  <mat-label>Last name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Last name"
+                    formControlName="lastName"
+                  />
+                  <mat-error
+                    *ngIf="getError('lastName') !== (null || undefined)"
+                    >{{
+                      (getError("lastName") && getError("lastName")["required"]
+                        ? "Please enter last name"
+                        : "") ||
+                        (getError("lastName") && getError("lastName")["pattern"]
+                          ? "Invalid input"
+                          : "")
+                    }}</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayout.gt-sm="row"
+                style="gap: 16px"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                >
+                  <mat-label>Mobile number</mat-label>
+                  <input
+                    matInput
+                    placeholder="Mobile number"
+                    formControlName="mobileNumber"
+                  />
+                  <mat-error
+                    *ngIf="getError('mobileNumber') !== (null || undefined)"
+                    >{{
+                      (getError("mobileNumber") &&
+                      getError("mobileNumber").required
+                        ? "Please enter your mobile number"
+                        : "") ||
+                        (getError("mobileNumber") &&
+                        getError("mobileNumber").minlength
+                          ? "Please enter a valid mobile number"
+                          : "") ||
+                        (getError("mobileNumber") &&
+                        getError("mobileNumber").maxlength
+                          ? "Please enter a valid 11 digit mobile number"
+                          : "")
+                    }}</mat-error
+                  >
+                </mat-form-field>
+                <div
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                ></div>
+              </div>
+              <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayout.gt-sm="row"
+                style="gap: 16px"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                  *ngIf="isReadOnly"
+                  class="readonly"
+                >
+                  <mat-label>Username</mat-label>
+                  <input
+                    matInput
+                    placeholder="Username"
+                    (input)="adminAccessForm.controls['userName'].setValue(formData.userName.toLowerCase())"
+                    formControlName="userName"
+                    role="presentation" autocomplete="off" 
+                  />
+                  <mat-error
+                    *ngIf="getError('userName') !== (null || undefined)"
+                    >{{
+                      (getError("userName") && getError("userName").required
+                        ? "Please enter your username"
+                        : "") ||
+                        (getError("userName") &&
+                        getError("userName").notAvailable
+                          ? "The username entered is not available. Try another one"
+                          : "") ||
+                        (getError("userName") && getError("userName").pattern
+                          ? "Invalid username, allowed characters: 1. small letters 2. numbers"
+                          : "")
+                    }}</mat-error
+                  >
+                </mat-form-field>
+                <div
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                ></div>
+              </div>
+              <div
+                fxFlex="100"
+                fxLayout="column"
+                fxLayout.gt-sm="row"
+                style="gap: 16px"
+                *ngIf="isNew"
+              >
+                <mat-form-field
+                  appearance="outline"
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                >
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    #password
+                    type="password"
+                    placeholder="Password"
+                    formControlName="password"
+                    role="presentation" autocomplete="off" 
+                  />
+                  <mat-icon
+                    class="icon-right"
+                    (click)="
+                      password.type =
+                        password.type === 'password' ? 'text' : 'password'
+                    "
+                    style="cursor: pointer"
+                    matSuffix
+                    >{{
+                      password.type === "password"
+                        ? "visibility"
+                        : "visibility_off"
+                    }}</mat-icon
+                  >
+                  <mat-error
+                    *ngIf="getError('password') !== (null || undefined)"
+                    >{{
+                      (getError("password") && getError("password").required
+                        ? "Please enter your password"
+                        : "") ||
+                        (getError("password") && getError("password").minlength
+                          ? "Please enter atleast 6 charcters"
+                          : "") ||
+                        (getError("password") && getError("password").maxlength
+                          ? "Only maximum of 16 characters are allowed"
+                          : "")
+                    }}</mat-error
+                  >
+                </mat-form-field>
+                <mat-form-field
+                  appearance="outline"
+                  fxFlex="50%"
+                  class="cell"
+                  [ngClass.gt-sm]="{ isLargeScreen: true }"
+                >
+                  <mat-label>Confirm Password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    #confirmPassword
+                    placeholder="Confirm password"
+                    formControlName="confirmPassword"
+                    [errorStateMatcher]="matcher"
+                    role="presentation" autocomplete="off" 
+                  />
+                  <mat-icon
+                    class="icon-right"
+                    (click)="
+                      confirmPassword.type =
+                        confirmPassword.type === 'password'
+                          ? 'text'
+                          : 'password'
+                    "
+                    style="cursor: pointer"
+                    matSuffix
+                  >
+                    {{
+                      confirmPassword.type === "password"
+                        ? "visibility"
+                        : "visibility_off"
+                    }}
+                  </mat-icon>
+                  <mat-error
+                    *ngIf="getError('confirmPassword') !== (null || undefined)"
+                  >
+                    {{
+                      getError("confirmPassword") &&
+                      getError("confirmPassword").notMatched
+                        ? "Please confirm your password"
+                        : ""
+                    }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <h4 class="inner-content-title">Access</h4>
+    <section class="access mat-elevation-z4">
+      <table class="table-admin-access" mat-table [dataSource]="accessDataSource">
+        <!-- Page Column -->
+        <ng-container matColumnDef="page" sticky>
+          <th mat-header-cell *matHeaderCellDef>Page</th>
+          <td mat-cell *matCellDef="let element">{{ element.page }}</td>
+        </ng-container>
+
+        <!-- View Column -->
+        <ng-container matColumnDef="view">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              [disabled]="!pageRights['Access']"
+              [matTooltip]="accessCheckBox.view.all ? 'Disable view access for all page' : 'Enable view access for all page'"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? accessCheckBox.view.changeAll(accessCheckBox.view.all ? false : true) : null;modifyAll.checked = !accessCheckBox.view.all ? false : false"
+              [indeterminate]="!accessCheckBox.view.all ? accessCheckBox.view.indeterminate : false"
+              [checked]="accessCheckBox.view.all"
+              *ngIf="!isReadOnly">
+            </mat-checkbox>
+            View
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox
+              [disabled]="isReadOnly || !pageRights['Access']"
+              [matTooltip]="(element.view ? 'Disable' : 'Enable') + ' view access for ' + element.page"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? (element.view = !element.view) : null;element.view ? element.modify = false:false;!element.view ? element.rights = [] : false;accessGridChange()"
+              [checked]="element.view">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Modify number Column -->
+        <ng-container matColumnDef="modify">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              #modifyAll
+              [matTooltip]="accessCheckBox.modify.all ? 'Disable modify access for all page' : 'Enable modify access for all page'"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? accessCheckBox.modify.changeAll(modifyAll.checked) : null"
+              [indeterminate]="!accessCheckBox.modify.all ? accessCheckBox.modify.indeterminate : false"
+              [checked]="accessCheckBox.modify.all"
+              *ngIf="!isReadOnly"
+              [disabled]="!pageRights['Access'] ? true : (!accessCheckBox.view.all && !accessCheckBox.view.indeterminate)">
+            </mat-checkbox>
+            Modify
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox
+              [disabled]="!pageRights['Access'] ? true : (!element.view || isReadOnly)"
+              [matTooltip]="(element.modify ? 'Disable' : 'Enable') + ' modify access for ' + element.page"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? (element.modify = !element.modify) : null;accessGridChange()"
+              [checked]="element.modify">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Rights Column -->
+        <ng-container matColumnDef="rights">
+          <th mat-header-cell *matHeaderCellDef >Rights</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-select 
+              *ngIf="!isReadOnly && rightsOptions(element.page).length > 0 && element.view;else rightsReadOnly" 
+              multiple #rights [ngModel]="element.rights" 
+              (selectionChange)="element.rights = rights.value;accessGridChange()" 
+              placeholder="Select rights"
+              [disabled]="!pageRights['Rights']">
+              <mat-option [value]="rights" *ngFor="let rights of rightsOptions(element.page)">
+                {{ rights }}
+              </mat-option>
+            </mat-select>
+            <ng-template #rightsReadOnly>
+              {{element.rights.toString()}}
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <div class="table-no-data" *ngIf="accessDataSource.data.length === 0">
+        <span>No access available</span>
+      </div>
+    </section>
+  </div>
+</div>

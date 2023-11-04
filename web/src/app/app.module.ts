@@ -28,17 +28,22 @@ import { AlertDialogComponent } from './shared/alert-dialog/alert-dialog.compone
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { CustomHttpInterceptor } from './interceptors/custom-http.interceptors';
 import { OptionSheetComponent } from './shared/option-sheet/option-sheet.component';
+import { NoAccessComponent } from './pages/no-access/no-access.component';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { APP_DATE_FORMATS } from './constant/date';
+import { AppDateAdapter } from './model/app-date-adapter';
 
 @NgModule({
-  declarations: [ 
-    AppComponent, 
+  declarations: [
+    AppComponent,
     AdminComponent,
     MemberComponent,
     ProfileComponent,
     AuthComponent,
     AlertDialogComponent,
     PageNotFoundComponent,
-    OptionSheetComponent
+    OptionSheetComponent,
+    NoAccessComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,7 +69,9 @@ import { OptionSheetComponent } from './shared/option-sheet/option-sheet.compone
       provide: HTTP_INTERCEPTORS,
       useClass: CustomHttpInterceptor,
       multi: true
-    }
+    },
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
   ],
   bootstrap: [AppComponent]
 })

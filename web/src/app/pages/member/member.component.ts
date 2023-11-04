@@ -25,13 +25,13 @@ import {
 } from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { OptionSheetComponent } from 'src/app/shared/option-sheet/option-sheet.component';
 
-const titlePrefix = 'SIATON MARKET STALL RENTALS';
 @Component({
   selector: 'app-member',
   templateUrl: './member.component.html',
@@ -48,16 +48,16 @@ export class MemberComponent implements OnInit {
     private dialog: MatDialog,
     private spinner: SpinnerVisibilityService,
     private router: Router,
-    private bottomSheet: MatBottomSheet
+    private bottomSheet: MatBottomSheet,
+    private appconfig: AppConfigService,
   ) {
     this.onResize();
     this.onScroll();
-    this.setupTitleListener();
   }
   ngOnInit(): void {}
   onActivate(event) {
     const title = this.titleService.getTitle();
-    this.title = title ? title.replace(titlePrefix, "").trim() : title;
+    this.title = title ? title.replace(this.appconfig.config.appName, "").trim() : title;
     this.onResize();
     this.onScroll();
     window.scroll({
@@ -65,43 +65,6 @@ export class MemberComponent implements OnInit {
       left: 0,
       behavior: 'smooth',
     });
-  }
-  private setupTitleListener() {
-    this.router.events
-      .pipe(filter((e) => e instanceof ResolveEnd))
-      .subscribe((e: any) => {
-        const { data } = this.getDeepestChildSnapshot(e.state.root);
-        if (data?.['title']) {
-          this.title = data['title'];
-          this.titleService.setTitle(`${this.title} ${titlePrefix}`);
-        }
-        this.navigationInterceptor(e);
-      });
-  }
-
-  getDeepestChildSnapshot(snapshot: ActivatedRouteSnapshot) {
-    let deepestChild = snapshot.firstChild;
-    while (deepestChild?.firstChild) {
-      deepestChild = deepestChild.firstChild;
-    }
-    return deepestChild || snapshot;
-  }
-  // Shows and hides the loading spinner during RouterEvent changes
-  navigationInterceptor(event: RouterEvent): void {
-    if (event instanceof NavigationStart) {
-      this.spinner.show();
-    }
-    if (event instanceof NavigationEnd) {
-      this.spinner.hide();
-    }
-
-    // Set loading state to false in both of the below events to hide the spinner in case a request fails
-    if (event instanceof NavigationCancel) {
-      this.spinner.hide();
-    }
-    if (event instanceof NavigationError) {
-      this.spinner.hide();
-    }
   }
   
   openUserAccountMenuSheet() {
@@ -116,32 +79,6 @@ export class MemberComponent implements OnInit {
   }
 
   public logOut() {
-    // const dialogData = new AlertDialogModel();
-    // dialogData.title = 'Confirm';
-    // dialogData.message = 'Are you sure you want to logout?';
-    // dialogData.confirmButton = {
-    //   visible: true,
-    //   text: 'yes',
-    //   color: 'primary',
-    // };
-    // dialogData.dismissButton = {
-    //   visible: true,
-    //   text: 'cancel',
-    // };
-    // const dialogRef = this.dialog.open(AlertDialogComponent, {
-    //   maxWidth: '400px',
-    //   closeOnNavigation: true,
-    // });
-
-    // dialogRef.componentInstance.alertDialogConfig = dialogData;
-    // dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
-    //   // subscribe
-    //   const profile = this.storageService.getLoginProfile();
-    //   this.storageService.saveLoginProfile(null);
-    //   this.authService.redirectToPage(profile, true);
-    //   dialogRef.close();
-    // });
-
     
     const sheet = this.bottomSheet.open(OptionSheetComponent, {
       closeOnNavigation: true, 

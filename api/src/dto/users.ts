@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
     validate,
     validateOrReject,
@@ -19,11 +19,16 @@ import {
     IsBooleanString,
     IsUppercase,
     Validate,
-    Matches
+    Matches,
+    IsArray,
+    ArrayMaxSize,
+    ArrayMinSize,
+    ValidateNested
   } from 'class-validator';
+import { Match } from './match.decorator';
   
 
-  export class DefaultAdminUser {
+  export class DefaultAdminUserDto {
     @IsNotEmpty()
     firstName: string;
 
@@ -32,14 +37,21 @@ import {
   
     @IsNotEmpty()
     @IsNumberString()
+    @Transform(({obj, key}) => {
+      return obj[key].toString();
+    })
     mobileNumber: string;
 
     @IsNotEmpty()
     @ArrayNotEmpty()
-    access: string[];
+      
+    @IsArray()
+    @Type(() => CreateAdminUserAccessDto)
+    @ValidateNested()
+    access: CreateAdminUserAccessDto[];
   }
 
-export class CreateAdminUser extends DefaultAdminUser {
+export class CreateAdminUserDto extends DefaultAdminUserDto {
     @IsNotEmpty()
     userName: string;
 
@@ -50,12 +62,24 @@ export class CreateAdminUser extends DefaultAdminUser {
     userProfilePic: any;
 }
 
-export class UpdateAdminUser extends DefaultAdminUser {
+export class UpdateAdminUserDto extends DefaultAdminUserDto {
     @IsNotEmpty()
-    id: string;
+    userId: string;
 }
 
-export class DefaultMember {
+export class UpdateAdminUserResetPasswordDto {
+  @IsNotEmpty()
+  userId: string;
+
+  @IsNotEmpty()
+  password: string;
+
+  @Match("password")
+  @IsNotEmpty()
+  confirmPassword: string;
+}
+
+export class DefaultMemberDto {
   @IsNotEmpty()
   firstName: string;
   
@@ -70,6 +94,9 @@ export class DefaultMember {
   email: string;
 
   @IsNotEmpty()
+  @Transform(({obj, key}) => {
+    return obj[key].toString();
+  })
   @IsNumberString()
   mobileNumber: string;
 
@@ -128,7 +155,7 @@ export class DefaultMember {
   userProfilePic: any;
 }
 
-export class CreateMemberUser extends DefaultMember {
+export class CreateMemberUserDto extends DefaultMemberDto {
   @IsNotEmpty()
   userName: string;
 
@@ -136,7 +163,26 @@ export class CreateMemberUser extends DefaultMember {
   password: string;
 }
 
-export class UpdateMemberUser extends DefaultMember {
+export class UpdateMemberUserDto extends DefaultMemberDto {
     @IsNotEmpty()
-    id: string;
+    userId: string;
+}
+
+export class CreateAdminUserAccessDto  {
+  @IsNotEmpty()
+  page: string;
+  
+  @IsNotEmpty()
+  @Transform(({obj, key}) => {
+    return obj[key].toString();
+  })
+  @IsBooleanString()
+  view: boolean = false;
+  
+  @IsNotEmpty()
+  @Transform(({obj, key}) => {
+    return obj[key].toString();
+  })
+  @IsBooleanString()
+  modify: boolean = false;
 }

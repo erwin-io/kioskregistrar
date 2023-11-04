@@ -1,0 +1,46 @@
+
+  ::ng-deep .access {
+    overflow: auto;
+    padding-bottom: 16px;
+    .table-admin-access {
+        min-width: 860px!important;
+        tr.mat-header-row {
+          .mat-header-cell {
+            padding-right: 20px !important;
+            &:last-child {
+              padding-right: 0 !important;
+            }
+          }
+        }
+        tr.mat-row {
+          .mat-cell {
+            padding-right: 20px !important;
+            &:last-child {
+              padding-right: 0 !important;
+            }
+          }
+        }
+
+        .mat-column-page {
+          flex: 0 0 25% !important;
+          width: 25% !important;
+        }
+
+        .mat-column-view {
+          flex: 0 0 25% !important;
+          width: 25% !important;
+        }
+
+        .mat-column-modify {
+          flex: 0 0 25% !important;
+          width: 25% !important;
+        }
+
+        .mat-column-rights {
+          flex: 0 25% !important;
+          width: 25% !important;
+        }
+
+      }
+
+  }

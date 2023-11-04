@@ -1,0 +1,76 @@
+
+<div class="inner-content">
+  <form
+  [formGroup]="requestTypeForm"
+  fxLayout="row wrap"
+  id="requestTypeForm"
+  [ngClass]="{'readonly' : isReadOnly}">
+  <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+    <mat-form-field
+      fxFlex="100"
+      fxLayout="column"
+      appearance="outline"
+    >
+      <mat-label>Request type name</mat-label>
+      <input
+        matInput
+        placeholder="Request type name"
+        formControlName="name"
+      />
+      <mat-error
+        *ngIf="getError('name') !== (null || undefined)"
+        >{{
+          (getError("name") &&
+          getError("name")["required"]
+            ? "Please enter request type name"
+            : "") ||
+            (getError("name") &&
+            getError("name")["pattern"]
+              ? "Invalid input"
+              : "")
+        }}</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field
+    fxFlex="100"
+    fxLayout="column"
+      appearance="outline"
+    >
+      <mat-label>Request fee</mat-label>
+      <input
+        matInput
+        type="number"
+        placeholder="Request fee"
+        formControlName="fee"
+      />
+      <mat-error
+        *ngIf="getError('fee') !== (null || undefined)"
+        >{{
+          (getError("fee") &&
+          getError("fee").required
+            ? "Please enter your request fee"
+            : "") ||
+            (getError("fee") &&
+            getError("fee").minlength
+              ? "Please enter a valid request fee amount"
+              : "") ||
+            (getError("fee") &&
+            getError("fee").maxlength
+              ? "Please enter a valid request fee amount"
+              : "")
+        }}</mat-error
+      >
+    </mat-form-field>
+    <div
+    fxFlex="100"
+    fxLayout="column">
+      <mat-checkbox formControlName="authorizeACopy">Authorize a copy</mat-checkbox>
+    </div>
+    <div
+    fxFlex="100"
+    fxLayout="column">
+    <mat-checkbox formControlName="isPaymentRequired">Payment required</mat-checkbox>
+    </div>
+  </fieldset>
+  </form>
+</div>
