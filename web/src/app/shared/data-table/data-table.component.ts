@@ -23,10 +23,30 @@ export class DataTableComponent {
   @Output() pageChange = new EventEmitter();
   @Output() sortChange = new EventEmitter();
   @Output() filterChange = new EventEmitter();
+  @Output() headerControlChange = new EventEmitter();
+  @Output() rowControlChange = new EventEmitter();
 
   dateFromDefault = new Date();
   dateToDefault = new Date();
   constructor() {
+  }
+
+  booleanHeaderControlValue(name: string, checkBoxType: "all" | "indeterminate") {
+    if(checkBoxType === "all") {
+      const all = this.dataSource.data.filter(x=>x[name] === true);
+      if(all) {
+        return all.length === this.dataSource.data.length;
+      } else {
+        return false;
+      }
+    } else  {
+      const all = this.dataSource.data.filter(x=>x[name] === true);
+      if(all) {
+        return all.length !== this.dataSource.data.length ? this.dataSource.data.some(x=>x[name] === true) : false;
+      } else {
+        return false;
+      }
+    }
   }
   ngAfterViewInit() {
     this.displayedColumns = this.columnDefs.map((def) => def.name);
@@ -62,4 +82,18 @@ export class DataTableComponent {
     return `${from},${to}`;
   }
 
+  booleanHeaderControlChange(name: string, value: boolean) {
+    this.dataSource.data.forEach(x=> {
+      if(x[name] !== undefined || x[name] !== null) {
+        x[name] = value;
+      }
+    });
+    if(name && name !== "") {
+      this.headerControlChange.emit(this.dataSource.data);
+    }
+  }
+
+  booleanRowControlChange() {
+    this.rowControlChange.emit(this.dataSource.data);
+  }
 }

@@ -33,7 +33,8 @@ export class UserService implements IServices {
     order: any,
     columnDef: { apiNotation: string; filter: string }[],
     pageSize: number,
-    pageIndex: number
+    pageIndex: number,
+    verified: boolean
   }): Observable<ApiResponse<{ results: Member[], total: number}>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getMemberByAdvanceSearch,
       params)
@@ -93,6 +94,14 @@ export class UserService implements IServices {
 
   udpdateAdminPassword(data: any): Observable<ApiResponse<Admin>> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateAdminPassword, data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  approveMember(data: any): Observable<ApiResponse<Admin>> {
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.approveMember, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))

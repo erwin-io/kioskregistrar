@@ -32,6 +32,7 @@ import { MyErrorStateMatcher } from 'src/app/shared/form-validation/error-state.
   },
 })
 export class AdminAccessDetailsComponent implements OnInit {
+  currentUserId:string;
   id;
   isNew = false;
   pageAccess: Access = {
@@ -68,7 +69,12 @@ export class AdminAccessDetailsComponent implements OnInit {
     const { isNew, edit } = this.route.snapshot.data;
     this.isNew = isNew;
     this.id = this.route.snapshot.paramMap.get('userId');
+    const profile = this.storageService.getLoginProfile();
+    this.currentUserId = profile.user.userId;
     this.isReadOnly = !edit && !isNew;
+    if(!isNew && edit && edit !== undefined && this.currentUserId === this.id) {
+      this.router.navigate(['/admin/admin-access/' + this.id]);
+    }
     if (this.route.snapshot.data) {
       this.pageAccess = {
         ...this.pageAccess,
@@ -169,14 +175,7 @@ export class AdminAccessDetailsComponent implements OnInit {
               Validators.required,
             ],
           ],
-          userName: [
-            '',
-            [
-              Validators.required,
-              Validators.minLength(3),
-              Validators.pattern('^[a-z0-9_]*$'),
-            ],
-          ],
+          userName: [null],
           password: [
             '',
             [
@@ -190,6 +189,9 @@ export class AdminAccessDetailsComponent implements OnInit {
         },
         { validators: this.checkPasswords }
       );
+      this.adminAccessForm.controls["mobileNumber"].valueChanges.subscribe(res=> {
+        this.adminAccessForm.controls["userName"].setValue(res)
+      })
     } else {
       this.adminAccessForm = this.formBuilder.group({
         firstName: ['', [Validators.required]],
@@ -203,14 +205,7 @@ export class AdminAccessDetailsComponent implements OnInit {
             Validators.pattern('^[0-9]*$'),
           ],
         ],
-        userName: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.pattern('^[a-z0-9_]*$'),
-          ],
-        ],
+        userName: [],
         access: [[] as Access[]],
       });
       const res = await this.userService.getAdminById(this.id).toPromise();
@@ -274,6 +269,10 @@ export class AdminAccessDetailsComponent implements OnInit {
 
   onSubmit() {
     if (this.adminAccessForm.invalid) {
+      console.log(this.adminAccessForm.errors)
+      // this.snackBar.open(this.adminAccessForm.errors[0], 'close', {
+      //   panelClass: ['style-error'],
+      // });
       return;
     }
 

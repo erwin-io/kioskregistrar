@@ -13,8 +13,19 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    redirectTo: '/admin/members/view/verified'
+  },
+  {
+    path: 'view/verified',
+    pathMatch: 'full',
     component: MemberUsersComponent,
-    data: { title: "Members"}
+    data: { title: "Members", verified: true }
+  },
+  {
+    path: 'view/un-verified',
+    pathMatch: 'full',
+    component: MemberUsersComponent,
+    data: { title: "Members", verified: false }
   },
   {
     path: ':userId',

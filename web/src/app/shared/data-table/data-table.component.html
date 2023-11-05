@@ -5,11 +5,11 @@
         <ng-container [sticky]="colDef.sticky" [matColumnDef]="colDef.name">
             <th mat-header-cell *matHeaderCellDef [ngStyle]="colDef.style">
                 <!-- sort header text -->
-                <span mat-sort-header>{{colDef.label}}</span>
+                <span mat-sort-header *ngIf="!colDef.controls">{{colDef.label}}</span>
                 <!-- end header text -->
                 <!-- filter -->
                 <!-- display filter when colDef.label & colDef.filterOptions is not null or empty -->
-                <ng-container *ngIf="colDef.label && colDef.label !== '' && colDef.filterOptions; else noFilter">
+                <ng-container *ngIf="colDef.label && colDef.label !== '' && colDef.filterOptions && !colDef.controls; else noFilter">
                     <ng-container *ngIf="colDef.filterOptions.type ==='date-range';else yesNoFilter">
                         <mat-form-field appearance="outline">
                             <mat-label>Enter a date range</mat-label>
@@ -44,12 +44,21 @@
                 <!-- no filter -->
                 <!-- when filterOptions is empty or label is blank -->
                 <ng-template #noFilter>
-                  <div style="height: 76px!important;"></div>
+                  <div style="height: 76px!important;" [ngStyle]="colDef.style">
+                    <mat-checkbox
+                    (change)="booleanHeaderControlChange(colDef.name, checkAll.checked)"
+                    [indeterminate]="booleanHeaderControlValue(colDef.name, 'indeterminate')"
+                    [checked]="booleanHeaderControlValue(colDef.name, 'all')"
+                    *ngIf="colDef.controls && colDef.type === 'boolean'"
+                    [ngStyle]="colDef.style"
+                    #checkAll>{{colDef.label}}</mat-checkbox>
+                  </div>
                 </ng-template>
                 <!-- end no filter-->
                 <!-- end filter -->
             </th>
             <td mat-cell *matCellDef="let element">
+              <ng-container *ngIf="!colDef.controls; else controlsRow">
                 <ng-container *ngIf="colDef.urlPropertyName && colDef.urlPropertyName!=='';else textCell">
                     <a [href]="element[colDef.urlPropertyName]">{{element[colDef.name]}}</a>
                 </ng-container>
@@ -58,6 +67,13 @@
                     <span *ngIf="colDef.type === 'string'">{{element[colDef.name]}}</span>
                     <span *ngIf="colDef.type === 'date'">{{element[colDef.name] | date: 'MMM dd, yyyy'}}</span>
                 </ng-template>
+              </ng-container>
+              <ng-template #controlsRow>
+                <mat-checkbox
+                  #controlsRowValue
+                  (change)="booleanRowControlChange()"
+                  [(ngModel)]="element[colDef.name]"></mat-checkbox>
+              </ng-template>
             </td>
         </ng-container>
         </ng-container>

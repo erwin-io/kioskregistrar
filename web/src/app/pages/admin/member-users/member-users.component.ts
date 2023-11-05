@@ -15,6 +15,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
+import { DataTableComponent } from 'src/app/shared/data-table/data-table.component';
 import { convertNotationToObject } from 'src/app/shared/utility/utility';
 
 @Component({
@@ -26,6 +27,7 @@ import { convertNotationToObject } from 'src/app/shared/utility/utility';
   }
 })
 export class MemberUsersComponent {
+  verifiedTab = true;
   currentUserId:string;
   error:string;
   dataSource = new MatTableDataSource<MemberTableColumn>();
@@ -35,7 +37,7 @@ export class MemberUsersComponent {
   pageSize = 10;
   total = 0;
   order: any = { user: { userId: "DESC" } };
-  filter: { 
+  filter: {
     apiNotation: string;
     filter: string;
     name: string;
@@ -46,6 +48,7 @@ export class MemberUsersComponent {
     view: true,
     modify: false,
   };
+  @ViewChild('dataTable', { static: true}) dataTable: DataTableComponent;
   constructor(
     private userService: UserService,
     private snackBar: MatSnackBar,
@@ -55,6 +58,7 @@ export class MemberUsersComponent {
     private route: ActivatedRoute,
     public router: Router) {
       this.dataSource = new MatTableDataSource([]);
+      this.verifiedTab = this.route.snapshot.data["verified"]
       if(this.route.snapshot.data) {
         this.pageAccess = {
           ...this.pageAccess,
@@ -62,6 +66,10 @@ export class MemberUsersComponent {
         };
       }
     }
+
+  get selectedUser() {
+    return !this.verifiedTab ? this.dataTable.dataSource.data.filter(x=>x.selected) : [];
+  }
 
   ngOnInit(): void {
     const profile = this.storageService.getLoginProfile();
@@ -72,7 +80,7 @@ export class MemberUsersComponent {
     this.getUsers();
   }
 
-  filterChange(event: { 
+  filterChange(event: {
     apiNotation: string;
     filter: string;
     name: string;
@@ -90,9 +98,17 @@ export class MemberUsersComponent {
 
   async sortChange(event: { active: string, direction: string }) {
     const { active, direction } = event;
-    const { apiNotation } = this.appConfig.config.tableColumns.members.find(x=>x.name === active);
+    const { apiNotation } = this.appConfig.config.tableColumns.membersVerified.find(x=>x.name === active);
     this.order = convertNotationToObject(apiNotation, direction.toUpperCase());
     this.getUsers()
+  }
+
+  async headerChange(event) {
+    console.log(event);
+  }
+
+  async rowControlChange(event) {
+    console.log(event);
   }
 
   async getUsers(){
@@ -101,12 +117,15 @@ export class MemberUsersComponent {
       await this.userService.getMemberByAdvanceSearch({
         order: this.order,
         columnDef: this.filter,
-        pageIndex: this.pageIndex, pageSize: this.pageSize
+        pageIndex: this.pageIndex, pageSize: this.pageSize,
+        verified: this.verifiedTab
       })
       .subscribe(async res => {
         if(res.success){
           let data = res.data.results.map((d)=>{
             return {
+              memberId: d.memberId,
+              userId: d.user.userId,
               fullName: `${d.firstName} ${d.lastName}`,
               courseTaken: d.courseTaken,
               email: d.email,
@@ -137,5 +156,62 @@ export class MemberUsersComponent {
       this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
     }
 
+  }
+
+  onApproveSelected() {
+    const dialogData = new AlertDialogModel();
+    dialogData.title = 'Confirm';
+    dialogData.message = 'Approve selected member?';
+    dialogData.confirmButton = {
+      visible: true,
+      text: 'yes',
+      color: 'primary',
+    };
+    dialogData.dismissButton = {
+      visible: true,
+      text: 'cancel',
+    };
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      maxWidth: '400px',
+      closeOnNavigation: true,
+    });
+    dialogRef.componentInstance.alertDialogConfig = dialogData;
+
+    dialogRef.componentInstance.conFirm.subscribe(async (data: any) => {
+      this.isProcessing = true;
+      dialogRef.componentInstance.isProcessing = this.isProcessing;
+      try {
+        const memberIds = this.selectedUser.map(x=>x.memberId);
+        let res = await this.userService.approveMember({ memberIds }).toPromise();
+        if (res.success) {
+          this.snackBar.open('Saved!', 'close', {
+            panelClass: ['style-success'],
+          });
+          this.router.navigate(['/admin/members/view/un-verified/'], { replaceUrl: true});
+          this.getUsers();
+          this.isProcessing = false;
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+          dialogRef.close();
+        } else {
+          this.isProcessing = false;
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+          this.error = Array.isArray(res.message)
+            ? res.message[0]
+            : res.message;
+          this.snackBar.open(this.error, 'close', {
+            panelClass: ['style-error'],
+          });
+          dialogRef.close();
+        }
+      } catch (e) {
+        this.isProcessing = false;
+        dialogRef.componentInstance.isProcessing = this.isProcessing;
+        this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+        this.snackBar.open(this.error, 'close', {
+          panelClass: ['style-error'],
+        });
+        dialogRef.close();
+      }
+    });
   }
 }

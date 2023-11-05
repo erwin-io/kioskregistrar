@@ -14,7 +14,8 @@ export interface AppConfig {
     };
     tableColumns: {
       admin: ColumnDefinition[];
-      members: ColumnDefinition[];
+      membersVerified: ColumnDefinition[];
+      membersUnVerified: ColumnDefinition[];
       requestType: ColumnDefinition[];
     };
     sessionConfig: {
@@ -46,6 +47,7 @@ export interface AppConfig {
         updateAdminPassword: string;
         changePassword: string;
         toggleGrantAccess: string;
+        approveMember: string;
       };
       requestType: {
         getByAdvanceSearch: string;

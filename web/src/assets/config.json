@@ -105,7 +105,101 @@
         }
       }
     ],
-    "members": [
+    "membersVerified": [
+      {
+        "name": "fullName",
+        "label": "Full name",
+        "apiNotation": "fullName",
+        "sticky": true,
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Full name"
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "courseTaken",
+        "label": "Course taken",
+        "apiNotation": "courseTaken",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Course taken"
+        }
+      },
+      {
+        "name": "email",
+        "label": "Email",
+        "apiNotation": "email",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Email"
+        }
+      },
+      {
+        "name": "mobileNumber",
+        "label": "Mobile number",
+        "apiNotation": "mobileNumber",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Mobile number"
+        }
+      },
+      {
+        "name": "birthDate",
+        "label": "Birth date",
+        "apiNotation": "birthDate",
+        "type": "date",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "YYYY-MM-DD",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "address",
+        "label": "Address",
+        "apiNotation": "address",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Address"
+        }
+      },
+      {
+        "name": "isAlumni",
+        "label": "Alumni",
+        "apiNotation": "isAlumni",
+        "type": "boolean",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "eg. Yes, No",
+          "type": "option-yes-no"
+        }
+      }
+    ],
+    "membersUnVerified": [
+      {
+        "name": "selected",
+        "type": "boolean",
+        "label": "Select All",
+        "controls": true,
+        "sticky": true,
+        "filterOptions": {
+          "enable": false
+        },
+        "style": {
+          "width": "120px",
+          "left": "0px"
+        }
+      },
       {
         "name": "fullName",
         "label": "Full name",
@@ -255,7 +349,8 @@
       "createAdmin": "/users/admin/",
       "updateAdmin": "/users/admin/",
       "getAdminByAdvanceSearch": "/users/admin/page",
-      "getMemberByAdvanceSearch": "/users/member/page/"
+      "getMemberByAdvanceSearch": "/users/member/page/",
+      "approveMember": "/users/member/approve"
     },
     "requestType": {
       "getByAdvanceSearch": "/requestType/page/",

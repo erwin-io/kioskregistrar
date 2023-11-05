@@ -18,7 +18,7 @@
       mat-raised-button
       color="primary"
       matTooltip="Save"
-      *ngIf="pageAccess.modify && isReadOnly"
+      *ngIf="currentUserId === id ? false : (pageAccess.modify && isReadOnly)"
       routerLink="/admin/admin-access/{{id}}/edit"
       replaceUrl="true"
     >
@@ -150,7 +150,7 @@
                   fxFlex="50%"
                   class="cell"
                   [ngClass.gt-sm]="{ isLargeScreen: true }"
-                  *ngIf="isReadOnly"
+                  *ngIf="!isNew && isReadOnly"
                   class="readonly"
                 >
                   <mat-label>Username</mat-label>
@@ -159,7 +159,7 @@
                     placeholder="Username"
                     (input)="adminAccessForm.controls['userName'].setValue(formData.userName.toLowerCase())"
                     formControlName="userName"
-                    role="presentation" autocomplete="off" 
+                    role="presentation" autocomplete="off"
                   />
                   <mat-error
                     *ngIf="getError('userName') !== (null || undefined)"
@@ -203,7 +203,7 @@
                     type="password"
                     placeholder="Password"
                     formControlName="password"
-                    role="presentation" autocomplete="off" 
+                    role="presentation" autocomplete="off"
                   />
                   <mat-icon
                     class="icon-right"
@@ -248,7 +248,7 @@
                     placeholder="Confirm password"
                     formControlName="confirmPassword"
                     [errorStateMatcher]="matcher"
-                    role="presentation" autocomplete="off" 
+                    role="presentation" autocomplete="off"
                   />
                   <mat-icon
                     class="icon-right"
@@ -348,10 +348,10 @@
         <ng-container matColumnDef="rights">
           <th mat-header-cell *matHeaderCellDef >Rights</th>
           <td mat-cell *matCellDef="let element">
-            <mat-select 
-              *ngIf="!isReadOnly && rightsOptions(element.page).length > 0 && element.view;else rightsReadOnly" 
-              multiple #rights [ngModel]="element.rights" 
-              (selectionChange)="element.rights = rights.value;accessGridChange()" 
+            <mat-select
+              *ngIf="!isReadOnly && rightsOptions(element.page).length > 0 && element.view;else rightsReadOnly"
+              multiple #rights [ngModel]="element.rights"
+              (selectionChange)="element.rights = rights.value;accessGridChange()"
               placeholder="Select rights"
               [disabled]="!pageRights['Rights']">
               <mat-option [value]="rights" *ngFor="let rights of rightsOptions(element.page)">

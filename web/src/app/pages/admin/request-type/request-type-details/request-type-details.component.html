@@ -47,6 +47,6 @@
       </mat-card-content>
     </mat-card>
     <h4 class="inner-content-title">Requirements</h4>
-    <app-request-requirements [requestType]="{ requestTypeId: id }" [isReadOnly]="isReadOnly" #requestRequirements></app-request-requirements>
+    <app-request-requirements [requestType]="{ requestTypeId: id }" [isReadOnly]="!pageRights['Requirements'] || isReadOnly" #requestRequirements></app-request-requirements>
   </div>
 </div>

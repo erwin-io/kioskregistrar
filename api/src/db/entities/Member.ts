@@ -68,6 +68,9 @@ export class Member {
   @Column("character varying", { name: "FullName", default: () => "''" })
   fullName: string;
 
+  @Column("boolean", { name: "IsVerified", default: () => "false" })
+  isVerified: boolean;
+
   @ManyToOne(() => Files, (files) => files.members)
   @JoinColumn([{ name: "BirthCertFileId", referencedColumnName: "fileId" }])
   birthCertFile: Files;

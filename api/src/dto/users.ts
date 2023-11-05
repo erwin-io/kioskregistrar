@@ -186,3 +186,8 @@ export class CreateAdminUserAccessDto  {
   @IsBooleanString()
   modify: boolean = false;
 }
+
+export class MemberVerificationDto  {
+  @IsArray()
+  memberIds: string[] = [];
+}

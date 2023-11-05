@@ -30,6 +30,8 @@ export class AdminTableColumn {
 }
 
 export class MemberTableColumn {
+  memberId: string;
+  userId: string;
   fullName: string;
   courseTaken: string;
   email: string;

@@ -4,7 +4,7 @@ import { Users } from "../../src/db/entities/Users";
 import { Between, FindOptionsWhere, ILike, In, getManager, getRepository } from "typeorm";
 import { CONST_USERTYPE } from "../../src/utils/constant";
 import { columnDefToTypeORMCondition, compare, convertColumnNotationToObject, getFullName, hash } from "../../src/utils/utils";
-import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto } from "../../src/dto/users";
+import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto, MemberVerificationDto } from "../../src/dto/users";
 import { Admin } from "../../src/db/entities/Admin";
 import { validatorDto } from "../utils/validator";
 import { Member } from "../../src/db/entities/Member";
@@ -17,7 +17,7 @@ usersRouter.post(
   "/:type/page",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let { type, pageSize, pageIndex, order, columnDef } = { ...req.params, ...req.body } as any;
+      let { type, pageSize, pageIndex, order, columnDef, verified } = { ...req.params, ...req.body } as any;
       const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
       const take = Number(pageSize);
       if(!CONST_USERTYPE.some(x=>x === type.toUpperCase())) {
@@ -32,6 +32,12 @@ usersRouter.post(
       } else {
         condition.user.userType = type.toUpperCase();
         condition.user.active = true;
+      }
+      if(verified === undefined || verified === null)  {
+        verified = false;
+      }
+      if(type.toUpperCase() === "MEMBER") {
+        condition.isVerified = verified
       }
       let [results, total] = await Promise.all([
         getRepository(type.toUpperCase() === "ADMIN" ? Admin : Member).find({
@@ -337,6 +343,57 @@ usersRouter.delete(
       } else {
         return res.status(400).json({
           message: "Bad request!",
+        });
+      }
+    } catch (ex) {
+      return res.status(500).json({
+        message: ex.message,
+      });
+    }
+  }
+);
+
+
+usersRouter.post(
+  "/member/approve/",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as MemberVerificationDto;
+      await validatorDto(MemberVerificationDto, body);
+      let success = [];
+      let failed = [];
+      if(body.memberIds && body.memberIds.length > 0) {
+        await getManager().transaction(
+          async (transactionalEntityManager) => {
+            for(var memberId of body.memberIds) {
+              let member = await getRepository(Member).findOne({
+                where: {
+                  memberId,
+                  user: {
+                    active: true
+                  }
+                },
+              });
+      
+              if (member) {
+                member.isVerified = true;
+                await transactionalEntityManager.save(member)
+                success.push(memberId);
+              } else { 
+                failed.push(memberId);
+              }
+            }
+          }
+        );
+        return res.status(200).json({
+          message: "Member verification successfully completed",
+          data: {success, failed},
+          success: true,
+        });
+      } else {
+        return res.status(200).json({
+          message: "Bad request!",
+          success: false,
         });
       }
     } catch (ex) {
