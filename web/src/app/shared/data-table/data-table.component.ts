@@ -1,15 +1,19 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
+import { APP_DATE_FORMATS } from 'src/app/constant/date';
 import { ColumnDefinition } from 'src/app/model/table';
 
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
-
+  providers: [
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class DataTableComponent {
   @Input() isLoading: any;

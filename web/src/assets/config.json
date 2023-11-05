@@ -350,7 +350,8 @@
       "updateAdmin": "/users/admin/",
       "getAdminByAdvanceSearch": "/users/admin/page",
       "getMemberByAdvanceSearch": "/users/member/page/",
-      "approveMember": "/users/member/approve"
+      "approveMember": "/users/member/approve",
+      "updateMember": "/users/member/"
     },
     "requestType": {
       "getByAdvanceSearch": "/requestType/page/",

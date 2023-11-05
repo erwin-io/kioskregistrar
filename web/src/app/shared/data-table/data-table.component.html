@@ -13,7 +13,7 @@
                     <ng-container *ngIf="colDef.filterOptions.type ==='date-range';else yesNoFilter">
                         <mat-form-field appearance="outline">
                             <mat-label>Enter a date range</mat-label>
-                            <mat-date-range-input [rangePicker]="pickerRange" >
+                            <mat-date-range-input [rangePicker]="pickerRange">
                                 <input matStartDate placeholder="Start date" [value]="dateFromDefault" #dateFrom (dateChange)="colDef.filter = formatDateRange(dateFrom.value, dateTo.value); filterTable()">
                                 <input matEndDate placeholder="End date" [value]="dateToDefault" #dateTo (dateChange)="colDef.filter = formatDateRange(dateFrom.value, dateTo.value); filterTable()">
                             </mat-date-range-input>

@@ -71,7 +71,6 @@ import { AppDateAdapter } from './model/app-date-adapter';
       multi: true
     },
     {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
   ],
   bootstrap: [AppComponent]
 })

@@ -52,7 +52,7 @@ export class UserService implements IServices {
     );
   }
 
-  getMemberById(userId: string): Observable<ApiResponse<Admin>> {
+  getMemberById(userId: string): Observable<ApiResponse<Member>> {
     return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getMemberById + userId)
     .pipe(
       tap(_ => this.log('user')),
@@ -70,6 +70,14 @@ export class UserService implements IServices {
 
   updateAdmin(id: string, data: any): Observable<ApiResponse<Admin>> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateAdmin + id, data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  updateMember(id: string, data: any): Observable<ApiResponse<Member>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateMember + id, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))

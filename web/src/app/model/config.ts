@@ -48,6 +48,7 @@ export interface AppConfig {
         changePassword: string;
         toggleGrantAccess: string;
         approveMember: string;
+        updateMember: string;
       };
       requestType: {
         getByAdvanceSearch: string;

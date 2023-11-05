@@ -12,6 +12,7 @@ import { UserService } from 'src/app/services/user.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { MyErrorStateMatcher } from 'src/app/shared/form-validation/error-state.matcher';
+import { generateSchoolYear } from 'src/app/shared/utility/utility';
 
 @Component({
   selector: 'app-member-details',
@@ -61,6 +62,24 @@ export class MemberDetailsComponent {
         ...this.route.snapshot.data['access'],
       };
     }
+    this.memberForm = this.formBuilder.group({
+      firstName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
+      lastName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
+      mobileNumber: ['', [ Validators.minLength(11), Validators.maxLength(11), Validators.pattern('^[0-9]*$'), Validators.required]],
+      email: ['', [ Validators.email, Validators.required]],
+      userName: [''],
+      birthDate: [null, [ Validators.required]],
+      gender: ['', [ Validators.required]],
+      address: ['', [ Validators.required]],
+      courseTaken: ['', [ Validators.required]],
+      major: [''],
+      isAlumni: [false, [ Validators.required]],
+      schoolYearLastAttended: ['', [ Validators.required]],
+      primarySchoolName: ['', [ Validators.required]],
+      primarySyGraduated: ['', [ Validators.required]],
+      secondarySchoolName: ['', [ Validators.required]],
+      secondarySyGraduated: ['', [ Validators.required]],
+    });
   }
 
   get pageRights() {
@@ -81,90 +100,47 @@ export class MemberDetailsComponent {
     return this.memberForm.value;
   }
 
+  get yearList() {
+    return generateSchoolYear(1950, false);
+  }
+
+  get pairedYearList() {
+    return generateSchoolYear(1950, true);
+  }
+
   ngOnInit(): void {
     this.initForm();
   }
 
   async initForm() {
-    if (this.isNew) {
-      this.memberForm = this.formBuilder.group(
-        {
-          firstName: [
-            '',
-            [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
-          ],
-          lastName: [
-            '',
-            [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
-          ],
-          mobileNumber: [
-            '',
-            [
-              Validators.minLength(11),
-              Validators.maxLength(11),
-              Validators.pattern('^[0-9]*$'),
-              Validators.required,
-            ],
-          ],
-          userName: [
-            '',
-            [
-              Validators.required,
-              Validators.minLength(3),
-              Validators.pattern('^[a-z0-9_]*$'),
-            ],
-          ],
-          password: [
-            '',
-            [
-              Validators.minLength(6),
-              Validators.maxLength(16),
-              Validators.required,
-            ],
-          ],
-          confirmPassword: '',
-        },
-        { validators: this.checkPasswords }
-      );
-    } else {
-      this.memberForm = this.formBuilder.group({
-        firstName: ['', [Validators.required]],
-        lastName: ['', [Validators.required]],
-        mobileNumber: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(11),
-            Validators.maxLength(11),
-            Validators.pattern('^[0-9]*$'),
-          ],
-        ],
-        userName: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.pattern('^[a-z0-9_]*$'),
-          ],
-        ],
-      });
-      const res = await this.userService.getMemberById(this.id).toPromise();
-      if (res.success) {
-        this.f['firstName'].setValue(res.data.firstName);
-        this.f['lastName'].setValue(res.data.lastName);
-        this.f['mobileNumber'].setValue(res.data.mobileNumber);
-        this.f['userName'].setValue(res.data.user.userName);
+    const res = await this.userService.getMemberById(this.id).toPromise();
+    if (res.success) {
+      this.f['firstName'].setValue(res.data.firstName);
+      this.f['lastName'].setValue(res.data.lastName);
+      this.f['mobileNumber'].setValue(res.data.mobileNumber);
+      this.f['email'].setValue(res.data.email);
+      this.f['userName'].setValue(res.data.user.userName);
+      this.f['birthDate'].setValue(res.data.birthDate);
+      this.f['gender'].setValue(res.data.gender);
+      this.f['address'].setValue(res.data.address);
+      this.f['courseTaken'].setValue(res.data.courseTaken);
+      this.f['major'].setValue(res.data.major);
+      this.f['isAlumni'].setValue(res.data.isAlumni);
+      this.f['schoolYearLastAttended'].setValue(res.data.schoolYearLastAttended);
+      this.f['primarySchoolName'].setValue(res.data.primarySchoolName);
+      this.f['primarySyGraduated'].setValue(res.data.primarySyGraduated);
+      this.f['secondarySchoolName'].setValue(res.data.secondarySchoolName);
+      this.f['secondarySyGraduated'].setValue(res.data.secondarySyGraduated);
 
-        this.f['userName'].disable();
-        if (this.isReadOnly) {
-          this.memberForm.disable();
-        }
-      } else {
-        this.error = Array.isArray(res.message) ? res.message[0] : res.message;
-        this.snackBar.open(this.error, 'close', {
-          panelClass: ['style-error'],
-        });
+      this.f['userName'].disable();
+      if (this.isReadOnly) {
+        this.memberForm.disable();
       }
+    } else {
+      this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+      this.snackBar.open(this.error, 'close', {
+        panelClass: ['style-error'],
+      });
     }
   }
 
@@ -187,6 +163,7 @@ export class MemberDetailsComponent {
 
 
   onSubmit() {
+    console.log(this.memberForm.value);
     if (this.memberForm.invalid) {
       return;
     }
@@ -215,15 +192,9 @@ export class MemberDetailsComponent {
       try {
         this.isProcessing = true;
         const params = this.formData;
-        let res;
-        if (this.isNew) {
-          res = await this.userService.createAdmin(params).toPromise();
-        } else {
-          res = await this.userService.updateAdmin(this.id, params).toPromise();
-        }
-
+        let res = await this.userService.updateMember(this.id, params).toPromise();
         if (res.success) {
-          this.snackBar.open('Saved!', 'close', {
+          this.snackBar.open('Updated!', 'close', {
             panelClass: ['style-success'],
           });
           this.router.navigate(['/admin/members/' + res.data.user.userId]);
