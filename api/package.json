@@ -5,7 +5,13 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "nodemon src/server.ts",
-    "start_api": "nodemon src/server.ts"
+    "start_api": "nodemon src/server.ts",
+    "postbuild": "npm run copy-files",
+    "copy-files": "copyfiles -u 1 \"./src/**/*\" \"dist\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && npx tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist"
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
@@ -30,7 +36,11 @@
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
     "typeorm": "^0.3.17",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "copy-files": "^0.1.0",
+    "copyfiles": "^2.4.1",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.5"
   },
   "repository": {
     "type": "git",
