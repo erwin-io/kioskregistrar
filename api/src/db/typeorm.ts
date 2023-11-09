@@ -5,9 +5,9 @@ import { Users } from "../../src/db/entities/Users";
 import { Admin } from "../../src/db/entities/Admin";
 import { Member } from "../../src/db/entities/Member";
 import { Files } from "../../src/db/entities/Files";
-import { RequestType } from "./entities/RequestType";
-import { RequestRequirements } from "./entities/RequestRequirements";
-import { Request } from "./entities/Request";
+import { RequestType } from "../../src/db/entities/RequestType";
+import { RequestRequirements } from "../../src/db/entities/RequestRequirements";
+import { Request } from "../../src/db/entities/Request";
 
 export function createConfig(): ConnectionOptions {
    const ssl = process.env.SSL;
