@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { Access } from 'src/app/model/access';
 import { Admin } from 'src/app/model/admin';
+import { ApiResponse } from 'src/app/model/api-response.model';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -32,7 +33,7 @@ import { MyErrorStateMatcher } from 'src/app/shared/form-validation/error-state.
   },
 })
 export class AdminAccessDetailsComponent implements OnInit {
-  currentUserId:string;
+  currentAdminCode:string;
   id;
   isNew = false;
   pageAccess: Access = {
@@ -68,11 +69,11 @@ export class AdminAccessDetailsComponent implements OnInit {
   ) {
     const { isNew, edit } = this.route.snapshot.data;
     this.isNew = isNew;
-    this.id = this.route.snapshot.paramMap.get('userId');
+    this.id = this.route.snapshot.paramMap.get('adminCode');
     const profile = this.storageService.getLoginProfile();
-    this.currentUserId = profile.user.userId;
+    this.currentAdminCode = profile["adminCode"];
     this.isReadOnly = !edit && !isNew;
-    if(!isNew && edit && edit !== undefined && this.currentUserId === this.id) {
+    if(!isNew && edit && edit !== undefined && this.currentAdminCode === this.id) {
       this.router.navigate(['/admin/admin-access/' + this.id]);
     }
     if (this.route.snapshot.data) {
@@ -83,7 +84,6 @@ export class AdminAccessDetailsComponent implements OnInit {
     }
     this.accessDataSource = new MatTableDataSource([] as Access[]);
   }
-
 
   get pageRights() {
     let rights = {};
@@ -269,10 +269,6 @@ export class AdminAccessDetailsComponent implements OnInit {
 
   onSubmit() {
     if (this.adminAccessForm.invalid) {
-      console.log(this.adminAccessForm.errors)
-      // this.snackBar.open(this.adminAccessForm.errors[0], 'close', {
-      //   panelClass: ['style-error'],
-      // });
       return;
     }
 
@@ -300,7 +296,7 @@ export class AdminAccessDetailsComponent implements OnInit {
       try {
         this.isProcessing = true;
         const params = this.formData;
-        let res;
+        let res: ApiResponse<Admin>;
         if (this.isNew) {
           res = await this.userService.createAdmin(params).toPromise();
         } else {
@@ -311,7 +307,7 @@ export class AdminAccessDetailsComponent implements OnInit {
           this.snackBar.open('Saved!', 'close', {
             panelClass: ['style-success'],
           });
-          this.router.navigate(['/admin/admin-access/' + res.data.user.userId]);
+          this.router.navigate(['/admin/admin-access/' + res.data.adminCode]);
           this.isProcessing = false;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
           dialogRef.close();

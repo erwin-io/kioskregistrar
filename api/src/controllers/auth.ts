@@ -5,7 +5,7 @@ import { Users } from "../../src/db/entities/Users";
 import { In, IsNull, getManager, getRepository } from "typeorm";
 import { Admin } from "../../src/db/entities/Admin";
 import { CONST_USERTYPE } from "../../src/utils/constant";
-import { compare, getFullName, hash } from "../../src/utils/utils";
+import { compare, generateMemberCode, getFullName, hash } from "../../src/utils/utils";
 import { LogInUser } from "../../src/dto/auth";
 import { CreateMemberUserDto } from "../../src/dto/users";
 import { Member } from "../../src/db/entities/Member";
@@ -104,7 +104,9 @@ authRouter.post(
         async (transactionalEntityManager) => {
           user = await transactionalEntityManager.save(user);
           member.user = user;
-          return await transactionalEntityManager.save(member);
+          member = await transactionalEntityManager.save(member);
+          member.memberCode = generateMemberCode(member.memberId);
+          return await transactionalEntityManager.save(Member, member);
         }
       );
       delete member.user.password;
@@ -159,6 +161,8 @@ authRouter.post(
             user = await transactionalEntityManager.save(user);
             member.user = user;
             member = await transactionalEntityManager.save(member);
+            member.memberCode = generateMemberCode(member.memberId);
+            member = await transactionalEntityManager.save(Member, member);
             delete member.user.password;
             members.push(member);
           }

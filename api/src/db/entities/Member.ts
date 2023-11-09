@@ -71,6 +71,9 @@ export class Member {
   @Column("boolean", { name: "IsVerified", default: () => "false" })
   isVerified: boolean;
 
+  @Column("character varying", { name: "MemberCode", default: () => "''" })
+  memberCode: string;
+
   @ManyToOne(() => Files, (files) => files.members)
   @JoinColumn([{ name: "BirthCertFileId", referencedColumnName: "fileId" }])
   birthCertFile: Files;
@@ -79,6 +82,6 @@ export class Member {
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
   user: Users;
 
-  @OneToMany(() => Request, (request) => request.member)
+  @OneToMany(() => Request, (request) => request.requestedBy)
   requests: Request[];
 }

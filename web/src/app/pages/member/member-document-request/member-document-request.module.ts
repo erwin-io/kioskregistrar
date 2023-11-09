@@ -33,7 +33,7 @@ export const routes: Routes = [
     data: { admin: false, tab: 2 },
   },
   {
-    path: 'to-claim',
+    path: 'to-complete',
     component: MemberDocumentRequestComponent,
     canActivate: [MemberAuthGuard],
     data: { admin: false, tab: 3 },

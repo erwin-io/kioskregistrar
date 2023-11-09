@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -16,11 +16,10 @@ import { ColumnDefinition } from 'src/app/model/table';
   ]
 })
 export class DataTableComponent {
+  @Input() columnDefs: ColumnDefinition[] = [];
   @Input() isLoading: any;
   @Input() dataSource = new MatTableDataSource<any>();
-  @Input() columnDefs: ColumnDefinition[] = [];
   @Input() total = 0;
-  displayedColumns: string[];
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -33,6 +32,13 @@ export class DataTableComponent {
   dateFromDefault = new Date();
   dateToDefault = new Date();
   constructor() {
+  }
+
+  get displayedColumns() {
+    return this.columnDefs.map((def) => def.name);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
   }
 
   booleanHeaderControlValue(name: string, checkBoxType: "all" | "indeterminate") {
@@ -52,8 +58,8 @@ export class DataTableComponent {
       }
     }
   }
+
   ngAfterViewInit() {
-    this.displayedColumns = this.columnDefs.map((def) => def.name);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator.page.subscribe((event: PageEvent)=> {
@@ -70,7 +76,7 @@ export class DataTableComponent {
 
   filterTable() {
     const filter = this.columnDefs
-    .filter((x: any)=>x.filter && !x.controls && (!x.name|| x.name !== ""))
+    .filter((x: any)=>x.filter && !x.filterOptions.hide && !x.controls && (!x.name|| x.name !== ""))
     .map((x: any)=> { return {
       apiNotation: x.apiNotation,
       filter: x.filter,

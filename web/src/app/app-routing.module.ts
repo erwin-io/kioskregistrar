@@ -41,13 +41,13 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'document-request-management',
+        path: 'request-management',
         canActivate: [AdminAuthGuard],
         data: { admin: true, title: 'Request Management' },
         loadChildren: () =>
           import(
-            './pages/admin/document-request-management/document-request-management.module'
-          ).then((m) => m.DocumentRequestManagementModule),
+            './pages/admin/request-management/request-management.module'
+          ).then((m) => m.RequestManagementModule),
       },
       {
         path: 'request-type',

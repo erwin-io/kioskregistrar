@@ -1,0 +1,36 @@
+::ng-deep .mat-stepper-vertical {
+  margin-top: 20px!important;
+  .mat-step-header {
+    &[aria-labelledby="request-done"]  {
+      .mat-step-icon {
+        background-color: #1565c0!important;
+        color: #fff!important;
+      }
+    }
+    &[aria-labelledby="updated-request"]  {
+      .mat-step-icon {
+        background-color: #00C853!important;
+        color: #fff!important;
+        height: 35px!important;
+        width: 35px!important;
+      }
+      .mat-step-label {
+        font-weight: 600!important;
+      }
+    }
+    .mat-step-icon {
+      background-color: rgb(0 0 0 / 20%)!important;
+      color: #fff!important;
+    }
+  }
+  ::ng-deep .mat-vertical-content-container {
+    .mat-vertical-stepper-content {
+      height: auto!important;
+      visibility: visible!important;
+    }
+  }
+}
+
+::ng-deep mat-card {
+  margin: 8px!important;
+}

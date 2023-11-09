@@ -10,19 +10,16 @@ import { SpinnerVisibilityService } from 'ng-http-loader';
 @Injectable()
 export class CustomHttpInterceptor implements HttpInterceptor {
 
-     constructor(private spinner: SpinnerVisibilityService) { }
+     constructor() { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        this.spinner.show();
 
         return next.handle(req)
              .pipe(tap((event: HttpEvent<any>) => {
                     if (event instanceof HttpResponse) {
-                        this.spinner.hide();
                     }
                 }, (error) => {
-                    this.spinner.hide();
                 }));
     }
 }

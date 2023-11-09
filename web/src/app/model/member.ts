@@ -3,9 +3,11 @@ import { Users } from "./users";
 
 export class Member {
   memberId: string;
+  memberCode: string;
   firstName: string;
   middleName: string;
   lastName: string;
+  fullName: string;
   email: string;
   mobileNumber: string;
   birthDate: string;
@@ -19,6 +21,7 @@ export class Member {
   primarySyGraduated: string ;
   secondarySchoolName: string ;
   secondarySyGraduated: string;
+  isVerified: boolean;
   birthCertFile: Files;
   user: Users;
 }

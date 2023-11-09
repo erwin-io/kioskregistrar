@@ -1,0 +1,110 @@
+
+<mat-card>
+  <mat-card-header>
+    <button *ngIf="requestDetails?.dateCompleted && !requestDetails?.dateClosed" aria-label="Close request" matTooltip="Close request" mat-fab extended color="primary" (click)="onCloseRequest()">
+      <mat-icon>check</mat-icon>
+      Close request
+    </button>
+    <button *ngIf="requestDetails?.dateProcessEnd && !requestDetails?.dateCompleted" aria-label="Mark as Completed" matTooltip="Mark as Completed" mat-fab extended color="primary" (click)="onRequestCompleted()">
+      <mat-icon>check</mat-icon>
+      Complete request
+    </button>
+    <button *ngIf="!requestDetails?.dateProcessEnd && requestDetails?.dateProcessStarted" aria-label="Process" matTooltip="Process" mat-fab extended color="primary" (click)="onMarkAsToComplete()">
+      <mat-icon>check</mat-icon>
+      Complete process
+    </button>
+    <button *ngIf="!requestDetails?.isPaid && requestDetails?.dateAssigned && requestDetails?.assignedAdmin" aria-label="Pay now" matTooltip="Pay now" mat-fab extended color="primary" (click)="onPayNow()">
+      <mat-icon>check</mat-icon>
+      Pay now
+    </button>
+    <button *ngIf="(pageRights && pageRights['Assign']) && requestDetails?.requestStatus === 'PENDING' && !requestDetails?.dateAssigned && !requestDetails?.assignedAdmin" aria-label="Assign now" matTooltip="Assign now" mat-fab extended color="primary" (click)="onAssignNow()">
+      <mat-icon>check</mat-icon>
+      Assign now
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-vertical-stepper #stepper>
+      <ng-template matStepperIcon="status">
+          <mat-icon>check</mat-icon>
+      </ng-template>
+      <mat-step
+        state="status"
+        completed="true"
+        *ngIf="requestDetails?.requestStatus === 'CLOSED'"
+        [aria-labelledby]="requestDetails && requestDetails?.requestStatus === 'CLOSED' ? 'updated-request' : ''">
+        <ng-template matStepLabel>Closed</ng-template>
+        <div fxFlex="100" *ngIf="requestDetails">
+          <p>{{requestDetails.dateClosed | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Request has been closed</p>
+        </div>
+      </mat-step>
+      <mat-step
+        state="status"
+        completed="true"
+        *ngIf="requestDetails?.dateCompleted || requestDetails?.requestStatus === 'TOCOMPLETE'"
+        [aria-labelledby]="requestDetails && !requestDetails?.dateClosed && requestDetails?.dateCompleted ? 'updated-request' : requestDetails?.dateCompleted ? 'request-done' : ''">
+        <ng-template matStepLabel>{{requestDetails?.dateProcessEnd && !requestDetails?.dateCompleted ? 'To complete' : 'Request completed'}}</ng-template>
+        <div fxFlex="100" *ngIf="requestDetails && requestDetails?.dateCompleted">
+          <p>{{requestDetails.dateCompleted | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Requested item was Completed</p>
+        </div>
+      </mat-step>
+      <mat-step
+        state="status"
+        completed="true"
+        *ngIf="requestDetails?.dateProcessStarted || requestDetails?.dateProcessEnd"
+        [aria-labelledby]="
+        requestDetails && !requestDetails?.dateCompleted && requestDetails?.dateProcessEnd ? 'updated-request' : requestDetails?.dateCompleted ? 'request-done' : ''">
+        <ng-template matStepLabel >{{requestDetails?.dateProcessEnd ? 'Process compeleted' : 'Processing'}}</ng-template>
+        <div fxFlex="100">
+          <p>{{requestDetails?.dateProcessEnd | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Process compeleted</p>
+        </div>
+      </mat-step>
+      <mat-step
+        state="status"
+        completed="true"
+        *ngIf="requestDetails?.dateProcessStarted"
+        [aria-labelledby]="
+        requestDetails && !requestDetails?.dateProcessEnd && requestDetails?.dateProcessStarted ? 'updated-request' : requestDetails?.dateProcessEnd ? 'request-done' : ''">
+        <ng-template matStepLabel>Process started</ng-template>
+        <div fxFlex="100" *ngIf="requestDetails && requestDetails?.dateProcessStarted">
+          <p>{{requestDetails?.dateProcessStarted | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Process started</p>
+        </div>
+      </mat-step>
+      <mat-step
+        state="status"
+        completed="true"
+        *ngIf="requestDetails?.datePaid || requestDetails?.requestStatus === 'TOPAY' || requestDetails?.dateAssigned"
+        [aria-labelledby]="requestDetails?.dateProcessStarted ? 'request-done' : ''">
+        <ng-template matStepLabel>{{ requestDetails?.datePaid ? 'Paid' : 'To pay'}}</ng-template>
+        <div fxFlex="100" *ngIf="requestDetails && requestDetails?.datePaid">
+          <p>{{requestDetails?.datePaid | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Request was Paid</p>
+        </div>
+      </mat-step>
+      <mat-step
+        state="status"
+        completed="true"
+        *ngIf="requestDetails?.dateAssigned || requestDetails?.requestStatus === 'PENDING'"
+        [aria-labelledby]="
+        requestDetails && requestDetails?.requestStatus === 'TOPAY' ? 'updated-request' : requestDetails?.dateProcessStarted ? 'request-done' : ''">
+        <ng-template matStepLabel>{{ requestDetails?.dateAssigned ? 'Assigned' : 'To assign'}}</ng-template>
+        <div fxFlex="100" *ngIf="requestDetails && requestDetails?.dateAssigned">
+          <p>{{requestDetails?.dateAssigned | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Request was assigned to {{requestDetails?.assignedAdmin.fullName}}</p>
+        </div>
+      </mat-step>
+      <mat-step state="status" completed="true" [aria-labelledby]="
+        requestDetails && requestDetails?.requestStatus === 'PENDING' ? 'updated-request' : requestDetails?.dateAssigned ? 'request-done' : ''">
+        <ng-template matStepLabel>Created</ng-template>
+        <div fxFlex="100" *ngIf="requestDetails">
+          <p>{{requestDetails?.dateRequested | date: 'MMM dd, yyyy h:mm a'}}</p>
+          <p>Request was created</p>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+
+  </mat-card-content>
+</mat-card>

@@ -29,7 +29,7 @@
             <mat-list-item routerLink="dashboard" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
                 <mat-icon>dashboard</mat-icon><span>Dashboard</span>
             </mat-list-item>
-            <mat-list-item *ngIf="showMenu('Request Management')" routerLink="document-request-management" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+            <mat-list-item *ngIf="showMenu('Request Management')" routerLink="request-management" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
                 <mat-icon>assignment_turned_in</mat-icon><span>Request Management</span>
             </mat-list-item>
             <mat-list-item *ngIf="showMenu('Request Type')" routerLink="request-type" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">

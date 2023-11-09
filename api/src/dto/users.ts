@@ -64,12 +64,12 @@ export class CreateAdminUserDto extends DefaultAdminUserDto {
 
 export class UpdateAdminUserDto extends DefaultAdminUserDto {
     @IsNotEmpty()
-    userId: string;
+    adminCode: string;
 }
 
 export class UpdateAdminUserResetPasswordDto {
   @IsNotEmpty()
-  userId: string;
+  adminCode: string;
 
   @IsNotEmpty()
   password: string;
@@ -165,7 +165,19 @@ export class CreateMemberUserDto extends DefaultMemberDto {
 
 export class UpdateMemberUserDto extends DefaultMemberDto {
     @IsNotEmpty()
-    userId: string;
+    memberCode: string;
+}
+
+export class UpdateMemberUserResetPasswordDto {
+  @IsNotEmpty()
+  memberCode: string;
+
+  @IsNotEmpty()
+  password: string;
+
+  @Match("password")
+  @IsNotEmpty()
+  confirmPassword: string;
 }
 
 export class CreateAdminUserAccessDto  {
@@ -189,5 +201,5 @@ export class CreateAdminUserAccessDto  {
 
 export class MemberVerificationDto  {
   @IsArray()
-  memberIds: string[] = [];
+  memberCodes: string[] = [];
 }

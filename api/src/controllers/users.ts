@@ -3,8 +3,8 @@ import axios, { AxiosResponse } from "axios";
 import { Users } from "../../src/db/entities/Users";
 import { Between, FindOptionsWhere, ILike, In, getManager, getRepository } from "typeorm";
 import { CONST_USERTYPE } from "../../src/utils/constant";
-import { columnDefToTypeORMCondition, compare, convertColumnNotationToObject, getFullName, hash } from "../../src/utils/utils";
-import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto, MemberVerificationDto } from "../../src/dto/users";
+import { columnDefToTypeORMCondition, compare, convertColumnNotationToObject, generateAdminCode, generateRequestNo, getFullName, hash } from "../../src/utils/utils";
+import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto, MemberVerificationDto, UpdateMemberUserResetPasswordDto } from "../../src/dto/users";
 import { Admin } from "../../src/db/entities/Admin";
 import { validatorDto } from "../utils/validator";
 import { Member } from "../../src/db/entities/Member";
@@ -81,18 +81,15 @@ usersRouter.post(
 );
 
 usersRouter.get(
-  "/:type/:userId",
+  "/admin/:adminCode/details",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, type } = req.params;
-      if(!CONST_USERTYPE.some(x=>x === type.toUpperCase())) {
-        throw Error("Invalid type");
-      }
-      let result: Admin | Member = await getRepository(type.toUpperCase() === "ADMIN" ? Admin : Member).findOne({
+      const { adminCode } = req.params;
+      let result = await getRepository(Admin).findOne({
         where:  {
+          adminCode,
           user: {
-            userId: userId,
-            active: true,
+            active: true
           }
         },
         relations: {
@@ -103,6 +100,70 @@ usersRouter.get(
         delete result.user.password;
         return res.status(200).json({
           data: result,
+          success: true,
+        });
+      } else {
+        return res.status(404).json({
+          message: "Not found!",
+        });
+      }
+    } catch (ex) {
+      return res.status(500).json({
+        message: ex.message,
+      });
+    }
+  }
+);
+
+usersRouter.get(
+  "/member/:memberCode/details",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { memberCode } = req.params;
+      let result = await getRepository(Member).findOne({
+        where:  {
+          memberCode,
+          user: {
+            active: true
+          }
+        },
+        relations: {
+          user: true
+        }
+      });
+      if (result) {
+        delete result.user.password;
+        return res.status(200).json({
+          data: result,
+          success: true,
+        });
+      } else {
+        return res.status(404).json({
+          message: "Not found!",
+        });
+      }
+    } catch (ex) {
+      return res.status(500).json({
+        message: ex.message,
+      });
+    }
+  }
+);
+
+usersRouter.get(
+  "/admin/all",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let result = await getRepository(Admin).find({
+        where:  {
+          user: {
+            active: true,
+          }
+        }
+      });
+      if (result) {
+        return res.status(200).json({
+          data: result.map(x=>x),
           success: true,
         });
       } else {
@@ -139,7 +200,9 @@ usersRouter.post(
         async (transactionalEntityManager) => {
           user = await transactionalEntityManager.save(user);
           admin.user = user;
-          return await transactionalEntityManager.save(admin);
+          admin = await transactionalEntityManager.save(admin);
+          admin.adminCode = generateAdminCode(admin.adminId);
+          return await transactionalEntityManager.save(Admin, admin);
         }
       );
       delete admin.user.password;
@@ -156,16 +219,15 @@ usersRouter.post(
 );
 
 usersRouter.put(
-  "/admin/:userId",
+  "/admin/:adminCode",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = { ...req.body, ...req.params } as UpdateAdminUserDto;
       await validatorDto(UpdateAdminUserDto, body);
       let admin: Admin = await getRepository(Admin).findOne({
         where: {
+          adminCode: body.adminCode,
           user: {
-            userId: body.userId,
-            userType: "ADMIN",
             active: true,
           },
         },
@@ -208,16 +270,15 @@ usersRouter.put(
 );
 
 usersRouter.put(
-  "/member/:userId",
+  "/member/:memberCode",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = { ...req.body, ...req.params } as UpdateMemberUserDto;
       await validatorDto(UpdateMemberUserDto, body);
       let member: Member = await getRepository(Member).findOne({
         where: {
+          memberCode: body.memberCode,
           user: {
-            userId: body.userId,
-            userType: "MEMBER",
             active: true,
           },
         },
@@ -272,28 +333,80 @@ usersRouter.put(
 );
 
 usersRouter.put(
-  "/:userId/resetPassword",
+  "/admin/:adminCode/resetPassword",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = { ...req.body, ...req.params } as UpdateAdminUserResetPasswordDto;
       await validatorDto(UpdateAdminUserResetPasswordDto, body);
-      let user: Users = await getRepository(Users).findOne({
+      let admin: Admin = await getRepository(Admin).findOne({
         where: {
-          userId: body.userId,
-          active: true,
+          adminCode: body.adminCode,
+          user: {
+            active: true,
+          }
         },
+        relations: {
+          user: true
+        }
       });
-      if (user) {
+      if (admin && admin.user) {
+        let user: Users = admin.user;
         user.password = await hash(body.password);
         user = await getManager().transaction(
           async (transactionalEntityManager) => {
-            return await transactionalEntityManager.save(user);
+            return await transactionalEntityManager.save(Users, user);
           }
         );
         delete user.password;
+        admin.user = user;
         return res.status(200).json({
           message: "user password updated successfully",
-          data: user,
+          data: admin,
+          success: true,
+        });
+      } else {
+        return res.status(404).json({
+          message: "Not Found!",
+        });
+      }
+    } catch (ex) {
+      return res.status(500).json({
+        message: ex.message,
+      });
+    }
+  }
+);
+
+usersRouter.put(
+  "/member/:memberCode/resetPassword",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = { ...req.body, ...req.params } as UpdateMemberUserResetPasswordDto;
+      await validatorDto(UpdateMemberUserResetPasswordDto, body);
+      let member = await getRepository(Member).findOne({
+        where: {
+          memberCode: body.memberCode,
+          user: {
+            active: true,
+          }
+        },
+        relations: {
+          user: true
+        }
+      });
+      if (member && member.user) {
+        let user: Users = member.user;
+        user.password = await hash(body.password);
+        user = await getManager().transaction(
+          async (transactionalEntityManager) => {
+            return await transactionalEntityManager.save(Users, user);
+          }
+        );
+        delete user.password;
+        member.user = user;
+        return res.status(200).json({
+          message: "user password updated successfully",
+          data: member,
           success: true,
         });
       } else {
@@ -310,29 +423,36 @@ usersRouter.put(
 );
 
 usersRouter.delete(
-  "/:userId",
+  "/admin/:adminCode",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (req.params && req.params.userId) {
-        let { userId } = req.params;
-        let user: Users = await getRepository(Users).findOne({
+      if (req.params && req.params.adminCode) {
+        let { adminCode } = req.params;
+        let admin = await getRepository(Admin).findOne({
           where: {
-            userId: userId,
-            active: true,
+            adminCode,
+            user: {
+              active: true,
+            }
           },
+          relations: {
+            user: true
+          }
         });
 
-        if (user) {
+        if (admin && admin.user) {
+          let user = admin.user;
           user.active = false;
           user = await getManager().transaction(
             async (transactionalEntityManager) => {
-              return await transactionalEntityManager.save(user);
+              return await transactionalEntityManager.save(Users, user);
             }
           );
           delete user.password;
+          admin.user = user;
           return res.status(200).json({
             message: "user deleted successfully",
-            data: user,
+            data: admin,
             success: true,
           });
         } else {
@@ -362,25 +482,28 @@ usersRouter.post(
       await validatorDto(MemberVerificationDto, body);
       let success = [];
       let failed = [];
-      if(body.memberIds && body.memberIds.length > 0) {
+      if(body.memberCodes && body.memberCodes.length > 0) {
         await getManager().transaction(
           async (transactionalEntityManager) => {
-            for(var memberId of body.memberIds) {
+            for(var memberCode of body.memberCodes) {
               let member = await getRepository(Member).findOne({
                 where: {
-                  memberId,
+                  memberCode,
                   user: {
                     active: true
                   }
                 },
+                relations: {
+                  user: true
+                }
               });
       
               if (member) {
                 member.isVerified = true;
                 await transactionalEntityManager.save(member)
-                success.push(memberId);
+                success.push(memberCode);
               } else { 
-                failed.push(memberId);
+                failed.push(memberCode);
               }
             }
           }

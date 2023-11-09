@@ -15,12 +15,20 @@ export class UserService implements IServices {
 
   constructor(private http: HttpClient, private appconfig: AppConfigService) { }
 
+  getAllAdmin(): Observable<ApiResponse<Admin[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getAllAdmin)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
   getAdminByAdvanceSearch(params:{
     order: any,
     columnDef: { apiNotation: string; filter: string }[],
     pageSize: number,
     pageIndex: number
-  }): Observable<ApiResponse<{ results: Member[], total: number}>> {
+  }): Observable<ApiResponse<{ results: Admin[], total: number}>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getAdminByAdvanceSearch,
       params)
     .pipe(
@@ -45,7 +53,7 @@ export class UserService implements IServices {
   }
 
   getAdminById(userId: string): Observable<ApiResponse<Admin>> {
-    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getAdminById + userId)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getAdminById + userId + "/details")
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -53,7 +61,7 @@ export class UserService implements IServices {
   }
 
   getMemberById(userId: string): Observable<ApiResponse<Member>> {
-    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getMemberById + userId)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getMemberById + userId + "/details")
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))

@@ -27,7 +27,7 @@ import { AdminTableColumn } from 'src/app/model/table';
   }
 })
 export class AdminAccessComponent implements OnInit {
-  currentUserId:string;
+  currentAdminCode:string;
   error:string;
   dataSource = new MatTableDataSource<AdminTableColumn>();
   displayedColumns = [];
@@ -36,7 +36,7 @@ export class AdminAccessComponent implements OnInit {
   pageIndex = 0;
   pageSize = 10;
   total = 0;
-  order: any = { user: { userId: "DESC" } };
+  order: any = { adminId: "DESC" };
 
   filter: {
     apiNotation: string;
@@ -68,7 +68,7 @@ export class AdminAccessComponent implements OnInit {
 
   ngOnInit(): void {
     const profile = this.storageService.getLoginProfile();
-    this.currentUserId = profile && profile.user.userId;
+    this.currentAdminCode = profile && profile["adminCode"];
   }
 
   ngAfterViewInit() {
@@ -111,12 +111,12 @@ export class AdminAccessComponent implements OnInit {
         if(res.success){
           let data = res.data.results.map((d)=>{
             return {
-              userId: d.user.userId,
+              adminCode: d.adminCode,
               userName: d.user.userName,
               fullName: `${d.firstName} ${d.lastName}`,
               mobileNumber: d.mobileNumber,
               enable: d.user.accessGranted,
-              url: `/admin/admin-access/${d.user.userId}`,
+              url: `/admin/admin-access/${d.adminCode}`,
             } as AdminTableColumn
           });
           this.total = res.data.total;
@@ -139,63 +139,5 @@ export class AdminAccessComponent implements OnInit {
       this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
     }
 
-  }
-
-  toggleEnable(userId:string, enable: boolean){
-    const newValue = enable ? false : true;
-    const dialogData = new AlertDialogModel();
-    dialogData.title = 'Confirm';
-    dialogData.message = newValue ? 'Enable user?' : 'Disable user?';
-    dialogData.confirmButton = {
-      visible: true,
-      text: 'yes',
-      color:'primary'
-    }
-    dialogData.dismissButton = {
-      visible: true,
-      text: 'cancel'
-    }
-    const dialogRef = this.dialog.open(AlertDialogComponent, {
-        maxWidth: '400px',
-        closeOnNavigation: true
-    })
-    dialogRef.componentInstance.alertDialogConfig = dialogData;
-
-    try{
-
-      dialogRef.componentInstance.conFirm.subscribe((data: any) => {
-        this.isProcessing = true;
-        dialogRef.componentInstance.isProcessing = this.isProcessing;
-        dialogRef.componentInstance.alertDialogConfig.message = 'Please wait...';
-        this.userService.toggleGrantAccess({ userId, enable: newValue})
-          .subscribe(async res => {
-            if (res.success) {
-              this.getUsers();
-              this.snackBar.open(newValue ? 'User enabled!' : 'User disabled!', 'close', {panelClass: ['style-success']});
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              dialogRef.close();
-            } else {
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              this.error = Array.isArray(res.message) ? res.message[0] : res.message;
-              this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
-              dialogRef.close();
-            }
-          }, async (err) => {
-            this.isProcessing = false;
-            dialogRef.componentInstance.isProcessing = this.isProcessing;
-            this.error = Array.isArray(err.message) ? err.message[0] : err.message;
-            this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
-            dialogRef.close();
-          });
-    });
-    } catch (e){
-      this.isProcessing = false;
-      dialogRef.componentInstance.isProcessing = this.isProcessing;
-      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-      this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
-      dialogRef.close();
-    }
   }
 }

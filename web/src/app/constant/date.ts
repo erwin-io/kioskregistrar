@@ -12,4 +12,12 @@ export const APP_DATE_FORMATS: MatDateFormats = {
      monthYearA11yLabel: { year: 'numeric', month: 'long' },
    }
  };
- 
+
+
+ export const CONST_REQUEST_STATUS_ENUM = {
+     PENDING: "PENDING",
+     TOPAY: "TOPAY",
+     PROCESSING: "PROCESSING",
+     TOCOMPLETE: "TOCOMPLETE",
+     CLOSED: "CLOSED",
+ };

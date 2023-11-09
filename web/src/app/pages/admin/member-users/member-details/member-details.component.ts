@@ -54,7 +54,7 @@ export class MemberDetailsComponent {
   ) {
     const { isNew, edit } = this.route.snapshot.data;
     this.isNew = isNew;
-    this.id = this.route.snapshot.paramMap.get('userId');
+    this.id = this.route.snapshot.paramMap.get('memberCode');
     this.isReadOnly = !edit && !isNew;
     if (this.route.snapshot.data) {
       this.pageAccess = {
@@ -161,9 +161,7 @@ export class MemberDetailsComponent {
     return pass === confirmPass ? null : { notMatched: true };
   };
 
-
   onSubmit() {
-    console.log(this.memberForm.value);
     if (this.memberForm.invalid) {
       return;
     }
@@ -197,7 +195,7 @@ export class MemberDetailsComponent {
           this.snackBar.open('Updated!', 'close', {
             panelClass: ['style-success'],
           });
-          this.router.navigate(['/admin/members/' + res.data.user.userId]);
+          this.router.navigate(['/admin/members/' + res.data.memberCode]);
           this.isProcessing = false;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
           dialogRef.close();

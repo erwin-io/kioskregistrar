@@ -32,7 +32,10 @@ requestTypeRouter.post(
         take,
         order
       }),
-      getRepository(RequestType).count({ where: condition}),
+      getRepository(RequestType).count({ where: {
+        ...condition,
+        active: true,
+      }}),
     ])
       return res.status(200).json({
         data: {

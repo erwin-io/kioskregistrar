@@ -43,7 +43,7 @@ import { AppDateAdapter } from './model/app-date-adapter';
     AlertDialogComponent,
     PageNotFoundComponent,
     OptionSheetComponent,
-    NoAccessComponent,
+    NoAccessComponent
   ],
   imports: [
     BrowserModule,

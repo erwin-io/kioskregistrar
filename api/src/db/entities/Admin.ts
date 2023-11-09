@@ -28,6 +28,9 @@ export class Admin {
   @Column("character varying", { name: "FullName", default: () => "''" })
   fullName: string;
 
+  @Column("character varying", { name: "AdminCode", default: () => "''" })
+  adminCode: string;
+
   @ManyToOne(() => Users, (users) => users.admins)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
   user: Users;

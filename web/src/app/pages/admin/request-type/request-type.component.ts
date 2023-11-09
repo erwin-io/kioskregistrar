@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SpinnerVisibilityService } from 'ng-http-loader';
 import { Access } from 'src/app/model/access';
 import { RequestTypeTableColumn } from 'src/app/model/table';
 import { AppConfigService } from 'src/app/services/app-config.service';
@@ -47,6 +48,7 @@ export class RequestTypeComponent {
 
   @ViewChild('requestTypeFormDialog') requestTypeFormDialogTemp: TemplateRef<any>;
   constructor(
+    private spinner: SpinnerVisibilityService,
     private requestTypeService: RequestTypeService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -99,6 +101,7 @@ export class RequestTypeComponent {
   async getUsers(){
     try{
       this.isLoading = true;
+      this.spinner.show();
       await this.requestTypeService.getByAdvanceSearch({
         order: this.order,
         columnDef: this.filter,
@@ -119,21 +122,26 @@ export class RequestTypeComponent {
           this.total = res.data.total;
           this.dataSource = new MatTableDataSource(data);
           this.isLoading = false;
+          this.spinner.hide();
         }
         else{
           this.error = Array.isArray(res.message) ? res.message[0] : res.message;
           this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
           this.isLoading = false;
+          this.spinner.hide();
         }
       }, async (err) => {
         this.error = Array.isArray(err.message) ? err.message[0] : err.message;
         this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
         this.isLoading = false;
+        this.spinner.hide();
       });
     }
     catch(e){
       this.error = Array.isArray(e.message) ? e.message[0] : e.message;
       this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
+      this.isLoading = false;
+      this.spinner.hide();
     }
 
   }

@@ -1,0 +1,154 @@
+<div class="content">
+  <div class="inner-content">
+    <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)" [(selectedIndex)]="tabIndex">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.pending > 99 ? '99+' : total.pending }}" *ngIf="total.pending > 0; else matLablePending" matBadgeOverlap="false">Pending</span>
+          <ng-template #matLablePending>Pending</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <app-data-table
+                #dataTablePending
+                [isLoading]="isLoading"
+                [dataSource]="dataSource.pending"
+                [columnDefs]="tableColumns.pending"
+                [total]="total.pending"
+                (pageChange)="pageChange($event, 'pending')"
+                (sortChange)="sortChange($event, 'pending')"
+                (filterChange)="filterChange($event, 'pending')"
+                (headerControlChange)="headerChange($event)"
+                (rowControlChange)="rowControlChange($event)"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab ariaLabel="to-process">
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total['to-process'] > 99 ? '99+' : total['to-process'] }}" *ngIf="total['to-process'] > 0; else matLableToProcess" matBadgeOverlap="false">To process</span>
+          <ng-template #matLableToProcess>To process</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <mat-checkbox style="max-width: max-content;" [(ngModel)]="showAll['to-process']" (change)="toggleAssigneeColumn('to-process', tableColumns['to-process'], showAll['to-process'])">Show All</mat-checkbox>
+              <mat-form-field appearance="outline" style="max-width: max-content;" >
+                <mat-label>Assigned to</mat-label>
+                <mat-select [disabled]="showAll['to-process']" [(ngModel)]="assignedAdmin['to-process']" (selectionChange)="selectAssigneeChange($event, 'to-process')">
+                    <mat-option [value]="item.adminId" *ngFor="let item of optionsAllAdmin">{{item.fullName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-data-table
+                #dataTableToProcess
+                [isLoading]="isLoading"
+                [dataSource]="dataSource['to-process']"
+                [columnDefs]="tableColumns['to-process']"
+                [total]="total['to-process']"
+                (pageChange)="pageChange($event, 'to-process')"
+                (sortChange)="sortChange($event, 'to-process')"
+                (filterChange)="filterChange($event, 'to-process')"
+                (headerControlChange)="headerChange($event)"
+                (rowControlChange)="rowControlChange($event)"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab ariaLabel="processing">
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.processing > 99 ? '99+' : total.processing }}" *ngIf="total.processing > 0; else matLableProcessing" matBadgeOverlap="false">Processing</span>
+          <ng-template #matLableProcessing>Processing</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <mat-checkbox style="max-width: max-content;" [(ngModel)]="showAll.processing" (change)="toggleAssigneeColumn('processing', tableColumns['processing'], showAll.processing)">Show All</mat-checkbox>
+              <mat-form-field appearance="outline" style="max-width: max-content;" >
+                <mat-label>Assigned to</mat-label>
+                <mat-select [disabled]="showAll.processing" [(ngModel)]="assignedAdmin['processing']" (selectionChange)="selectAssigneeChange($event, 'processing')">
+                    <mat-option [value]="item.adminId" *ngFor="let item of optionsAllAdmin">{{item.fullName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-data-table
+                #dataTableProcessing
+                [isLoading]="isLoading"
+                [dataSource]="dataSource.processing"
+                [columnDefs]="tableColumns.processing"
+                [total]="total.processing"
+                (pageChange)="pageChange($event, 'processing')"
+                (sortChange)="sortChange($event, 'processing')"
+                (filterChange)="filterChange($event, 'processing')"
+                (headerControlChange)="headerChange($event)"
+                (rowControlChange)="rowControlChange($event)"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab ariaLabel="to-release">
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total['to-release'] > 99 ? '99+' : total['to-release'] }}" *ngIf="total['to-release'] > 0; else matLableToRelease" matBadgeOverlap="false">To release</span>
+          <ng-template #matLableToRelease>To release</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <mat-checkbox style="max-width: max-content;" [(ngModel)]="showAll['to-release']" (change)="toggleAssigneeColumn('to-release', tableColumns['to-release'], showAll['to-release'])">Show All</mat-checkbox>
+              <mat-form-field appearance="outline" style="max-width: max-content;" >
+                <mat-label>Assigned to</mat-label>
+                <mat-select [disabled]="showAll['to-release']" [(ngModel)]="assignedAdmin['to-release']" (selectionChange)="selectAssigneeChange($event, 'to-release')">
+                    <mat-option [value]="item.adminId" *ngFor="let item of optionsAllAdmin">{{item.fullName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-data-table
+                #dataTableToRelease
+                [isLoading]="isLoading"
+                [dataSource]="dataSource['to-release']"
+                [columnDefs]="tableColumns['to-release']"
+                [total]="total['to-release']"
+                (pageChange)="pageChange($event, 'to-release')"
+                (sortChange)="sortChange($event, 'to-release')"
+                (filterChange)="filterChange($event, 'to-release')"
+                (headerControlChange)="headerChange($event)"
+                (rowControlChange)="rowControlChange($event)"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Closed" ariaLabel="closed">
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.closed > 99 ? '99+' : total.closed }}" *ngIf="total.closed > 0; else matLableClosed" matBadgeOverlap="false">Closed</span>
+          <ng-template #matLableClosed>Closed</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <mat-checkbox style="max-width: max-content;" [(ngModel)]="showAll.closed" (change)="toggleAssigneeColumn('closed', tableColumns['closed'], showAll.closed)">Show All</mat-checkbox>
+              <mat-form-field appearance="outline" style="max-width: max-content;" >
+                <mat-label>Assigned to</mat-label>
+                <mat-select [disabled]="showAll.closed" [(ngModel)]="assignedAdmin['closed']" (selectionChange)="selectAssigneeChange($event, 'closed')">
+                    <mat-option [value]="item.adminId" *ngFor="let item of optionsAllAdmin">{{item.fullName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-data-table
+                #dataTableClosed
+                [isLoading]="isLoading"
+                [dataSource]="dataSource.closed"
+                [columnDefs]="tableColumns.closed"
+                [total]="total.closed"
+                (pageChange)="pageChange($event, 'closed')"
+                (sortChange)="sortChange($event, 'closed')"
+                (filterChange)="filterChange($event, 'closed')"
+                (headerControlChange)="headerChange($event)"
+                (rowControlChange)="rowControlChange($event)"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -28,7 +28,7 @@ import { convertNotationToObject } from 'src/app/shared/utility/utility';
 })
 export class MemberUsersComponent {
   verifiedTab = true;
-  currentUserId:string;
+  currentMemberCode:string;
   error:string;
   dataSource = new MatTableDataSource<MemberTableColumn>();
   isLoading = false;
@@ -36,7 +36,7 @@ export class MemberUsersComponent {
   pageIndex = 0;
   pageSize = 10;
   total = 0;
-  order: any = { user: { userId: "DESC" } };
+  order: any = { memberId: "DESC"  };
   filter: {
     apiNotation: string;
     filter: string;
@@ -58,7 +58,7 @@ export class MemberUsersComponent {
     private route: ActivatedRoute,
     public router: Router) {
       this.dataSource = new MatTableDataSource([]);
-      this.verifiedTab = this.route.snapshot.data["verified"]
+      this.verifiedTab = this.route.snapshot.data["verified"];
       if(this.route.snapshot.data) {
         this.pageAccess = {
           ...this.pageAccess,
@@ -73,7 +73,7 @@ export class MemberUsersComponent {
 
   ngOnInit(): void {
     const profile = this.storageService.getLoginProfile();
-    this.currentUserId = profile && profile.user.userId;
+    this.currentMemberCode = profile && profile["memberCode"];
   }
 
   ngAfterViewInit() {
@@ -124,8 +124,7 @@ export class MemberUsersComponent {
         if(res.success){
           let data = res.data.results.map((d)=>{
             return {
-              memberId: d.memberId,
-              userId: d.user.userId,
+              memberCode: d.memberCode,
               fullName: `${d.firstName} ${d.lastName}`,
               courseTaken: d.courseTaken,
               email: d.email,
@@ -133,7 +132,7 @@ export class MemberUsersComponent {
               birthDate: d.birthDate,
               address: d.address,
               isAlumni: d.isAlumni,
-              url: `/admin/members/${d.user.userId}`,
+              url: `/admin/members/${d.memberCode}`,
             } as MemberTableColumn
           });
           this.total = res.data.total;
@@ -181,8 +180,8 @@ export class MemberUsersComponent {
       this.isProcessing = true;
       dialogRef.componentInstance.isProcessing = this.isProcessing;
       try {
-        const memberIds = this.selectedUser.map(x=>x.memberId);
-        let res = await this.userService.approveMember({ memberIds }).toPromise();
+        const memberCodes = this.selectedUser.map(x=>x.memberCode);
+        let res = await this.userService.approveMember({ memberCodes }).toPromise();
         if (res.success) {
           this.snackBar.open('Saved!', 'close', {
             panelClass: ['style-success'],

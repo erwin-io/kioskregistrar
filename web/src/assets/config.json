@@ -17,6 +17,144 @@
     ]
   },
   "tableColumns": {
+    "request": [
+      {
+        "name": "requestNo",
+        "label": "#",
+        "apiNotation": "requestNo",
+        "sticky": true,
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Request No."
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "requestedBy",
+        "label": "Requested By",
+        "apiNotation": "requestedBy.fullName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Requested By"
+        }
+      },
+      {
+        "name": "requestType",
+        "label": "Request Type",
+        "apiNotation": "requestType.name",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Request Type"
+        }
+      },
+      {
+        "name": "dateAssigned",
+        "label": "Date assigned",
+        "apiNotation": "dateAssigned",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy h:mm a"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Date assigned",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "datePaid",
+        "label": "Date paid",
+        "apiNotation": "datePaid",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy h:mm a"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Date paid",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "dateProcessStarted",
+        "label": "Date process started",
+        "apiNotation": "dateProcessStarted",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy h:mm a"
+        },
+        "filterOptions": {
+          "enable": true,
+          "label": "Date process started",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "dateProcessEnd",
+        "label": "Date process completed",
+        "apiNotation": "dateProcessEnd",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy h:mm a"
+        },
+        "filterOptions": {
+          "enable": true,
+          "label": "Date process completed",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "dateCompleted",
+        "label": "Date request completed",
+        "apiNotation": "dateCompleted",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy h:mm a"
+        },
+        "filterOptions": {
+          "enable": true,
+          "label": "Date request completed",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "dateRequested",
+        "label": "Date requested",
+        "apiNotation": "dateRequested",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy h:mm a"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Date requested",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "assignedAdmin",
+        "label": "Assigned to",
+        "apiNotation": "assignedAdmin.fullName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Assigned to"
+        }
+      }
+    ],
     "requestType": [
       {
         "name": "name",
@@ -50,6 +188,9 @@
         "label": "Fee",
         "apiNotation": "fee",
         "type": "string",
+        "format": {
+          "type": "currency"
+        },
         "filterOptions": {
           "enable": true,
           "placeholder": "Fee"
@@ -322,7 +463,7 @@
         "view": false,
         "modify": false,
         "rights": [
-          "Approval"
+          "Assign"
         ]
       },
       {
@@ -330,7 +471,7 @@
         "view": false,
         "modify": false,
         "rights": [
-          "Approval"
+          "Reviewer"
         ]
       }
     ]
@@ -344,6 +485,7 @@
       "registerMember": "/auth/register/member"
     },
     "user": {
+      "getAllAdmin": "/users/admin/all",
       "getAdminById": "/users/admin/",
       "getMemberById": "/users/member/",
       "createAdmin": "/users/admin/",
@@ -367,7 +509,13 @@
       "update": "/requestRequirements/",
       "delete": "/requestRequirements/"
     },
-    "request": {},
+    "request": {
+      "getByAdvanceSearch": "/request/page/",
+      "create": "/request/",
+      "updateDescription": "/request/",
+      "updateStatus": "/request/",
+      "getById": "/request/"
+    },
     "dashboard": {},
     "message": {
       "create": "/message/"

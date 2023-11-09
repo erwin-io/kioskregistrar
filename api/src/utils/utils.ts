@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { getConnectionOptions, getConnection, Between, ILike } from "typeorm";
+import { getConnectionOptions, getConnection, Between, ILike, Raw } from "typeorm";
 import * as bcrypt from "bcrypt";
 import { createCipheriv, randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
@@ -124,4 +124,16 @@ export const columnDefToTypeORMCondition = (columnDef) => {
     }
   }
   return Object.assign({}, ...conditionMapping);
+}
+
+export const generateRequestNo = (requestId) => {
+  return String(requestId).padStart(6, '0')
+}
+
+export const generateAdminCode = (adminId) => {
+  return String(adminId).padStart(6, '0')
+}
+
+export const generateMemberCode = (memberId) => {
+  return String(memberId).padStart(6, '0')
 }

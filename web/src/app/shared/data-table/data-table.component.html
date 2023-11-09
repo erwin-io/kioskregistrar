@@ -1,9 +1,9 @@
 
 <section class="table-container">
     <table class="table" mat-table matSort [dataSource]="dataSource">
-        <ng-container *ngFor="let colDef of columnDefs">
+      <ng-container *ngFor="let colDef of columnDefs">
         <ng-container [sticky]="colDef.sticky" [matColumnDef]="colDef.name">
-            <th mat-header-cell *matHeaderCellDef [ngStyle]="colDef.style">
+            <th mat-header-cell *matHeaderCellDef [ngStyle]="colDef.style" [ngClass]="{ 'hidden': colDef.hide }">
                 <!-- sort header text -->
                 <span mat-sort-header *ngIf="!colDef.controls">{{colDef.label}}</span>
                 <!-- end header text -->
@@ -57,15 +57,29 @@
                 <!-- end no filter-->
                 <!-- end filter -->
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" [ngStyle]="colDef.style" [ngClass]="{ 'hidden': colDef.hide }">
               <ng-container *ngIf="!colDef.controls; else controlsRow">
                 <ng-container *ngIf="colDef.urlPropertyName && colDef.urlPropertyName!=='';else textCell">
                     <a [href]="element[colDef.urlPropertyName]">{{element[colDef.name]}}</a>
                 </ng-container>
                 <ng-template #textCell>
-                    <span *ngIf="colDef.type === 'boolean'">{{element[colDef.name] ? 'Yes' : 'No'}}</span>
-                    <span *ngIf="colDef.type === 'string'">{{element[colDef.name]}}</span>
-                    <span *ngIf="colDef.type === 'date'">{{element[colDef.name] | date: 'MMM dd, yyyy'}}</span>
+                    <span *ngIf="colDef.type === 'boolean'; else nonBoolean">{{element[colDef.name] ? 'Yes' : 'No'}}</span>
+                    <ng-template #nonBoolean>
+                      <ng-container>
+                        <ng-container *ngIf="colDef.format && colDef.format.type !== ''; else noFormat">
+                          <span *ngIf="colDef.format.type === 'currency' && (!colDef.format.custom || colDef.format.custom === '')">{{element[colDef.name] | currency: 'PHP'}}</span>
+                          <span *ngIf="colDef.format.type === 'currency' && (colDef.format.custom && colDef.format.custom !== '')">{{element[colDef.name] | currency: colDef.format.custom }}</span>
+                          <span *ngIf="colDef.format.type === 'date' && (!colDef.format.custom || colDef.format.custom === '')">{{element[colDef.name] | date: 'MMM dd, yyyy'}}</span>
+                          <span *ngIf="colDef.format.type === 'date' && (colDef.format.custom && colDef.format.custom !== '')">{{element[colDef.name] | date: colDef.format.custom }}</span>
+                          <span *ngIf="colDef.format.type === 'date-time' && (!colDef.format.custom || colDef.format.custom === '')">{{element[colDef.name] | date: 'MMM dd, yyyy h:mm a'}}</span>
+                          <span *ngIf="colDef.format.type === 'date-time' && (colDef.format.custom && colDef.format.custom !== '')">{{element[colDef.name] | date: colDef.format.custom}}</span>
+                          <span *ngIf="colDef.format.type === 'number'">{{element[colDef.name] | number }}</span>
+                        </ng-container>
+                        <ng-template #noFormat>
+                          <span>{{element[colDef.name]}}</span>
+                        </ng-template>
+                      </ng-container>
+                    </ng-template>
                 </ng-template>
               </ng-container>
               <ng-template #controlsRow>
@@ -76,20 +90,20 @@
               </ng-template>
             </td>
         </ng-container>
-        </ng-container>
+      </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator
-        [style]="{'display': dataSource.data.length === 0 ? 'none!important' : ''}"
-        #paginator
-        [pageSizeOptions]="[10, 20, 50, 100]"
-        showFirstLastButtons
-        [length]="total"
-        aria-label="Select page of periodic elements">
-    </mat-paginator>
 </section>
+<mat-paginator
+    [style]="{'display': dataSource.data.length === 0 ? 'none!important' : ''}"
+    #paginator
+    [pageSizeOptions]="[10, 20, 50, 100]"
+    showFirstLastButtons
+    [length]="total"
+    aria-label="Select page of periodic elements">
+</mat-paginator>
 <div class="table-no-data" *ngIf="dataSource.data.length === 0">
   <span>No data available</span>
 </div>

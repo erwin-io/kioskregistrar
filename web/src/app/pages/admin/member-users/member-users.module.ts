@@ -28,12 +28,12 @@ export const routes: Routes = [
     data: { title: "Members", verified: false }
   },
   {
-    path: ':userId',
+    path: ':memberCode',
     component: MemberDetailsComponent,
     data: { title: "Members", details: true }
   },
   {
-    path: ':userId/edit',
+    path: ':memberCode/edit',
     component: MemberDetailsComponent,
     data: { title: "Members", details: true, edit: true }
   },

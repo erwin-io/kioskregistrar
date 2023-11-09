@@ -10,6 +10,7 @@ import { usersRouter } from "../src/controllers/users";
 import { authRouter } from "../src/controllers/auth";
 import { requestTypeRouter } from '../src/controllers/request-type';
 import { requestRequirementsRouter } from "./controllers/request-requirements";
+import { requestRouter } from "./controllers/request";
 
 const app: Express = express();
 
@@ -41,6 +42,7 @@ createConnection(dbConfig)
 const routePrefix = "api/";
 app.use("/" + routePrefix + "auth", authRouter);
 app.use("/" + routePrefix + "users", usersRouter);
+app.use("/" + routePrefix + "request", requestRouter);
 app.use("/" + routePrefix + "requestType", requestTypeRouter);
 app.use("/" + routePrefix + "requestRequirements", requestRequirementsRouter);
 /** Error handling */

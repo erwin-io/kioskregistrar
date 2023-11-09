@@ -5,15 +5,22 @@ export class ColumnDefinition {
   sticky?: boolean;
   style?: ColumnStyle;
   controls?: boolean;
-  type?: "string" | "boolean" | "date" | "decimal" = "string";
-  filterOptions?: {
-    placeholder: string;
-    enable: boolean;
-    type?: "text" | "option" | "option-yes-no" | "date" | "date-range";
+  format?: {
+    type: "currency" | "date" | "date-time" | "number" | "custom";
+    custom: string;
   };
+  hide?: boolean;
+  type?: "string" | "boolean" | "date" | "decimal" = "string";
+  filterOptions: ColumnDefinitionFilterOptions;
   urlPropertyName?: string;
+  filter: any;
 }
 
+export class ColumnDefinitionFilterOptions {
+  placeholder?: string;
+  enable?: boolean;
+  type?: "text" | "option" | "option-yes-no" | "date" | "date-range" | "number";
+};
 export class ColumnStyle {
   width: string;
   left: string;
@@ -21,7 +28,7 @@ export class ColumnStyle {
 
 
 export class AdminTableColumn {
-  userId: string;
+  adminCode: string;
   fullName: string;
   userName: string;
   mobileNumber: string;
@@ -30,8 +37,7 @@ export class AdminTableColumn {
 }
 
 export class MemberTableColumn {
-  memberId: string;
-  userId: string;
+  memberCode: string;
   fullName: string;
   courseTaken: string;
   email: string;
@@ -50,5 +56,22 @@ export class RequestTypeTableColumn {
   fee: string;
   isPaymentRequired: boolean;
   active: boolean;
+  url?: string;
+}
+
+export class RequestTableColumn {
+  requestId: string;
+  requestNo: string;
+  dateRequested: string;
+  dateAssigned: string;
+  datePaid?: string;
+  dateProcessStarted?: string;
+  dateProcessEnd?: string;
+  dateCompleted?: string;
+  dateClosed?: string;
+  requestedBy?: string;
+  requestType?: string;
+  assignedAdminId?: string;
+  assignedAdmin?: string;
   url?: string;
 }

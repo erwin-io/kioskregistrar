@@ -17,6 +17,7 @@ export interface AppConfig {
       membersVerified: ColumnDefinition[];
       membersUnVerified: ColumnDefinition[];
       requestType: ColumnDefinition[];
+      request: ColumnDefinition[];
     };
     sessionConfig: {
       sessionTimeout: string;
@@ -38,6 +39,7 @@ export interface AppConfig {
         registerMember: string;
       };
       user: {
+        getAllAdmin: string;
         getAdminById: string;
         getMemberById: string;
         createAdmin: string;
@@ -64,7 +66,13 @@ export interface AppConfig {
         update: string;
         delete: string;
       };
-      request: {};
+      request: {
+        getByAdvanceSearch: string;
+        create: string;
+        updateDescription: string;
+        updateStatus: string;
+        getById: string;
+      };
       dashboard: {};
       message: { create: string };
     };

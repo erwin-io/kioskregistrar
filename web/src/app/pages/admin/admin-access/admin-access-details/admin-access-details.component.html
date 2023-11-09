@@ -18,7 +18,7 @@
       mat-raised-button
       color="primary"
       matTooltip="Save"
-      *ngIf="currentUserId === id ? false : (pageAccess.modify && isReadOnly)"
+      *ngIf="currentAdminCode === id ? false : (pageAccess.modify && isReadOnly)"
       routerLink="/admin/admin-access/{{id}}/edit"
       replaceUrl="true"
     >
@@ -300,7 +300,7 @@
               [disabled]="!pageRights['Access']"
               [matTooltip]="accessCheckBox.view.all ? 'Disable view access for all page' : 'Enable view access for all page'"
               (click)="$event.stopPropagation()"
-              (change)="$event ? accessCheckBox.view.changeAll(accessCheckBox.view.all ? false : true) : null;modifyAll.checked = !accessCheckBox.view.all ? false : false"
+              (change)="$event ? accessCheckBox.view.changeAll(accessCheckBox.view.all ? false : true) : null;"
               [indeterminate]="!accessCheckBox.view.all ? accessCheckBox.view.indeterminate : false"
               [checked]="accessCheckBox.view.all"
               *ngIf="!isReadOnly">
