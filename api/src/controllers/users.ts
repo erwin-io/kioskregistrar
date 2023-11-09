@@ -1,13 +1,13 @@
 import { Router, Request, Response, NextFunction, response } from "express";
 import axios, { AxiosResponse } from "axios";
-import { Users } from "../../src/db/entities/Users";
+import { Users } from "../db/entities/Users";
 import { Between, FindOptionsWhere, ILike, In, getManager, getRepository } from "typeorm";
-import { CONST_USERTYPE } from "../../src/utils/constant";
-import { columnDefToTypeORMCondition, compare, convertColumnNotationToObject, generateAdminCode, generateRequestNo, getFullName, hash } from "../../src/utils/utils";
-import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto, MemberVerificationDto, UpdateMemberUserResetPasswordDto } from "../../src/dto/users";
-import { Admin } from "../../src/db/entities/Admin";
+import { CONST_USERTYPE } from "../utils/constant";
+import { columnDefToTypeORMCondition, compare, convertColumnNotationToObject, generateAdminCode, generateRequestNo, getFullName, hash } from "../utils/utils";
+import { CreateAdminUserDto, CreateAdminUserAccessDto, UpdateAdminUserDto, UpdateAdminUserResetPasswordDto, UpdateMemberUserDto, MemberVerificationDto, UpdateMemberUserResetPasswordDto } from "../dto/users";
+import { Admin } from "../db/entities/Admin";
 import { validatorDto } from "../utils/validator";
-import { Member } from "../../src/db/entities/Member";
+import { Member } from "../db/entities/Member";
 import moment from "moment";
 import { format } from 'date-fns';
 

@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createConfig = void 0;
 require("reflect-metadata");
-const SystemConfig_1 = require("../../src/db/entities/SystemConfig");
-const Users_1 = require("../../src/db/entities/Users");
-const Admin_1 = require("../../src/db/entities/Admin");
-const Member_1 = require("../../src/db/entities/Member");
-const Files_1 = require("../../src/db/entities/Files");
-const RequestType_1 = require("../../src/db/entities/RequestType");
-const RequestRequirements_1 = require("../../src/db/entities/RequestRequirements");
-const Request_1 = require("../../src/db/entities/Request");
+const SystemConfig_1 = require("./entities/SystemConfig");
+const Users_1 = require("./entities/Users");
+const Admin_1 = require("./entities/Admin");
+const Member_1 = require("./entities/Member");
+const Files_1 = require("./entities/Files");
+const RequestType_1 = require("./entities/RequestType");
+const RequestRequirements_1 = require("./entities/RequestRequirements");
+const Request_1 = require("./entities/Request");
 function createConfig() {
     const ssl = process.env.SSL;
     const config = {

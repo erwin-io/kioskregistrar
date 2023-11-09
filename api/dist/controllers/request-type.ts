@@ -1,15 +1,9 @@
 import { columnDefToTypeORMCondition } from './../utils/utils';
 import { Router, Request, Response, NextFunction } from "express";
-import moment from "moment";
 import { Between, ILike, getRepository, getManager } from "typeorm";
-import { Member } from "../../src/db/entities/Member";
-import { Users } from "../../src/db/entities/Users";
-import { convertColumnNotationToObject, hash, getFullName } from "../utils/utils";
 import { validatorDto } from "../utils/validator";
-import { Admin } from "../../src/db/entities/Admin";
-import { CONST_USERTYPE } from "../utils/constant";
-import { RequestType } from '../../src/db/entities/RequestType';
-import { RequestRequirements } from '../../src/db/entities/RequestRequirements';
+import { RequestType } from '../db/entities/RequestType';
+import { RequestRequirements } from '../db/entities/RequestRequirements';
 import { RequestTypeDto, UpdateRequestTypeDto } from '../dto/request-type';
 
 export const requestTypeRouter = Router();

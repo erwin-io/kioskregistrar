@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { getRepository, getManager, getTreeRepository } from "typeorm";
 import { validatorDto } from "../utils/validator";
-import { RequestType } from '../../src/db/entities/RequestType';
-import { RequestRequirements } from '../../src/db/entities/RequestRequirements';
+import { RequestType } from '../db/entities/RequestType';
+import { RequestRequirements } from '../db/entities/RequestRequirements';
 import { CreateRequestRequirementDto, UpdateRequestRequirementDto } from '../dto/request-type';
 
 export const requestRequirementsRouter = Router();

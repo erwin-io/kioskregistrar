@@ -12,14 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.requestRouter = void 0;
 const express_1 = require("express");
 const typeorm_1 = require("typeorm");
-const Request_1 = require("../../src/db/entities/Request");
+const Request_1 = require("../db/entities/Request");
 const request_1 = require("../dto/request");
 const utils_1 = require("../utils/utils");
 const validator_1 = require("../utils/validator");
-const RequestType_1 = require("../../src/db/entities/RequestType");
-const Member_1 = require("../../src/db/entities/Member");
+const RequestType_1 = require("../db/entities/RequestType");
+const Member_1 = require("../db/entities/Member");
 const constant_1 = require("../utils/constant");
-const Admin_1 = require("../../src/db/entities/Admin");
+const Admin_1 = require("../db/entities/Admin");
 exports.requestRouter = (0, express_1.Router)();
 exports.requestRouter.post("/page/:requestStatus", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;

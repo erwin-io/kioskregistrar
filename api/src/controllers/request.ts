@@ -1,14 +1,13 @@
 import { Router, Response, NextFunction } from "express";
 import { getRepository, getManager } from "typeorm";
-import { RequestRequirements } from "../../src/db/entities/RequestRequirements";
-import { Request } from "../../src/db/entities/Request";
+import { Request } from "../db/entities/Request";
 import { AssignRequestDto, MarkRequestAsCompletedDto, MarkRequestAsClosedDto, MarkRequestAsPaidDto, MarkRequestAsProcessedDto, RequestDto, UpdateRequestDescriptionDto, UpdateRequestStatusDto } from "../dto/request";
 import { columnDefToTypeORMCondition, generateRequestNo } from "../utils/utils";
 import { validatorDto } from "../utils/validator";
-import { RequestType } from "../../src/db/entities/RequestType";
-import { Member } from "../../src/db/entities/Member";
+import { RequestType } from "../db/entities/RequestType";
+import { Member } from "../db/entities/Member";
 import { CONST_QUERYCURRENT_TIMESTAMP, CONST_REQUEST_STATUS_ENUM } from "../utils/constant";
-import { Admin } from "../../src/db/entities/Admin";
+import { Admin } from "../db/entities/Admin";
 
 export const requestRouter = Router();
 

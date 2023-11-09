@@ -1,14 +1,12 @@
 /** source/controllers/posts.ts */
 import { Router, Request, Response, NextFunction } from "express";
-import axios, { AxiosResponse } from "axios";
-import { Users } from "../../src/db/entities/Users";
+import { Users } from "../db/entities/Users";
 import { In, IsNull, getManager, getRepository } from "typeorm";
-import { Admin } from "../../src/db/entities/Admin";
-import { CONST_USERTYPE } from "../../src/utils/constant";
-import { compare, generateMemberCode, getFullName, hash } from "../../src/utils/utils";
-import { LogInUser } from "../../src/dto/auth";
-import { CreateMemberUserDto } from "../../src/dto/users";
-import { Member } from "../../src/db/entities/Member";
+import { Admin } from "../db/entities/Admin";
+import { compare, generateMemberCode, getFullName, hash } from "../utils/utils";
+import { LogInUser } from "../dto/auth";
+import { CreateMemberUserDto } from "../dto/users";
+import { Member } from "../db/entities/Member";
 import moment from "moment";
 import { validatorDto } from "../utils/validator";
 

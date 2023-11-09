@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import { ConnectionOptions } from "typeorm";
-import { SystemConfig } from "../../src/db/entities/SystemConfig";
-import { Users } from "../../src/db/entities/Users";
-import { Admin } from "../../src/db/entities/Admin";
-import { Member } from "../../src/db/entities/Member";
-import { Files } from "../../src/db/entities/Files";
-import { RequestType } from "../../src/db/entities/RequestType";
-import { RequestRequirements } from "../../src/db/entities/RequestRequirements";
-import { Request } from "../../src/db/entities/Request";
+import { SystemConfig } from "./entities/SystemConfig";
+import { Users } from "./entities/Users";
+import { Admin } from "./entities/Admin";
+import { Member } from "./entities/Member";
+import { Files } from "./entities/Files";
+import { RequestType } from "./entities/RequestType";
+import { RequestRequirements } from "./entities/RequestRequirements";
+import { Request } from "./entities/Request";
 
 export function createConfig(): ConnectionOptions {
    const ssl = process.env.SSL;

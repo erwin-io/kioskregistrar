@@ -5,10 +5,10 @@ import express = require("express");
 import * as path from "path";
 import * as dotenv from "dotenv";
 import { createConnection } from "typeorm";
-import * as typeOrmConfig from "../src/db/typeorm";
-import { usersRouter } from "../src/controllers/users";
-import { authRouter } from "../src/controllers/auth";
-import { requestTypeRouter } from '../src/controllers/request-type';
+import * as typeOrmConfig from "./db/typeorm";
+import { usersRouter } from "./controllers/users";
+import { authRouter } from "./controllers/auth";
+import { requestTypeRouter } from './controllers/request-type';
 import { requestRequirementsRouter } from "./controllers/request-requirements";
 import { requestRouter } from "./controllers/request";
 

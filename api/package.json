@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "src/server.ts",
   "scripts": {
-    "start": "nodemon src/server.ts",
+    "start": "nodemon dist/server.js",
     "start_api": "nodemon src/server.ts",
     "postbuild": "npm run copy-files",
     "copy-files": "copyfiles -u 1 \"./src/**/*\" \"dist\"",
