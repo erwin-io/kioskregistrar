@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Access } from 'src/app/model/access';
-import { ColumnDefinition, MemberTableColumn } from 'src/app/model/table';
+import { ColumnDefinition, MemberTableColumn } from 'src/app/shared/utility/table';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserService } from 'src/app/services/user.service';
@@ -117,9 +117,8 @@ export class MemberUsersComponent {
       await this.userService.getMemberByAdvanceSearch({
         order: this.order,
         columnDef: this.filter,
-        pageIndex: this.pageIndex, pageSize: this.pageSize,
-        verified: this.verifiedTab
-      })
+        pageIndex: this.pageIndex, pageSize: this.pageSize
+      }, this.verifiedTab)
       .subscribe(async res => {
         if(res.success){
           let data = res.data.results.map((d)=>{

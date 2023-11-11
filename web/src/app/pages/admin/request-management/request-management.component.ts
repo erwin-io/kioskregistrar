@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Access } from 'src/app/model/access';
-import { ColumnDefinition, RequestTableColumn } from 'src/app/model/table';
+import { ColumnDefinition, RequestTableColumn } from 'src/app/shared/utility/table';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { RequestService } from 'src/app/services/request.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -124,7 +124,7 @@ export class RequestManagementComponent {
   @ViewChild('dataTablePending', { static: true}) dataTablePending: DataTableComponent;
   @ViewChild('dataTableToProcess', { static: true}) dataTableToProcess: DataTableComponent;
   @ViewChild('dataTableProcessing', { static: true}) dataTableProcessing: DataTableComponent;
-  @ViewChild('dataTableToRelease', { static: true}) dataTableToRelease: DataTableComponent;
+  @ViewChild('dataTableToComplete', { static: true}) dataTableToComplete: DataTableComponent;
   @ViewChild('dataTableClosed', { static: true}) dataTableClosed: DataTableComponent;
 
   optionsAllAdmin = [];
@@ -337,7 +337,7 @@ export class RequestManagementComponent {
       if(redirect) {
         this._location.go("/admin/request-management/to-release");
       }
-      this.titleService.setTitle(`To release | ${this.appConfig.config.appName}`);
+      this.titleService.setTitle(`To complete | ${this.appConfig.config.appName}`);
       hiddenColumn = ["dateCompleted"];
       table = 'to-release';
     } else if(index === 4) {

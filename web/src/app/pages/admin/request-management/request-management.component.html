@@ -89,8 +89,8 @@
       </mat-tab>
       <mat-tab ariaLabel="to-release">
         <ng-template mat-tab-label>
-          <span class="tab-label" matBadge="{{total['to-release'] > 99 ? '99+' : total['to-release'] }}" *ngIf="total['to-release'] > 0; else matLableToRelease" matBadgeOverlap="false">To release</span>
-          <ng-template #matLableToRelease>To release</ng-template>
+          <span class="tab-label" matBadge="{{total['to-release'] > 99 ? '99+' : total['to-release'] }}" *ngIf="total['to-release'] > 0; else matLableToComplete" matBadgeOverlap="false">To complete</span>
+          <ng-template #matLableToComplete>To complete</ng-template>
         </ng-template>
         <ng-template matTabContent>
           <mat-card [ngClass]="{ 'hidden': isLoading }">
@@ -103,7 +103,7 @@
                 </mat-select>
               </mat-form-field>
               <app-data-table
-                #dataTableToRelease
+                #dataTableToComplete
                 [isLoading]="isLoading"
                 [dataSource]="dataSource['to-release']"
                 [columnDefs]="tableColumns['to-release']"

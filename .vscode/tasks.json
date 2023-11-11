@@ -41,7 +41,7 @@
     },
     {
       "type": "npm",
-      "script": "start_api",
+      "script": "start:dev",
       "isBackground": true,
       "presentation": {
         "focus": true,

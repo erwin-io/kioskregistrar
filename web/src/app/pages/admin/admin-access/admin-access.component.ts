@@ -16,7 +16,7 @@ import { UserService } from 'src/app/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Access } from 'src/app/model/access';
 import { convertNotationToObject } from 'src/app/shared/utility/utility';
-import { AdminTableColumn } from 'src/app/model/table';
+import { AdminTableColumn } from 'src/app/shared/utility/table';
 
 @Component({
   selector: 'app-admin-access',

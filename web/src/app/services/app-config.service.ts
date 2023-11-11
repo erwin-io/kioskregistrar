@@ -3,7 +3,7 @@ import { catchError, take, throwError } from 'rxjs';
 
 import { Injectable, APP_INITIALIZER } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppConfig } from '../model/config';
+import { AppConfig } from '../shared/utility/config';
 
 @Injectable({
   providedIn: 'root'

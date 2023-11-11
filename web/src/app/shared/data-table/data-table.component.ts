@@ -5,7 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { APP_DATE_FORMATS } from 'src/app/constant/date';
-import { ColumnDefinition } from 'src/app/model/table';
+import { ColumnDefinition } from 'src/app/shared/utility/table';
 
 @Component({
   selector: 'app-data-table',

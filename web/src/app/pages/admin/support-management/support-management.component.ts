@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import * as moment from 'moment';
 import { APP_DATE_FORMATS } from 'src/app/constant/date';
-import { AppDateAdapter } from 'src/app/model/app-date-adapter';
+import { AppDateAdapter } from 'src/app/shared/utility/app-date-adapter';
 
 @Component({
   selector: 'app-support-management',

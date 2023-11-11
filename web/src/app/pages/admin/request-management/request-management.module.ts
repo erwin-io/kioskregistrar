@@ -41,7 +41,7 @@ export const routes: Routes = [
     path: 'to-release',
     pathMatch: 'full',
     component: RequestManagementComponent,
-    data: { title: "To release", tab: 3 }
+    data: { title: "To complete", tab: 3 }
   },
   {
     path: 'closed',

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { Access } from 'src/app/model/access';
-import { RequestTypeTableColumn } from 'src/app/model/table';
+import { RequestTypeTableColumn } from 'src/app/shared/utility/table';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { RequestTypeService } from 'src/app/services/request-type.service';
 import { StorageService } from 'src/app/services/storage.service';

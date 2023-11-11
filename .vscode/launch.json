@@ -6,7 +6,7 @@
       "name": "start api",
       "request": "launch",
       "type": "node",
-      "preLaunchTask": "npm: start_api",
+      "preLaunchTask": "npm: start:dev",
       "webRoot": "${workspaceFolder}/api"
     },
     {
