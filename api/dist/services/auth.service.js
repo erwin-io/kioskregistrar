@@ -156,6 +156,9 @@ let AuthService = class AuthService {
                 }
             }
         });
+        if (!res) {
+            throw Error(auth_error_constant_1.LOGIN_ERROR_USER_NOT_FOUND);
+        }
         delete res.user.password;
         return res;
     }
@@ -176,6 +179,9 @@ let AuthService = class AuthService {
                 }
             }
         });
+        if (!res) {
+            throw Error(auth_error_constant_1.LOGIN_ERROR_USER_NOT_FOUND);
+        }
         delete res.user.password;
         return res;
     }

@@ -171,6 +171,9 @@ export class AuthService {
         }
       }
     });
+    if(!res) {
+      throw Error(LOGIN_ERROR_USER_NOT_FOUND);
+    }
     delete res.user.password;
     return res;
   }
@@ -193,6 +196,9 @@ export class AuthService {
         }
       }
     });
+    if(!res) {
+      throw Error(LOGIN_ERROR_USER_NOT_FOUND);
+    }
     delete res.user.password;
     return res;
   }
