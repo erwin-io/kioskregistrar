@@ -30,9 +30,9 @@ import { CustomHttpInterceptor } from './interceptors/custom-http.interceptors';
 import { OptionSheetComponent } from './shared/option-sheet/option-sheet.component';
 import { NoAccessComponent } from './pages/no-access/no-access.component';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { APP_DATE_FORMATS } from './constant/date';
 import { AppDateAdapter } from './shared/utility/app-date-adapter';
-
+import { QrCodeScannerModule } from './shared/qr-code-scanner/qr-code-scanner.module';
+import { QrCodeGeneratorModule } from './shared/qr-code-generator/qr-code-generator.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +55,9 @@ import { AppDateAdapter } from './shared/utility/app-date-adapter';
     HttpClientModule,
     MaterialModule,
     ReactiveFormsModule,
-    NgHttpLoaderModule.forRoot()
+    NgHttpLoaderModule.forRoot(),
+    QrCodeScannerModule,
+    QrCodeGeneratorModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500} },

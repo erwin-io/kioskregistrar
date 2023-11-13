@@ -9,5 +9,5 @@ export declare class AuthController {
     constructor(authService: AuthService);
     register(createUserDto: RegisterMemberUserDto): Promise<ApiResponseModel<Member>>;
     registerBatch(createUserDto: RegisterMemberBatchUserDto): Promise<ApiResponseModel<Member[]>>;
-    loginAdmin(type: "ADMIN" | "MEMBER", loginUserDto: LogInDto): Promise<ApiResponseModel<Member | Admin>>;
+    loginAdmin(type: "ADMIN" | "MEMBER", loginUserDto: LogInDto): Promise<ApiResponseModel<Admin | Member>>;
 }

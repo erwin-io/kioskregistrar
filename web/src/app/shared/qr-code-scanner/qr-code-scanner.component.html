@@ -1,0 +1,29 @@
+
+<h4 mat-dialog-title>QR Code scanner</h4>
+
+<div mat-dialog-content>
+    <div class="scanner-container">
+      <quar-scanner class="qr-scanner" #scanner [ngClass]="{ 'scanner-hide': scannerData.error && scannerData.error !== ''}" (scanSuccess)="onScanSuccess($event)" (scanError)="onScanError($event)"></quar-scanner>
+      <div class="scanner-cursor">
+      </div>
+      <div class="scanner-data">
+        <span>{{scannerData.message}}</span>
+        <button mat-raised-button *ngIf="scannerData.canRetry" color="primary" (click)="scannerData.canRetry = false;scannerData.data=null;scannerData.error=null;scanner.resumeScanner()">Retry</button>
+      </div>
+      <div class="scanner-error" *ngIf="scannerData.error && scannerData.error !== ''">
+        <span>Camera error, please try again</span>
+        <button mat-raised-button *ngIf="scannerData.canRetry" color="primary" (click)="scannerData.canRetry = false;scannerData.data=null;scannerData.error=null;scanner.ngOnInit()">Retry</button>
+      </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-dialog-close
+      mat-flat-button
+      cdkFocusInitial>
+      Close
+    </button>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+::ng-deep {
+  .qr-generator-dialog {
+    .mat-mdc-dialog-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      .qr-code {
+        height: 100%;
+        box-sizing: border-box;
+        max-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        canvas {
+          max-width: 400px!important;
+          width: 100%!important;
+          height: 100%!important;
+        }
+      }
+    }
+  }
+}

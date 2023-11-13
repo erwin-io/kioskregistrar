@@ -145,8 +145,14 @@ const columnDefToTypeORMCondition = (columnDef) => {
                 conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, value));
             }
         }
+        else if (col.type === "number-range") {
+            const range = col.filter.split("-").map((x) => x === null || x === void 0 ? void 0 : x.trim());
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Between)(range[0], range[1])));
+        }
         else {
-            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ILike)("%" + col.filter + "%")));
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Raw)((alias) => {
+                return `CAST(${alias} as varchar) ILike '%${col.filter}%'`;
+            })));
         }
     }
     return Object.assign({}, ...conditionMapping);

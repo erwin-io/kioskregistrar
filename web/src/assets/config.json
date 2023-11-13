@@ -187,13 +187,14 @@
         "name": "fee",
         "label": "Fee",
         "apiNotation": "fee",
-        "type": "string",
+        "type": "number",
         "format": {
           "type": "currency"
         },
         "filterOptions": {
           "enable": true,
-          "placeholder": "Fee"
+          "placeholder": "Fee",
+          "type": "number-range"
         }
       },
       {

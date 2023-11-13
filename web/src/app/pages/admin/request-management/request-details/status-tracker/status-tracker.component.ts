@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Request  } from 'src/app/model/request';
 import { RequestService } from 'src/app/services/request.service';
@@ -17,7 +17,7 @@ import { SpinnerVisibilityService } from 'ng-http-loader';
 export class StatusTrackerComponent {
   @Input() requestDetails: Request;
   @Input() pageRights: any;
-  statusUpdated = new EventEmitter();
+  @Output() statusUpdated = new EventEmitter();
   error;
   constructor(
     private spinner: SpinnerVisibilityService,

@@ -1,0 +1,19 @@
+<div mat-dialog-content>
+  <ngx-qrcode-styling class="qr-code"
+    [data]="qrData"
+    [width]="400"
+    [height]="400"
+    [image]="'../../../assets/img/banner.png'">
+  </ngx-qrcode-styling>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-dialog-close
+      mat-flat-button
+      cdkFocusInitial>
+      Close
+    </button>
+  </div>
+</div>

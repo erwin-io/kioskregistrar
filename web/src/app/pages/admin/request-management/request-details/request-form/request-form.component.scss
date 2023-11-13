@@ -1,0 +1,11 @@
+::ng-deep {
+  h1,h2,h3,h4,h5,h6 {
+    margin: 0px;
+  }
+  mat-divider {
+    // margin: 10px 0!important;
+  }
+  .value {
+    font-size: 1.1em!important;
+  }
+}

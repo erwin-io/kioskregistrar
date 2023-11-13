@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { RequestService } from 'src/app/services/request.service';
@@ -9,6 +9,10 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { Access } from 'src/app/model/access';
+import { MatDialog } from '@angular/material/dialog';
+import { QrCodeScannerComponent } from 'src/app/shared/qr-code-scanner/qr-code-scanner.component';
+import { QrCodeGeneratorComponent } from 'src/app/shared/qr-code-generator/qr-code-generator.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-request-details',
@@ -39,6 +43,8 @@ export class RequestDetailsComponent {
     modify: false,
   };
   constructor(
+    private dialog: MatDialog,
+    private _location: Location,
     private spinner: SpinnerVisibilityService,
     private formBuilder: FormBuilder,
     private requestService: RequestService,
@@ -69,6 +75,10 @@ export class RequestDetailsComponent {
     return rights;
   }
 
+  get qrData() {
+    return `${window.location.host}${window.location.pathname}`;
+  }
+
 
   private handleMediaChange(mediaChange: MediaChange) {
     if (this.media.isActive('gt-sm')) {
@@ -97,5 +107,57 @@ export class RequestDetailsComponent {
       this.isLoading = false;
       this.spinner.hide();
     });
+  }
+
+  openQRCodeGeneratorDialog() {
+    const dialogRef = this.dialog.open(QrCodeGeneratorComponent, {
+      width: '780px',
+      panelClass: 'qr-generator-dialog',
+    });
+    dialogRef.componentInstance.qrData = this.requestNo;
+  }
+
+  openSacannerDialog() {
+    const dialogRef = this.dialog.open(QrCodeScannerComponent, {
+      width: '780px',
+      panelClass: 'scanner-dialog'
+    });
+    dialogRef.componentInstance.scanComplete.subscribe(res=> {
+      console.log(res);
+      const requestNo = res;
+      console.log(requestNo);
+      this.spinner.show();
+      this.isLoading = true;
+      try {
+        this.requestService.getById(requestNo).subscribe(res=> {
+          console.log(res);
+          if (res.success) {
+            this.requestNo = requestNo;
+            this.requestDetails = res.data;
+            this._location.go("/admin/request-management/details/" + requestNo);
+            dialogRef.close();
+          } else {
+            dialogRef.componentInstance.scannerData.message = "Invalid QR Code or QR Code was not a request number.";
+            this.snackBar.open("Invalid QR Code or QR Code was not a request number.", 'close', {
+              panelClass: ['style-error'],
+            });
+          }
+          this.isLoading = false;
+          this.spinner.hide();
+        }, ()=> {
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open("Invalid QR Code or QR Code was not a request number.", 'close', {
+            panelClass: ['style-error'],
+          });
+          this.isLoading = false;
+          this.spinner.hide();
+          dialogRef.componentInstance.scannerData.message = "Invalid QR Code or QR Code was not a request number.";
+        });
+      } catch(ex) {
+        this.isLoading = false;
+        this.spinner.hide();
+        dialogRef.componentInstance.scannerData.message = "Error scanning, please try again";
+      }
+    })
   }
 }

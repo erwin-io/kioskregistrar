@@ -23,7 +23,7 @@
                     </ng-container>
                     <!-- show dropdown yes no if filterOptions type is option-yes-no -->
                     <ng-template #yesNoFilter>
-                        <ng-container *ngIf="colDef.filterOptions.type ==='option-yes-no'; else textFilter" >
+                        <ng-container *ngIf="colDef.filterOptions.type ==='option-yes-no'; else numberRange" >
                             <mat-form-field appearance="outline">
                                 <mat-label>{{colDef.filterOptions.placeholder}}</mat-label>
                                 <mat-select [(value)]="colDef.filter" (selectionChange)="filterTable()">
@@ -32,6 +32,12 @@
                                     <mat-option value="No">No</mat-option>
                                 </mat-select>
                               </mat-form-field>
+                        </ng-container>
+                    </ng-template>
+                    <!-- show dropdown yes no if filterOptions type is option-yes-no -->
+                    <ng-template #numberRange>
+                        <ng-container *ngIf="colDef.filterOptions.type ==='number-range'; else textFilter" >
+                          <app-data-table-range-filter (valueChange)="colDef.filter = $event;filterTable()"></app-data-table-range-filter>
                         </ng-container>
                     </ng-template>
                     <!-- default filter field is text input -->

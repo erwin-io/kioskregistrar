@@ -1,5 +1,13 @@
+import { filter } from "rxjs";
+import { type } from "os";
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { getConnectionOptions, getConnection, Between, ILike } from "typeorm";
+import {
+  getConnectionOptions,
+  getConnection,
+  Between,
+  ILike,
+  Raw,
+} from "typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
 import * as path from "path";
@@ -148,11 +156,22 @@ export const columnDefToTypeORMCondition = (columnDef) => {
           convertColumnNotationToObject(col.apiNotation, value)
         );
       }
+    } else if (col.type === "number-range") {
+      const range = col.filter.split("-").map((x) => x?.trim());
+
+      conditionMapping.push(
+        convertColumnNotationToObject(
+          col.apiNotation,
+          Between(range[0], range[1])
+        )
+      );
     } else {
       conditionMapping.push(
         convertColumnNotationToObject(
           col.apiNotation,
-          ILike("%" + col.filter + "%")
+          Raw((alias) => {
+            return `CAST(${alias} as varchar) ILike '%${col.filter}%'`;
+          })
         )
       );
     }

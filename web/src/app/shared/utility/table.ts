@@ -10,7 +10,7 @@ export class ColumnDefinition {
     custom: string;
   };
   hide?: boolean;
-  type?: "string" | "boolean" | "date" | "decimal" = "string";
+  type?: "string" | "boolean" | "date" | "number" = "string";
   filterOptions: ColumnDefinitionFilterOptions;
   urlPropertyName?: string;
   filter: any;
@@ -19,7 +19,7 @@ export class ColumnDefinition {
 export class ColumnDefinitionFilterOptions {
   placeholder?: string;
   enable?: boolean;
-  type?: "text" | "option" | "option-yes-no" | "date" | "date-range" | "number";
+  type?: "text" | "option" | "option-yes-no" | "date" | "date-range" | "number" | "number-range";
 };
 export class ColumnStyle {
   width: string;

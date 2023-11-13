@@ -1,26 +1,28 @@
 
 <mat-card>
   <mat-card-header>
-    <button *ngIf="requestDetails?.dateCompleted && !requestDetails?.dateClosed" aria-label="Close request" matTooltip="Close request" mat-fab extended color="primary" (click)="onCloseRequest()">
-      <mat-icon>check</mat-icon>
-      Close request
-    </button>
-    <button *ngIf="requestDetails?.dateProcessEnd && !requestDetails?.dateCompleted" aria-label="Mark as Completed" matTooltip="Mark as Completed" mat-fab extended color="primary" (click)="onRequestCompleted()">
-      <mat-icon>check</mat-icon>
-      Complete request
-    </button>
-    <button *ngIf="!requestDetails?.dateProcessEnd && requestDetails?.dateProcessStarted" aria-label="Process" matTooltip="Process" mat-fab extended color="primary" (click)="onMarkAsToComplete()">
-      <mat-icon>check</mat-icon>
-      Complete process
-    </button>
-    <button *ngIf="!requestDetails?.isPaid && requestDetails?.dateAssigned && requestDetails?.assignedAdmin" aria-label="Pay now" matTooltip="Pay now" mat-fab extended color="primary" (click)="onPayNow()">
-      <mat-icon>check</mat-icon>
-      Pay now
-    </button>
-    <button *ngIf="(pageRights && pageRights['Assign']) && requestDetails?.requestStatus === 'PENDING' && !requestDetails?.dateAssigned && !requestDetails?.assignedAdmin" aria-label="Assign now" matTooltip="Assign now" mat-fab extended color="primary" (click)="onAssignNow()">
-      <mat-icon>check</mat-icon>
-      Assign now
-    </button>
+    <div class="request-controls">
+      <button *ngIf="requestDetails?.dateCompleted && !requestDetails?.dateClosed" aria-label="Close request" matTooltip="Close request" mat-fab extended color="primary" (click)="onCloseRequest()">
+        <mat-icon>check</mat-icon>
+        Close request
+      </button>
+      <button *ngIf="requestDetails?.dateProcessEnd && !requestDetails?.dateCompleted" aria-label="Mark as Completed" matTooltip="Mark as Completed" mat-fab extended color="primary" (click)="onRequestCompleted()">
+        <mat-icon>check</mat-icon>
+        Complete request
+      </button>
+      <button *ngIf="!requestDetails?.dateProcessEnd && requestDetails?.dateProcessStarted" aria-label="Process" matTooltip="Process" mat-fab extended color="primary" (click)="onMarkAsToComplete()">
+        <mat-icon>check</mat-icon>
+        Complete process
+      </button>
+      <button *ngIf="!requestDetails?.isPaid && requestDetails?.dateAssigned && requestDetails?.assignedAdmin" aria-label="Pay now" matTooltip="Pay now" mat-fab extended color="primary" (click)="onPayNow()">
+        <mat-icon>check</mat-icon>
+        Pay now
+      </button>
+      <button *ngIf="(pageRights && pageRights['Assign']) && requestDetails?.requestStatus === 'PENDING' && !requestDetails?.dateAssigned && !requestDetails?.assignedAdmin" aria-label="Assign now" matTooltip="Assign now" mat-fab extended color="primary" (click)="onAssignNow()">
+        <mat-icon>check</mat-icon>
+        Assign now
+      </button>
+    </div>
   </mat-card-header>
   <mat-card-content>
     <mat-vertical-stepper #stepper>

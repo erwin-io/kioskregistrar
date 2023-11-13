@@ -33,4 +33,10 @@
 
 ::ng-deep mat-card {
   margin: 8px!important;
+  .request-controls {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin: 16px 15px 0 15px!important;
+  }
 }

@@ -12,6 +12,7 @@ import { StatusTrackerComponent } from './request-details/status-tracker/status-
 import { RequestFormComponent } from './request-details/request-form/request-form.component';
 import { RequestPaymentFormComponent } from './request-details/request-payment-form/request-payment-form.component';
 import { RequestAssignFormComponent } from './request-details/request-assign-form/request-assign-form.component';
+import { NgxQrcodeStylingModule } from 'ngx-qrcode-styling';
 
 export const routes: Routes = [
   {
@@ -63,8 +64,7 @@ export const routes: Routes = [
     StatusTrackerComponent,
     RequestFormComponent,
     RequestPaymentFormComponent,
-    RequestAssignFormComponent,
-
+    RequestAssignFormComponent
   ],
   imports: [
     CommonModule,
