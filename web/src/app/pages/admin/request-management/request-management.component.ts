@@ -16,6 +16,7 @@ import { convertNotationToObject } from 'src/app/shared/utility/utility';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { SpinnerVisibilityService } from 'ng-http-loader';
+import { QrCodeScannerComponent } from 'src/app/shared/qr-code-scanner/qr-code-scanner.component';
 
 @Component({
   selector: 'app-request-management',
@@ -375,6 +376,48 @@ export class RequestManagementComponent {
         const profile = this.storageService.getLoginProfile();
         this.assignedAdmin[table] = profile["adminId"];
       }
+  }
+
+  openSacannerDialog() {
+    const dialogRef = this.dialog.open(QrCodeScannerComponent, {
+      width: '780px',
+      panelClass: 'scanner-dialog'
+    });
+    dialogRef.componentInstance.scanComplete.subscribe(res=> {
+      console.log(res);
+      const requestNo = res;
+      console.log(requestNo);
+      this.spinner.show();
+      this.isLoading = true;
+      try {
+        this.requestService.getById(requestNo).subscribe(res=> {
+          console.log(res);
+          if (res.success) {
+            this.router.navigate(["/admin/request-management/details/" + requestNo]);
+            dialogRef.close();
+          } else {
+            dialogRef.componentInstance.scannerData.message = "Invalid QR Code or QR Code was not a request number.";
+            this.snackBar.open("Invalid QR Code or QR Code was not a request number.", 'close', {
+              panelClass: ['style-error'],
+            });
+          }
+          this.isLoading = false;
+          this.spinner.hide();
+        }, ()=> {
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open("Invalid QR Code or QR Code was not a request number.", 'close', {
+            panelClass: ['style-error'],
+          });
+          this.isLoading = false;
+          this.spinner.hide();
+          dialogRef.componentInstance.scannerData.message = "Invalid QR Code or QR Code was not a request number.";
+        });
+      } catch(ex) {
+        this.isLoading = false;
+        this.spinner.hide();
+        dialogRef.componentInstance.scannerData.message = "Error scanning, please try again";
+      }
+    })
   }
 }
 

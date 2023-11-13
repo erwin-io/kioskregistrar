@@ -8,11 +8,11 @@
       </div>
       <div class="scanner-data">
         <span>{{scannerData.message}}</span>
-        <button mat-raised-button *ngIf="scannerData.canRetry" color="primary" (click)="scannerData.canRetry = false;scannerData.data=null;scannerData.error=null;scanner.resumeScanner()">Retry</button>
+        <button mat-raised-button *ngIf="scannerData.canRetry" color="primary" (click)="scannerData.canRetry = false;scannerData.data=null;scannerData.error=null;scannerData.message=null;scanner.ngOnInit()">Retry</button>
       </div>
       <div class="scanner-error" *ngIf="scannerData.error && scannerData.error !== ''">
         <span>Camera error, please try again</span>
-        <button mat-raised-button *ngIf="scannerData.canRetry" color="primary" (click)="scannerData.canRetry = false;scannerData.data=null;scannerData.error=null;scanner.ngOnInit()">Retry</button>
+        <button mat-raised-button *ngIf="scannerData.canRetry" color="primary" (click)="scannerData.canRetry = false;scannerData.data=null;scannerData.error=null;scannerData.message=null;scanner.ngOnInit()">Retry</button>
       </div>
     </div>
 </div>
