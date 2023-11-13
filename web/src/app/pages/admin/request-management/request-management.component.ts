@@ -166,14 +166,6 @@ export class RequestManagementComponent {
         'to-release': profile["adminId"],
         closed: profile["adminId"],
       }
-      console.log(this.assignedAdmin);
-      // if(this.pageRights["Manage"]) {
-      // } else {
-      //   const columnAssignedAdmin = this.tableColumns.find(x=> x.name === "assignedAdmin");
-      //   if(columnAssignedAdmin) {
-      //     columnAssignedAdmin.filterOptions.hide = true;
-      //   }
-      // }
       this.onSelectedTabChange({index: this.tabIndex}, false);
     }
 
@@ -229,11 +221,9 @@ export class RequestManagementComponent {
   }
 
   async headerChange(event) {
-    console.log(event);
   }
 
   async rowControlChange(event) {
-    console.log(event);
   }
 
   async toggleAssigneeColumn(table, columnDefs, showAll) {
@@ -384,14 +374,11 @@ export class RequestManagementComponent {
       panelClass: 'scanner-dialog'
     });
     dialogRef.componentInstance.scanComplete.subscribe(res=> {
-      console.log(res);
       const requestNo = res;
-      console.log(requestNo);
       this.spinner.show();
       this.isLoading = true;
       try {
         this.requestService.getById(requestNo).subscribe(res=> {
-          console.log(res);
           if (res.success) {
             this.router.navigate(["/admin/request-management/details/" + requestNo]);
             dialogRef.close();

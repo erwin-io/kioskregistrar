@@ -33,7 +33,6 @@ export class DataTableRangeFilterComponent {
   }
 
   onSliderChange(event) {
-    console.log("slider change ", event);
   }
 
   onInputChange() {
@@ -48,6 +47,5 @@ export class DataTableRangeFilterComponent {
   }
 
   maxRangeChange(event) {
-    console.log(event);
   }
 }

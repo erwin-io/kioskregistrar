@@ -104,11 +104,9 @@ export class MemberUsersComponent {
   }
 
   async headerChange(event) {
-    console.log(event);
   }
 
   async rowControlChange(event) {
-    console.log(event);
   }
 
   async getUsers(){

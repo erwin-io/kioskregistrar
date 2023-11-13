@@ -61,7 +61,6 @@ export class RequestDetailsComponent {
       }
       this.mediaWatcher = this.media.asObservable().subscribe((change) => {
         change.forEach((item) => {
-          console.log(this.media.isActive(["gt-sm", "lt-sm", "gt-xm", "lt-xm", "sm", "xm"]))
           this.handleMediaChange(item);
         });
       })
@@ -95,7 +94,6 @@ export class RequestDetailsComponent {
     this.isLoading = true;
     this.spinner.show();
     this.requestService.getById(this.requestNo).subscribe(res=> {
-      console.log(res);
       if (res.success) {
         this.requestDetails = res.data;
       } else {
@@ -123,14 +121,11 @@ export class RequestDetailsComponent {
       panelClass: 'scanner-dialog'
     });
     dialogRef.componentInstance.scanComplete.subscribe(res=> {
-      console.log(res);
       const requestNo = res;
-      console.log(requestNo);
       this.spinner.show();
       this.isLoading = true;
       try {
         this.requestService.getById(requestNo).subscribe(res=> {
-          console.log(res);
           if (res.success) {
             this.requestNo = requestNo;
             this.requestDetails = res.data;

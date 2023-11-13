@@ -24,13 +24,9 @@ export class StatusTrackerComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private requestService: RequestService) {
-    console.log(this.requestDetails);
-    console.log(this.pageRights);
   }
 
   ngAfterViewInit() {
-    console.log(this.requestDetails);
-    console.log(this.pageRights);
   }
 
   onCloseRequest() {

@@ -22,7 +22,7 @@ export class AuthService implements IServices {
   redirectUrl: string;
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
     private storageService: StorageService,
     private appconfig: AppConfigService) { }

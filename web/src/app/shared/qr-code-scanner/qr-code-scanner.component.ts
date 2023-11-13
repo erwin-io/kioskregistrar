@@ -18,14 +18,12 @@ export class QrCodeScannerComponent {
   constructor() {}
 
   onScanSuccess(event) {
-    console.log(event);
     this.scannerData.data = event;
     this.scannerData.error = null;
     this.scannerData.canRetry = true;
     this.scanComplete.emit(event);
   }
   onScanError(event) {
-    console.log(event);
     this.scannerData.error = event;
     this.scannerData.data = null;
     this.scannerData.canRetry = true;
