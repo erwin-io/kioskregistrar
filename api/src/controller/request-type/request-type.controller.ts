@@ -27,7 +27,7 @@ export class RequestTypeController {
 
   @Get("/:requestTypeId")
   //   @UseGuards(JwtAuthGuard)
-  async getAdminDetails(@Param("requestTypeId") requestTypeId: string) {
+  async getDetails(@Param("requestTypeId") requestTypeId: string) {
     const res = {} as ApiResponseModel<RequestType>;
     try {
       res.data = await this.requestTypeService.getById(requestTypeId);
@@ -42,7 +42,7 @@ export class RequestTypeController {
 
   @Post("/page")
   //   @UseGuards(JwtAuthGuard)
-  async getPaginatedAdminUsers(@Body() params: PaginationParamsDto) {
+  async getPaginated(@Body() params: PaginationParamsDto) {
     const res: ApiResponseModel<{ results: RequestType[]; total: number }> =
       {} as any;
     try {

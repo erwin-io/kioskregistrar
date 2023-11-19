@@ -24,7 +24,7 @@ let RequestTypeController = class RequestTypeController {
     constructor(requestTypeService) {
         this.requestTypeService = requestTypeService;
     }
-    async getAdminDetails(requestTypeId) {
+    async getDetails(requestTypeId) {
         const res = {};
         try {
             res.data = await this.requestTypeService.getById(requestTypeId);
@@ -37,7 +37,7 @@ let RequestTypeController = class RequestTypeController {
             return res;
         }
     }
-    async getPaginatedAdminUsers(params) {
+    async getPaginated(params) {
         const res = {};
         try {
             res.data = await this.requestTypeService.getRequestTypePagination(params);
@@ -99,14 +99,14 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], RequestTypeController.prototype, "getAdminDetails", null);
+], RequestTypeController.prototype, "getDetails", null);
 __decorate([
     (0, common_1.Post)("/page"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [pagination_params_dto_1.PaginationParamsDto]),
     __metadata("design:returntype", Promise)
-], RequestTypeController.prototype, "getPaginatedAdminUsers", null);
+], RequestTypeController.prototype, "getPaginated", null);
 __decorate([
     (0, common_1.Post)(""),
     __param(0, (0, common_1.Body)()),

@@ -7,8 +7,8 @@ import { RequestTypeService } from "src/services/request-type.service";
 export declare class RequestTypeController {
     private readonly requestTypeService;
     constructor(requestTypeService: RequestTypeService);
-    getAdminDetails(requestTypeId: string): Promise<ApiResponseModel<RequestType>>;
-    getPaginatedAdminUsers(params: PaginationParamsDto): Promise<ApiResponseModel<{
+    getDetails(requestTypeId: string): Promise<ApiResponseModel<RequestType>>;
+    getPaginated(params: PaginationParamsDto): Promise<ApiResponseModel<{
         results: RequestType[];
         total: number;
     }>>;
