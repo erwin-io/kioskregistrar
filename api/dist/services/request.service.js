@@ -29,19 +29,17 @@ let RequestService = class RequestService {
     constructor(requestRepo) {
         this.requestRepo = requestRepo;
     }
-    async getRequestPagination(requestStatus, { pageSize, pageIndex, order, columnDef, assignedAdminId }) {
+    async getRequestPagination({ pageSize, pageIndex, order, columnDef, assignedAdminId, }) {
         var _a, _b;
         const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
         const take = Number(pageSize);
         let condition = (0, utils_1.columnDefToTypeORMCondition)(columnDef);
-        if (!condition.requestStatus || condition.requestStatus === "") {
-            if (!requestStatus || requestStatus === "") {
-                requestStatus = "PENDING";
-            }
-            condition.requestStatus = requestStatus;
-        }
-        if (condition.requestStatus.toUpperCase() !==
-            request_constant_1.CONST_REQUEST_STATUS_ENUM.PENDING &&
+        if (columnDef &&
+            columnDef.find((x) => x.apiNotation === "requestStatus") &&
+            columnDef.find((x) => x.apiNotation === "requestStatus").type ===
+                "precise" &&
+            columnDef.find((x) => x.apiNotation === "requestStatus").filter !==
+                "PENDING" &&
             (!((_a = condition === null || condition === void 0 ? void 0 : condition.assignedAdmin) === null || _a === void 0 ? void 0 : _a.adminId) ||
                 ((_b = condition === null || condition === void 0 ? void 0 : condition.assignedAdmin) === null || _b === void 0 ? void 0 : _b.adminId) === "")) {
             if (assignedAdminId && assignedAdminId !== "") {
@@ -394,6 +392,53 @@ let RequestService = class RequestService {
                 return res[0]["timestamp"];
             });
             request.dateClosed = timestamp;
+            request.dateLastUpdated = timestamp;
+            request = await entityManager.save(Request_1.Request, request);
+            return await entityManager.findOne(Request_1.Request, {
+                where: {
+                    requestNo: request.requestNo,
+                },
+                relations: {
+                    requestedBy: {
+                        user: true,
+                    },
+                    assignedAdmin: {
+                        user: true,
+                    },
+                    requestType: {
+                        requestRequirements: true,
+                    },
+                },
+            });
+        });
+    }
+    async cancelRequest(requestNo, dto) {
+        return await this.requestRepo.manager.transaction(async (entityManager) => {
+            let request = await entityManager.findOne(Request_1.Request, {
+                where: {
+                    requestNo,
+                },
+            });
+            if (!request) {
+                throw Error(request_constant_1.REQUEST_ERROR_NOT_FOUND);
+            }
+            if (request.requestStatus.toUpperCase() === request_constant_1.CONST_REQUEST_STATUS_ENUM.CANCEL) {
+                throw Error("Request already cancelled!");
+            }
+            if (request.requestStatus.toUpperCase() === request_constant_1.CONST_REQUEST_STATUS_ENUM.CLOSED) {
+                throw Error("Request already closed!");
+            }
+            if (request.requestStatus.toUpperCase() !==
+                request_constant_1.CONST_REQUEST_STATUS_ENUM.PENDING ||
+                request.requestStatus.toUpperCase() !== request_constant_1.CONST_REQUEST_STATUS_ENUM.TOPAY) {
+                throw Error("Not allowed to cancel!, Request was already being process!");
+            }
+            request.requestStatus = request_constant_1.CONST_REQUEST_STATUS_ENUM.CANCEL;
+            const timestamp = await entityManager
+                .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
+                .then((res) => {
+                return res[0]["timestamp"];
+            });
             request.dateLastUpdated = timestamp;
             request = await entityManager.save(Request_1.Request, request);
             return await entityManager.findOne(Request_1.Request, {

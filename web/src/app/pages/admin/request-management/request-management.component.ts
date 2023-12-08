@@ -33,7 +33,7 @@ export class RequestManagementComponent {
     pending: "PENDING",
     'to-process': "TOPAY",
     processing: "PROCESSING",
-    'to-release': "TOCOMPLETE",
+    'to-complete': "TOCOMPLETE",
     closed: "CLOSED",
   };
   currentUserId:string;
@@ -42,7 +42,7 @@ export class RequestManagementComponent {
     pending: new MatTableDataSource<RequestTableColumn>([]),
     'to-process': new MatTableDataSource<RequestTableColumn>([]),
     processing: new MatTableDataSource<RequestTableColumn>([]),
-    'to-release': new MatTableDataSource<RequestTableColumn>([]),
+    'to-complete': new MatTableDataSource<RequestTableColumn>([]),
     closed: new MatTableDataSource<RequestTableColumn>([]),
   };
   isLoading = false;
@@ -51,28 +51,28 @@ export class RequestManagementComponent {
     pending: 0,
     'to-process': 0,
     processing: 0,
-    'to-release': 0,
+    'to-complete': 0,
     closed: 0,
   };
   pageSize = {
     pending: 10,
     'to-process': 10,
     processing: 10,
-    'to-release': 10,
+    'to-complete': 10,
     closed: 10,
   };
   total = {
     pending: 0,
     'to-process': 0,
     processing: 0,
-    'to-release': 0,
+    'to-complete': 0,
     closed: 0,
   };
   order = {
     pending: { requestId: "DESC" },
     'to-process': { requestId: "DESC" },
     processing: { requestId: "DESC" },
-    'to-release': { requestId: "DESC" },
+    'to-complete': { requestId: "DESC" },
     closed: { requestId: "DESC" },
   };
   filter = {
@@ -94,7 +94,7 @@ export class RequestManagementComponent {
       name: string;
       type: string;
     }[],
-    'to-release': [] as {
+    'to-complete': [] as {
       apiNotation: string;
       filter: string;
       name: string;
@@ -111,7 +111,7 @@ export class RequestManagementComponent {
     pending: this.appConfig.config.tableColumns.request.slice(0),
     'to-process': this.appConfig.config.tableColumns.request.slice(0),
     processing: this.appConfig.config.tableColumns.request.slice(0),
-    'to-release': this.appConfig.config.tableColumns.request.slice(0),
+    'to-complete': this.appConfig.config.tableColumns.request.slice(0),
     closed: this.appConfig.config.tableColumns.request.slice(0),
   };
 
@@ -134,7 +134,7 @@ export class RequestManagementComponent {
     pending: false,
     'to-process': false,
     processing: false,
-    'to-release': false,
+    'to-complete': false,
     closed: false,
   };
   constructor(
@@ -163,7 +163,7 @@ export class RequestManagementComponent {
         pending: profile["adminId"],
         'to-process': profile["adminId"],
         processing: profile["adminId"],
-        'to-release': profile["adminId"],
+        'to-complete': profile["adminId"],
         closed: profile["adminId"],
       }
       this.onSelectedTabChange({index: this.tabIndex}, false);
@@ -193,7 +193,7 @@ export class RequestManagementComponent {
     this.initTable("pending");
     this.initTable("to-process");
     this.initTable("processing");
-    this.initTable("to-release");
+    this.initTable("to-complete");
     this.initTable("closed");
   }
 
@@ -252,6 +252,24 @@ export class RequestManagementComponent {
 
   async initTable(table: string){
     try{
+      let findIndex = this.filter[table].findIndex(x=>x.apiNotation === 'requestStatus');
+      if(findIndex >= 0) {
+        this.filter[findIndex] = {
+          apiNotation: 'requestStatus',
+          // eslint-disable-next-line max-len
+          filter: table.toLowerCase() === "to-process" ? "TOPAY" : table.toUpperCase(),
+          name: 'requestStatus',
+          type: 'precise'
+        };
+      } else {
+        this.filter[table].push({
+          apiNotation: 'requestStatus',
+          // eslint-disable-next-line max-len
+          filter: table.toLowerCase() === "to-process" ? "TOPAY" : table.toUpperCase(),
+          name: 'requestStatus',
+          type: 'precise'
+        });
+      }
       this.isLoading = true;
       this.spinner.show();
       await this.requestService.getByAdvanceSearch({
@@ -260,8 +278,7 @@ export class RequestManagementComponent {
         pageIndex: this.pageIndex[table],
         pageSize: this.pageSize[table],
         assignedAdminId: this.assignedAdmin[table]
-      },
-      this.requestStatus[table])
+      })
       .subscribe(async res => {
         if(res.success){
           let data = res.data.results.map((d)=>{
@@ -326,11 +343,11 @@ export class RequestManagementComponent {
       hiddenColumn = ["dateProcessEnd", "dateCompleted"];
     } else if(index === 3) {
       if(redirect) {
-        this._location.go("/admin/request-management/to-release");
+        this._location.go("/admin/request-management/to-complete");
       }
       this.titleService.setTitle(`To complete | ${this.appConfig.config.appName}`);
       hiddenColumn = ["dateCompleted"];
-      table = 'to-release';
+      table = 'to-complete';
     } else if(index === 4) {
       if(redirect) {
         this._location.go("/admin/request-management/closed");

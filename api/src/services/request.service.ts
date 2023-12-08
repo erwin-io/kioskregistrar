@@ -17,6 +17,7 @@ import { RequestType } from "src/db/entities/RequestType";
 import { Repository } from "typeorm";
 import {
   AssignRequestDto,
+  CancelRequestDto,
   MarkRequestAsClosedDto,
   MarkRequestAsCompletedDto,
   MarkRequestAsPaidDto,
@@ -32,24 +33,25 @@ export class RequestService {
     @InjectRepository(Request) private readonly requestRepo: Repository<Request>
   ) {}
 
-  async getRequestPagination(
-    requestStatus,
-    { pageSize, pageIndex, order, columnDef, assignedAdminId }
-  ) {
+  async getRequestPagination({
+    pageSize,
+    pageIndex,
+    order,
+    columnDef,
+    assignedAdminId,
+  }) {
     const skip =
       Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
     const take = Number(pageSize);
 
     let condition = columnDefToTypeORMCondition(columnDef);
-    if (!condition.requestStatus || condition.requestStatus === "") {
-      if (!requestStatus || requestStatus === "") {
-        requestStatus = "PENDING";
-      }
-      condition.requestStatus = requestStatus;
-    }
     if (
-      condition.requestStatus.toUpperCase() !==
-        CONST_REQUEST_STATUS_ENUM.PENDING &&
+      columnDef &&
+      columnDef.find((x) => x.apiNotation === "requestStatus") &&
+      columnDef.find((x) => x.apiNotation === "requestStatus").type ===
+        "precise" &&
+      columnDef.find((x) => x.apiNotation === "requestStatus").filter !==
+        "PENDING" &&
       (!condition?.assignedAdmin?.adminId ||
         condition?.assignedAdmin?.adminId === "")
     ) {
@@ -435,6 +437,63 @@ export class RequestService {
           return res[0]["timestamp"];
         });
       request.dateClosed = timestamp;
+      request.dateLastUpdated = timestamp;
+      request = await entityManager.save(Request, request);
+      return await entityManager.findOne(Request, {
+        where: {
+          requestNo: request.requestNo,
+        },
+        relations: {
+          requestedBy: {
+            user: true,
+          },
+          assignedAdmin: {
+            user: true,
+          },
+          requestType: {
+            requestRequirements: true,
+          },
+        },
+      });
+    });
+  }
+
+  async cancelRequest(requestNo, dto: CancelRequestDto) {
+    return await this.requestRepo.manager.transaction(async (entityManager) => {
+      let request = await entityManager.findOne(Request, {
+        where: {
+          requestNo,
+        },
+      });
+      if (!request) {
+        throw Error(REQUEST_ERROR_NOT_FOUND);
+      }
+      if (
+        request.requestStatus.toUpperCase() === CONST_REQUEST_STATUS_ENUM.CANCEL
+      ) {
+        throw Error("Request already cancelled!");
+      }
+      if (
+        request.requestStatus.toUpperCase() === CONST_REQUEST_STATUS_ENUM.CLOSED
+      ) {
+        throw Error("Request already closed!");
+      }
+      if (
+        request.requestStatus.toUpperCase() !==
+          CONST_REQUEST_STATUS_ENUM.PENDING ||
+        request.requestStatus.toUpperCase() !== CONST_REQUEST_STATUS_ENUM.TOPAY
+      ) {
+        throw Error(
+          "Not allowed to cancel!, Request was already being process!"
+        );
+      }
+
+      request.requestStatus = CONST_REQUEST_STATUS_ENUM.CANCEL;
+      const timestamp = await entityManager
+        .query(CONST_QUERYCURRENT_TIMESTAMP)
+        .then((res) => {
+          return res[0]["timestamp"];
+        });
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
       return await entityManager.findOne(Request, {

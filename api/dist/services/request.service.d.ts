@@ -1,11 +1,11 @@
 import { RequestDto } from "src/core/dto/request/request.dto";
 import { Request } from "src/db/entities/Request";
 import { Repository } from "typeorm";
-import { AssignRequestDto, MarkRequestAsClosedDto, MarkRequestAsCompletedDto, MarkRequestAsPaidDto, MarkRequestAsProcessedDto, UpdateRequestDescriptionDto } from "src/core/dto/request/request-update.dto";
+import { AssignRequestDto, CancelRequestDto, MarkRequestAsClosedDto, MarkRequestAsCompletedDto, MarkRequestAsPaidDto, MarkRequestAsProcessedDto, UpdateRequestDescriptionDto } from "src/core/dto/request/request-update.dto";
 export declare class RequestService {
     private readonly requestRepo;
     constructor(requestRepo: Repository<Request>);
-    getRequestPagination(requestStatus: any, { pageSize, pageIndex, order, columnDef, assignedAdminId }: {
+    getRequestPagination({ pageSize, pageIndex, order, columnDef, assignedAdminId, }: {
         pageSize: any;
         pageIndex: any;
         order: any;
@@ -23,4 +23,5 @@ export declare class RequestService {
     markAsToComplete(requestNo: any, dto: MarkRequestAsProcessedDto): Promise<Request>;
     completeRequest(requestNo: any, dto: MarkRequestAsCompletedDto): Promise<Request>;
     closeRequest(requestNo: any, dto: MarkRequestAsClosedDto): Promise<Request>;
+    cancelRequest(requestNo: any, dto: CancelRequestDto): Promise<Request>;
 }

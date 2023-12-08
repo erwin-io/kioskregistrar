@@ -4,6 +4,7 @@ export const CONST_REQUEST_STATUS_ENUM = {
   PROCESSING: "PROCESSING",
   TOCOMPLETE: "TOCOMPLETE",
   CLOSED: "CLOSED",
+  CANCEL: "CANCEL",
 };
 
 export const CONST_REQUEST_STATUS = [
@@ -12,6 +13,7 @@ export const CONST_REQUEST_STATUS = [
   "PROCESSING",
   "TOCOMPLETE",
   "CLOSED",
+  "CANCEL",
 ];
 
 export const REQUEST_ERROR_NOT_FOUND = "Request type not found!";

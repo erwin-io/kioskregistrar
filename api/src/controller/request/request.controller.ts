@@ -12,6 +12,7 @@ import {
 import { RequestDto } from "src/core/dto/request/request.dto";
 import {
   AssignRequestDto,
+  CancelRequestDto,
   MarkRequestAsClosedDto,
   MarkRequestAsCompletedDto,
   MarkRequestAsPaidDto,
@@ -24,25 +25,13 @@ import { RequestType } from "src/db/entities/RequestType";
 @Controller("request")
 export class RequestController {
   constructor(private readonly requestService: RequestService) {}
-  @ApiParam({
-    name: "requestStatus",
-    required: true,
-    example: "PENDING",
-    description: "status: PENDING,TOPAY,PROCESSING,TOCOMPLETE,CLOSED",
-  })
-  @Post("/page/:requestStatus")
+  @Post("/page/")
   //   @UseGuards(JwtAuthGuard)
-  async getPaginatedAdminUsers(
-    @Param("requestStatus") requestStatus: string,
-    @Body() params: RequestPaginationParamsDto
-  ) {
+  async getPaginatedAdminUsers(@Body() params: RequestPaginationParamsDto) {
     const res: ApiResponseModel<{ results: Request[]; total: number }> =
       {} as any;
     try {
-      res.data = await this.requestService.getRequestPagination(
-        requestStatus,
-        params
-      );
+      res.data = await this.requestService.getRequestPagination(params);
       res.success = true;
       return res;
     } catch (e) {
@@ -187,6 +176,25 @@ export class RequestController {
     const res: ApiResponseModel<Request> = {} as any;
     try {
       res.data = await this.requestService.closeRequest(requestNo, dto);
+      res.success = true;
+      res.message = `Request ${UPDATE_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @Put("/:requestNo/cancelRequest")
+  //   @UseGuards(JwtAuthGuard)
+  async cancelRequest(
+    @Param("requestNo") requestNo: string,
+    @Body() dto: CancelRequestDto
+  ) {
+    const res: ApiResponseModel<Request> = {} as any;
+    try {
+      res.data = await this.requestService.cancelRequest(requestNo, dto);
       res.success = true;
       res.message = `Request ${UPDATE_SUCCESS}`;
       return res;

@@ -36,3 +36,6 @@ export class MarkRequestAsCompletedDto extends UpdateRequestStatusDto {
 
 export class MarkRequestAsClosedDto extends UpdateRequestStatusDto {
 }
+
+export class CancelRequestDto extends UpdateRequestStatusDto {
+}

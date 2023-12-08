@@ -66,8 +66,13 @@ export class UsersService {
               url: true,
             },
           },
+          adminId: true,
+          adminCode: true,
+          fullName: true,
+          firstName: true,
+          lastName: true,
         },
-        where: condition,
+        // where: condition,
         relations: {
           user: true,
         },
@@ -76,7 +81,7 @@ export class UsersService {
         order,
       }),
       this.userRepo.manager.count(Admin, {
-        where: condition,
+        // where: condition,
       }),
     ]);
     return {

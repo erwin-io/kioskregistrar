@@ -28,6 +28,7 @@ export class DefaultMemberDto {
   @IsOptional()
   middleName: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   lastName: string;
 

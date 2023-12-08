@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { SpinnerVisibilityService } from 'ng-http-loader';
+import { SelectAdminDialogComponent } from 'src/app/shared/select-admin-dialog/select-admin-dialog.component';
+import { Admin } from 'src/app/model/admin';
 
 @Component({
   selector: 'app-status-tracker',
@@ -230,15 +232,17 @@ export class StatusTrackerComponent {
   }
 
   onAssignNow() {
-    const dialogRef = this.dialog.open(RequestAssignFormComponent, {
-      closeOnNavigation: true,
+    const dialogRef = this.dialog.open(SelectAdminDialogComponent, {
+      disableClose: true,
+      panelClass: "select-admin-dialog"
     });
-    dialogRef.componentInstance.conFirm.subscribe(async ({ id, fullName }) => {
+    dialogRef.afterClosed().subscribe(async (selected: Admin)=> {
       try {
-        if({ id, fullName }){
+        if(selected && selected?.adminId){
+          const { adminId } = selected;
           this.spinner.show();
           const res = await this.requestService.assignRequest(this.requestDetails.requestNo, {
-            assignedAdminId: id
+            assignedAdminId: adminId
           }).toPromise();
           if(res.success) {
             this.requestDetails = res.data;
@@ -263,6 +267,6 @@ export class StatusTrackerComponent {
         });
         this.spinner.hide();
       }
-    });
+    })
   }
 }

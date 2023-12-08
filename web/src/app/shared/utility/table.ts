@@ -19,7 +19,7 @@ export class ColumnDefinition {
 export class ColumnDefinitionFilterOptions {
   placeholder?: string;
   enable?: boolean;
-  type?: "text" | "option" | "option-yes-no" | "date" | "date-range" | "number" | "number-range";
+  type?: "text" | "option" | "option-yes-no" | "date" | "date-range" | "number" | "number-range" | "precise";
 };
 export class ColumnStyle {
   width: string;

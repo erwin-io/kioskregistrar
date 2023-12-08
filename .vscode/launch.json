@@ -27,6 +27,26 @@
         "/*": "*",
         "/./~/*": "${webRoot}/node_modules/*"
       }
-    }
+    },
+    // Based on: https://github.com/microsoft/vscode-recipes/tree/master/Angular-CLI
+    {
+      "name": "Launch Mobile",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: ionic_serve",
+      "url": "http://localhost:8100/",
+
+      // Note: The ./client directory
+      "webRoot": "${workspaceFolder}/mobile",
+
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/*",
+        "/*": "*",
+        "/./~/*": "${webRoot}/node_modules/*"
+      }
+    },
   ]
 }

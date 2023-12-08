@@ -59,8 +59,12 @@ let UsersService = class UsersService {
                             url: true,
                         },
                     },
+                    adminId: true,
+                    adminCode: true,
+                    fullName: true,
+                    firstName: true,
+                    lastName: true,
                 },
-                where: condition,
                 relations: {
                     user: true,
                 },
@@ -68,9 +72,7 @@ let UsersService = class UsersService {
                 take,
                 order,
             }),
-            this.userRepo.manager.count(Admin_1.Admin, {
-                where: condition,
-            }),
+            this.userRepo.manager.count(Admin_1.Admin, {}),
         ]);
         return {
             results,

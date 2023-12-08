@@ -36,6 +36,9 @@ export class Users {
   @Column("json", { name: "Access", default: [] })
   access: object;
 
+  @Column("character varying", { name: "UserCode", nullable: true })
+  userCode: string | null;
+
   @OneToMany(() => Admin, (admin) => admin.user)
   admins: Admin[];
 

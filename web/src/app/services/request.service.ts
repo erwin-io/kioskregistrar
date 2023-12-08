@@ -20,10 +20,8 @@ export class RequestService implements IServices {
     pageSize: number,
     pageIndex: number,
     assignedAdminId: string,
-  },
-  requestStatus: string,
-  ): Observable<ApiResponse<{ results: Request[], total: number}>> {
-    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.request.getByAdvanceSearch + requestStatus,
+  }): Observable<ApiResponse<{ results: Request[], total: number}>> {
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.request.getByAdvanceSearch,
       params)
     .pipe(
       tap(_ => this.log('request')),

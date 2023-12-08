@@ -149,13 +149,37 @@ const columnDefToTypeORMCondition = (columnDef) => {
             const range = col.filter.split("-").map((x) => x === null || x === void 0 ? void 0 : x.trim());
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Between)(range[0], range[1])));
         }
+        else if (col.type === "precise") {
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, col.filter));
+        }
+        else if (col.type === "not" || col.type === "except") {
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Not)(col.filter)));
+        }
+        else if (col.type === "in" || col.type === "option-multi") {
+            const array = col.filter.toString().split(",");
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.In)(array)));
+        }
         else {
-            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Raw)((alias) => {
-                return `CAST(${alias} as varchar) ILike '%${col.filter}%'`;
-            })));
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ILike)(`%${col.filter}%`)));
         }
     }
-    return Object.assign({}, ...conditionMapping);
+    const newArr = [];
+    for (const item of conditionMapping) {
+        const name = Object.keys(item)[0];
+        if (newArr.some((x) => x[name])) {
+            const index = newArr.findIndex((x) => x[name]);
+            const res = Object.keys(newArr[index]).map((key) => newArr[index][key]);
+            res.push(item[name]);
+            newArr[index] = {
+                [name]: Object.assign({}, ...res),
+            };
+            res.push(newArr[index]);
+        }
+        else {
+            newArr.push(item);
+        }
+    }
+    return Object.assign({}, ...newArr);
 };
 exports.columnDefToTypeORMCondition = columnDefToTypeORMCondition;
 const generateRequestNo = (requestId) => {

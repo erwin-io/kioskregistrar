@@ -24,10 +24,10 @@ let RequestController = class RequestController {
     constructor(requestService) {
         this.requestService = requestService;
     }
-    async getPaginatedAdminUsers(requestStatus, params) {
+    async getPaginatedAdminUsers(params) {
         const res = {};
         try {
-            res.data = await this.requestService.getRequestPagination(requestStatus, params);
+            res.data = await this.requestService.getRequestPagination(params);
             res.success = true;
             return res;
         }
@@ -148,19 +148,26 @@ let RequestController = class RequestController {
             return res;
         }
     }
+    async cancelRequest(requestNo, dto) {
+        const res = {};
+        try {
+            res.data = await this.requestService.cancelRequest(requestNo, dto);
+            res.success = true;
+            res.message = `Request ${api_response_constant_1.UPDATE_SUCCESS}`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
 };
 __decorate([
-    (0, swagger_1.ApiParam)({
-        name: "requestStatus",
-        required: true,
-        example: "PENDING",
-        description: "status: PENDING,TOPAY,PROCESSING,TOCOMPLETE,CLOSED",
-    }),
-    (0, common_1.Post)("/page/:requestStatus"),
-    __param(0, (0, common_1.Param)("requestStatus")),
-    __param(1, (0, common_1.Body)()),
+    (0, common_1.Post)("/page/"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, request_pagination_params_dto_1.RequestPaginationParamsDto]),
+    __metadata("design:paramtypes", [request_pagination_params_dto_1.RequestPaginationParamsDto]),
     __metadata("design:returntype", Promise)
 ], RequestController.prototype, "getPaginatedAdminUsers", null);
 __decorate([
@@ -225,6 +232,14 @@ __decorate([
     __metadata("design:paramtypes", [String, request_update_dto_1.MarkRequestAsClosedDto]),
     __metadata("design:returntype", Promise)
 ], RequestController.prototype, "closeRequest", null);
+__decorate([
+    (0, common_1.Put)("/:requestNo/cancelRequest"),
+    __param(0, (0, common_1.Param)("requestNo")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, request_update_dto_1.CancelRequestDto]),
+    __metadata("design:returntype", Promise)
+], RequestController.prototype, "cancelRequest", null);
 RequestController = __decorate([
     (0, swagger_1.ApiTags)("request"),
     (0, common_1.Controller)("request"),

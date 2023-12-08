@@ -7,6 +7,8 @@ import {
   Between,
   ILike,
   Raw,
+  Not,
+  In,
 } from "typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
@@ -165,18 +167,41 @@ export const columnDefToTypeORMCondition = (columnDef) => {
           Between(range[0], range[1])
         )
       );
+    } else if (col.type === "precise") {
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, col.filter)
+      );
+    } else if (col.type === "not" || col.type === "except") {
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, Not(col.filter))
+      );
+    } else if (col.type === "in" || col.type === "option-multi") {
+      const array = col.filter.toString().split(",");
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, In(array))
+      );
     } else {
       conditionMapping.push(
-        convertColumnNotationToObject(
-          col.apiNotation,
-          Raw((alias) => {
-            return `CAST(${alias} as varchar) ILike '%${col.filter}%'`;
-          })
-        )
+        convertColumnNotationToObject(col.apiNotation, ILike(`%${col.filter}%`))
       );
     }
   }
-  return Object.assign({}, ...conditionMapping);
+  const newArr = [];
+  for (const item of conditionMapping) {
+    const name = Object.keys(item)[0];
+    if (newArr.some((x) => x[name])) {
+      const index = newArr.findIndex((x) => x[name]);
+      const res = Object.keys(newArr[index]).map((key) => newArr[index][key]);
+      res.push(item[name]);
+      newArr[index] = {
+        [name]: Object.assign({}, ...res),
+      };
+      res.push(newArr[index]);
+    } else {
+      newArr.push(item);
+    }
+  }
+  return Object.assign({}, ...newArr);
 };
 
 export const generateRequestNo = (requestId) => {

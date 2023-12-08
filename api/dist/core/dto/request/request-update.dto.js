@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MarkRequestAsClosedDto = exports.MarkRequestAsCompletedDto = exports.MarkRequestAsProcessedDto = exports.MarkRequestAsPaidDto = exports.AssignRequestDto = exports.UpdateRequestStatusDto = exports.UpdateRequestDescriptionDto = void 0;
+exports.CancelRequestDto = exports.MarkRequestAsClosedDto = exports.MarkRequestAsCompletedDto = exports.MarkRequestAsProcessedDto = exports.MarkRequestAsPaidDto = exports.AssignRequestDto = exports.UpdateRequestStatusDto = exports.UpdateRequestDescriptionDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class UpdateRequestDescriptionDto {
@@ -43,4 +43,7 @@ exports.MarkRequestAsCompletedDto = MarkRequestAsCompletedDto;
 class MarkRequestAsClosedDto extends UpdateRequestStatusDto {
 }
 exports.MarkRequestAsClosedDto = MarkRequestAsClosedDto;
+class CancelRequestDto extends UpdateRequestStatusDto {
+}
+exports.CancelRequestDto = CancelRequestDto;
 //# sourceMappingURL=request-update.dto.js.map

@@ -33,6 +33,7 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter } from './shared/utility/app-date-adapter';
 import { QrCodeScannerModule } from './shared/qr-code-scanner/qr-code-scanner.module';
 import { QrCodeGeneratorModule } from './shared/qr-code-generator/qr-code-generator.module';
+import { SelectAdminDialogComponent } from './shared/select-admin-dialog/select-admin-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +44,8 @@ import { QrCodeGeneratorModule } from './shared/qr-code-generator/qr-code-genera
     AlertDialogComponent,
     PageNotFoundComponent,
     OptionSheetComponent,
-    NoAccessComponent
+    NoAccessComponent,
+    SelectAdminDialogComponent
   ],
   imports: [
     BrowserModule,

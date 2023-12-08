@@ -39,7 +39,7 @@ export const routes: Routes = [
     data: { title: "Processing", tab: 2 }
   },
   {
-    path: 'to-release',
+    path: 'to-complete',
     pathMatch: 'full',
     component: RequestManagementComponent,
     data: { title: "To complete", tab: 3 }
