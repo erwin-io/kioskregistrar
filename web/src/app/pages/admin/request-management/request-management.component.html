@@ -97,30 +97,30 @@
           </mat-card>
         </ng-template>
       </mat-tab>
-      <mat-tab ariaLabel="to-complete">
+      <mat-tab ariaLabel="tocomplete">
         <ng-template mat-tab-label>
-          <span class="tab-label" matBadge="{{total['to-complete'] > 99 ? '99+' : total['to-complete'] }}" *ngIf="total['to-complete'] > 0; else matLableToComplete" matBadgeOverlap="false">To complete</span>
+          <span class="tab-label" matBadge="{{total['tocomplete'] > 99 ? '99+' : total['tocomplete'] }}" *ngIf="total['tocomplete'] > 0; else matLableToComplete" matBadgeOverlap="false">To complete</span>
           <ng-template #matLableToComplete>To complete</ng-template>
         </ng-template>
         <ng-template matTabContent>
           <mat-card [ngClass]="{ 'hidden': isLoading }">
             <mat-card-content fxLayout="column" >
-              <mat-checkbox style="max-width: max-content;" [(ngModel)]="showAll['to-complete']" (change)="toggleAssigneeColumn('to-complete', tableColumns['to-complete'], showAll['to-complete'])">Show All</mat-checkbox>
+              <mat-checkbox style="max-width: max-content;" [(ngModel)]="showAll['tocomplete']" (change)="toggleAssigneeColumn('tocomplete', tableColumns['tocomplete'], showAll['tocomplete'])">Show All</mat-checkbox>
               <mat-form-field appearance="outline" style="max-width: max-content;" >
                 <mat-label>Assigned to</mat-label>
-                <mat-select [disabled]="showAll['to-complete']" [(ngModel)]="assignedAdmin['to-complete']" (selectionChange)="selectAssigneeChange($event, 'to-complete')">
+                <mat-select [disabled]="showAll['tocomplete']" [(ngModel)]="assignedAdmin['tocomplete']" (selectionChange)="selectAssigneeChange($event, 'tocomplete')">
                     <mat-option [value]="item.adminId" *ngFor="let item of optionsAllAdmin">{{item.fullName}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <app-data-table
                 #dataTableToComplete
                 [isLoading]="isLoading"
-                [dataSource]="dataSource['to-complete']"
-                [columnDefs]="tableColumns['to-complete']"
-                [total]="total['to-complete']"
-                (pageChange)="pageChange($event, 'to-complete')"
-                (sortChange)="sortChange($event, 'to-complete')"
-                (filterChange)="filterChange($event, 'to-complete')"
+                [dataSource]="dataSource['tocomplete']"
+                [columnDefs]="tableColumns['tocomplete']"
+                [total]="total['tocomplete']"
+                (pageChange)="pageChange($event, 'tocomplete')"
+                (sortChange)="sortChange($event, 'tocomplete')"
+                (filterChange)="filterChange($event, 'tocomplete')"
                 (headerControlChange)="headerChange($event)"
                 (rowControlChange)="rowControlChange($event)"
               ></app-data-table>

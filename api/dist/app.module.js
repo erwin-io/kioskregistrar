@@ -43,6 +43,7 @@ const users_module_1 = require("./controller/users/users.module");
 const request_module_1 = require("./controller/request/request.module");
 const request_type_module_1 = require("./controller/request-type/request-type.module");
 const request_requirements_module_1 = require("./controller/request-requirements/request-requirements.module");
+const dashboard_module_1 = require("./controller/dashboard/dashboard.module");
 const envFilePath = (0, utils_1.getEnvPath)(`${__dirname}/common/envs`);
 let AppModule = class AppModule {
 };
@@ -63,6 +64,7 @@ AppModule = __decorate([
             request_module_1.RequestModule,
             request_type_module_1.RequestTypeModule,
             request_requirements_module_1.RequestRequirementsModule,
+            dashboard_module_1.DashboardModule,
         ],
         providers: [app_service_1.AppService],
         controllers: [],

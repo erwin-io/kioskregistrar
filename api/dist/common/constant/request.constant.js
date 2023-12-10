@@ -8,6 +8,7 @@ exports.CONST_REQUEST_STATUS_ENUM = {
     TOCOMPLETE: "TOCOMPLETE",
     CLOSED: "CLOSED",
     CANCEL: "CANCEL",
+    REJECTED: "REJECTED",
 };
 exports.CONST_REQUEST_STATUS = [
     "PENDING",
@@ -16,6 +17,7 @@ exports.CONST_REQUEST_STATUS = [
     "TOCOMPLETE",
     "CLOSED",
     "CANCEL",
+    "REJECTED",
 ];
 exports.REQUEST_ERROR_NOT_FOUND = "Request type not found!";
 //# sourceMappingURL=request.constant.js.map

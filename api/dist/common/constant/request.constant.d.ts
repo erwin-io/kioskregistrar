@@ -5,6 +5,7 @@ export declare const CONST_REQUEST_STATUS_ENUM: {
     TOCOMPLETE: string;
     CLOSED: string;
     CANCEL: string;
+    REJECTED: string;
 };
 export declare const CONST_REQUEST_STATUS: string[];
 export declare const REQUEST_ERROR_NOT_FOUND = "Request type not found!";

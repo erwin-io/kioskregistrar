@@ -22,6 +22,7 @@ import {
   MarkRequestAsCompletedDto,
   MarkRequestAsPaidDto,
   MarkRequestAsProcessedDto,
+  RejectRequestDto,
   UpdateRequestDescriptionDto,
 } from "src/core/dto/request/request-update.dto";
 import { Admin } from "src/db/entities/Admin";
@@ -458,6 +459,69 @@ export class RequestService {
     });
   }
 
+  async rejectRequest(requestNo, dto: RejectRequestDto) {
+    return await this.requestRepo.manager.transaction(async (entityManager) => {
+      let request = await entityManager.findOne(Request, {
+        where: {
+          requestNo,
+        },
+      });
+      if (!request) {
+        throw Error(REQUEST_ERROR_NOT_FOUND);
+      }
+      if (
+        request.requestStatus.toUpperCase() ===
+        CONST_REQUEST_STATUS_ENUM.REJECTED
+      ) {
+        throw Error("Request already rejected!");
+      }
+      if (
+        request.requestStatus.toUpperCase() === CONST_REQUEST_STATUS_ENUM.CANCEL
+      ) {
+        throw Error("Request already cancelled!");
+      }
+      if (
+        request.requestStatus.toUpperCase() === CONST_REQUEST_STATUS_ENUM.CLOSED
+      ) {
+        throw Error("Request already closed!");
+      }
+      if (
+        !["PENDING", "TOPAY"].some(
+          (x) => x === request.requestStatus.toUpperCase()
+        )
+      ) {
+        throw Error(
+          "Not allowed to cancel!, Request was already being process!"
+        );
+      }
+
+      request.requestStatus = CONST_REQUEST_STATUS_ENUM.REJECTED;
+      const timestamp = await entityManager
+        .query(CONST_QUERYCURRENT_TIMESTAMP)
+        .then((res) => {
+          return res[0]["timestamp"];
+        });
+      request.dateLastUpdated = timestamp;
+      request = await entityManager.save(Request, request);
+      return await entityManager.findOne(Request, {
+        where: {
+          requestNo: request.requestNo,
+        },
+        relations: {
+          requestedBy: {
+            user: true,
+          },
+          assignedAdmin: {
+            user: true,
+          },
+          requestType: {
+            requestRequirements: true,
+          },
+        },
+      });
+    });
+  }
+
   async cancelRequest(requestNo, dto: CancelRequestDto) {
     return await this.requestRepo.manager.transaction(async (entityManager) => {
       let request = await entityManager.findOne(Request, {
@@ -479,9 +543,9 @@ export class RequestService {
         throw Error("Request already closed!");
       }
       if (
-        request.requestStatus.toUpperCase() !==
-          CONST_REQUEST_STATUS_ENUM.PENDING ||
-        request.requestStatus.toUpperCase() !== CONST_REQUEST_STATUS_ENUM.TOPAY
+        !["PENDING", "TOPAY"].some(
+          (x) => x === request.requestStatus.toUpperCase()
+        )
       ) {
         throw Error(
           "Not allowed to cancel!, Request was already being process!"

@@ -5,6 +5,7 @@ export const CONST_REQUEST_STATUS_ENUM = {
   TOCOMPLETE: "TOCOMPLETE",
   CLOSED: "CLOSED",
   CANCEL: "CANCEL",
+  REJECTED: "REJECTED",
 };
 
 export const CONST_REQUEST_STATUS = [
@@ -14,6 +15,8 @@ export const CONST_REQUEST_STATUS = [
   "TOCOMPLETE",
   "CLOSED",
   "CANCEL",
+  "REJECTED",
 ];
 
 export const REQUEST_ERROR_NOT_FOUND = "Request type not found!";
+  

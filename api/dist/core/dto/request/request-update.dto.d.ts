@@ -16,3 +16,5 @@ export declare class MarkRequestAsClosedDto extends UpdateRequestStatusDto {
 }
 export declare class CancelRequestDto extends UpdateRequestStatusDto {
 }
+export declare class RejectRequestDto extends UpdateRequestStatusDto {
+}

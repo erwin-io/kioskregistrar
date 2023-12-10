@@ -80,6 +80,12 @@ export class Request {
   @Column("timestamp with time zone", { name: "RAssignedDate", nullable: true })
   rAssignedDate: Date | null;
 
+  @Column("character varying", { name: "RejectReason", nullable: true })
+  rejectReason: string | null;
+
+  @Column("character varying", { name: "CancelReason", nullable: true })
+  cancelReason: string | null;
+
   @ManyToOne(() => Admin, (admin) => admin.requests)
   @JoinColumn([{ name: "AssignedAdminId", referencedColumnName: "adminId" }])
   assignedAdmin: Admin;

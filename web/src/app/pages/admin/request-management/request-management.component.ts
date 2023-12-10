@@ -33,7 +33,7 @@ export class RequestManagementComponent {
     pending: "PENDING",
     'to-process': "TOPAY",
     processing: "PROCESSING",
-    'to-complete': "TOCOMPLETE",
+    'tocomplete': "TOCOMPLETE",
     closed: "CLOSED",
   };
   currentUserId:string;
@@ -42,7 +42,7 @@ export class RequestManagementComponent {
     pending: new MatTableDataSource<RequestTableColumn>([]),
     'to-process': new MatTableDataSource<RequestTableColumn>([]),
     processing: new MatTableDataSource<RequestTableColumn>([]),
-    'to-complete': new MatTableDataSource<RequestTableColumn>([]),
+    'tocomplete': new MatTableDataSource<RequestTableColumn>([]),
     closed: new MatTableDataSource<RequestTableColumn>([]),
   };
   isLoading = false;
@@ -51,28 +51,28 @@ export class RequestManagementComponent {
     pending: 0,
     'to-process': 0,
     processing: 0,
-    'to-complete': 0,
+    'tocomplete': 0,
     closed: 0,
   };
   pageSize = {
     pending: 10,
     'to-process': 10,
     processing: 10,
-    'to-complete': 10,
+    'tocomplete': 10,
     closed: 10,
   };
   total = {
     pending: 0,
     'to-process': 0,
     processing: 0,
-    'to-complete': 0,
+    'tocomplete': 0,
     closed: 0,
   };
   order = {
     pending: { requestId: "DESC" },
     'to-process': { requestId: "DESC" },
     processing: { requestId: "DESC" },
-    'to-complete': { requestId: "DESC" },
+    'tocomplete': { requestId: "DESC" },
     closed: { requestId: "DESC" },
   };
   filter = {
@@ -94,7 +94,7 @@ export class RequestManagementComponent {
       name: string;
       type: string;
     }[],
-    'to-complete': [] as {
+    'tocomplete': [] as {
       apiNotation: string;
       filter: string;
       name: string;
@@ -111,7 +111,7 @@ export class RequestManagementComponent {
     pending: this.appConfig.config.tableColumns.request.slice(0),
     'to-process': this.appConfig.config.tableColumns.request.slice(0),
     processing: this.appConfig.config.tableColumns.request.slice(0),
-    'to-complete': this.appConfig.config.tableColumns.request.slice(0),
+    'tocomplete': this.appConfig.config.tableColumns.request.slice(0),
     closed: this.appConfig.config.tableColumns.request.slice(0),
   };
 
@@ -134,7 +134,7 @@ export class RequestManagementComponent {
     pending: false,
     'to-process': false,
     processing: false,
-    'to-complete': false,
+    'tocomplete': false,
     closed: false,
   };
   constructor(
@@ -163,7 +163,7 @@ export class RequestManagementComponent {
         pending: profile["adminId"],
         'to-process': profile["adminId"],
         processing: profile["adminId"],
-        'to-complete': profile["adminId"],
+        'tocomplete': profile["adminId"],
         closed: profile["adminId"],
       }
       this.onSelectedTabChange({index: this.tabIndex}, false);
@@ -193,7 +193,7 @@ export class RequestManagementComponent {
     this.initTable("pending");
     this.initTable("to-process");
     this.initTable("processing");
-    this.initTable("to-complete");
+    this.initTable("tocomplete");
     this.initTable("closed");
   }
 
@@ -343,11 +343,11 @@ export class RequestManagementComponent {
       hiddenColumn = ["dateProcessEnd", "dateCompleted"];
     } else if(index === 3) {
       if(redirect) {
-        this._location.go("/admin/request-management/to-complete");
+        this._location.go("/admin/request-management/tocomplete");
       }
       this.titleService.setTitle(`To complete | ${this.appConfig.config.appName}`);
       hiddenColumn = ["dateCompleted"];
-      table = 'to-complete';
+      table = 'tocomplete';
     } else if(index === 4) {
       if(redirect) {
         this._location.go("/admin/request-management/closed");
