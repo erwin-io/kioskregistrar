@@ -15,6 +15,20 @@
     </span>
   </div>
   <mat-divider></mat-divider>
+  <div fxLayout="column">
+    <div class="profile-holder"  >
+      <div class="profile-pic">
+        <label class="label" (click)="onShowImageViewer()">
+          <span class="glyphicon glyphicon-camera"></span>
+          <span>View picture</span>
+        </label>
+        <div class="profile-loader" *ngIf="!userProfilePicLoaded">
+          <mat-spinner></mat-spinner>
+        </div>
+        <img [hidden]="!userProfilePicLoaded" [src]="requestDetails?.requestedBy?.user?.profileFile?.url" (error)="profilePicErrorHandler($event)" id="profilePicture" width="200" (load)="userProfilePicLoaded = true"/>
+      </div>
+    </div>
+  </div>
   <div fxLayout="column" fxLayoutGap="5px">
     <h4>Name</h4>
     <span class="value"><a href="/admin/members/{{requestDetails?.requestedBy?.memberCode}}" target="_blank">{{requestDetails?.requestedBy?.fullName}}</a></span>

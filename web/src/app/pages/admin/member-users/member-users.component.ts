@@ -163,6 +163,7 @@ export class MemberUsersComponent {
               birthDate: d.birthDate,
               address: d.address,
               isAlumni: d.isAlumni,
+              profile: d.user?.profileFile?.url,
               url: `/admin/members/${d.memberCode}`,
             } as MemberTableColumn
           });

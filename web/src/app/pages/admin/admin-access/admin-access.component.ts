@@ -116,6 +116,7 @@ export class AdminAccessComponent implements OnInit {
               fullName: `${d.firstName} ${d.lastName}`,
               mobileNumber: d.mobileNumber,
               enable: d.user.accessGranted,
+              profile: d.user?.profileFile?.url,
               url: `/admin/admin-access/${d.adminCode}`,
             } as AdminTableColumn
           });

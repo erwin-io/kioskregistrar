@@ -34,6 +34,10 @@ import { AppDateAdapter } from './shared/utility/app-date-adapter';
 import { QrCodeScannerModule } from './shared/qr-code-scanner/qr-code-scanner.module';
 import { QrCodeGeneratorModule } from './shared/qr-code-generator/qr-code-generator.module';
 import { SelectAdminDialogComponent } from './shared/select-admin-dialog/select-admin-dialog.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { WebcamModule } from 'ngx-webcam';
+import { ImageUploadDialogComponent } from './shared/image-upload-dialog/image-upload-dialog.component';
+import { ImageViewerDialogComponent } from './shared/image-viewer-dialog/image-viewer-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +49,9 @@ import { SelectAdminDialogComponent } from './shared/select-admin-dialog/select-
     PageNotFoundComponent,
     OptionSheetComponent,
     NoAccessComponent,
-    SelectAdminDialogComponent
+    SelectAdminDialogComponent,
+    ImageUploadDialogComponent,
+    ImageViewerDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -57,6 +63,8 @@ import { SelectAdminDialogComponent } from './shared/select-admin-dialog/select-
     HttpClientModule,
     MaterialModule,
     ReactiveFormsModule,
+    ImageCropperModule,
+    WebcamModule,
     NgHttpLoaderModule.forRoot(),
     QrCodeScannerModule,
     QrCodeGeneratorModule

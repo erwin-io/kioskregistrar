@@ -269,4 +269,8 @@ export class StatusTrackerComponent {
       }
     })
   }
+
+  profilePicErrorHandler(event) {
+    event.target.src = '../../../../../../assets/img/person.png';
+  }
 }

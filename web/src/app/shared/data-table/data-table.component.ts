@@ -20,6 +20,7 @@ export class DataTableComponent {
   @Input() isLoading: any;
   @Input() dataSource = new MatTableDataSource<any>();
   @Input() total = 0;
+  @Input() defaultThumbnail;
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -27,7 +28,7 @@ export class DataTableComponent {
   @Output() sortChange = new EventEmitter();
   @Output() filterChange = new EventEmitter();
   @Output() headerControlChange = new EventEmitter();
-  @Output() rowControlChange = new EventEmitter();
+  @Output() controlMenuItemSelected = new EventEmitter();
 
   dateFromDefault = new Date();
   dateToDefault = new Date();
@@ -103,7 +104,11 @@ export class DataTableComponent {
     }
   }
 
-  booleanRowControlChange() {
-    this.rowControlChange.emit(this.dataSource.data);
+  imageErrorHandler(event) {
+    if(this.defaultThumbnail) {
+      event.target.src = this.defaultThumbnail;
+    } else {
+      event.target.src = "../../../assets/img/thumbnail.png";
+    }
   }
 }

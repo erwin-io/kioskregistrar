@@ -122,7 +122,7 @@ export class DefaultMemberDto {
 
   @ApiProperty()
   @IsOptional()
-  userProfilePic: any;
+  profileFile: any;
 }
 
 export class UpdateMemberUserDto extends DefaultMemberDto {

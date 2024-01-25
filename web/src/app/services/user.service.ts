@@ -83,6 +83,14 @@ export class UserService implements IServices {
     );
   }
 
+  updateAdminProfile(id: string, data: any): Observable<ApiResponse<Admin>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateAdminProfile + id + "/profile", data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
   updateMember(id: string, data: any): Observable<ApiResponse<Member>> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateMember + id, data)
     .pipe(

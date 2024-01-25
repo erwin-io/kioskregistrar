@@ -25,6 +25,7 @@ import {
 } from '@angular/router';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
+import { Member } from 'src/app/model/member';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { RouteService } from 'src/app/services/route.service';
@@ -42,6 +43,8 @@ export class MemberComponent implements OnInit {
   title = '';
   view: 'mobile' | 'tablet' | 'desktop';
   @ViewChild('userAccountMenuTrigger', {static: false }) userAccountMenuTrigger: MatMenuTrigger;
+  profileLoaded = false;
+  profile: Member;
   constructor(
     private titleService: Title,
     private authService: AuthService,
@@ -53,6 +56,11 @@ export class MemberComponent implements OnInit {
     private routeService: RouteService,
     private appconfig: AppConfigService,
   ) {
+    const profile = this.storageService.getLoginProfile();
+    if(!profile || !profile?.user || !profile?.user?.userId) {
+      this.router.navigate(['/auth/']);
+    }
+    this.profile = profile as Member;
     this.onResize();
     this.onScroll();
   }

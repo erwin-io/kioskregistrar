@@ -1,7 +1,7 @@
 import { UpdateAdminUserResetPasswordDto, UpdateMemberUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { MemberVerificationDto, UpdateMemberUserDto } from "src/core/dto/user/user-member.dto";
-import { CreateAdminUserDto, UpdateAdminUserDto } from "src/core/dto/user/users-admin.dto";
+import { CreateAdminUserDto, UpdateAdminUserDto, UpdateAdminUserProfileDto } from "src/core/dto/user/users-admin.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
 import { Admin } from "src/db/entities/Admin";
 import { Member } from "src/db/entities/Member";
@@ -21,6 +21,7 @@ export declare class UsersController {
         total: number;
     }>>;
     createAdmin(createAdminUserDto: CreateAdminUserDto): Promise<ApiResponseModel<Admin>>;
+    updateAdminProfile(adminCode: string, dto: UpdateAdminUserProfileDto): Promise<ApiResponseModel<Admin>>;
     updateAdmin(adminCode: string, updateAdminUserDto: UpdateAdminUserDto): Promise<ApiResponseModel<Admin>>;
     updateMember(memberCode: string, updateMemberUserDto: UpdateMemberUserDto): Promise<ApiResponseModel<Member>>;
     resetAdminPassword(adminCode: string, updateAdminUserDto: UpdateAdminUserResetPasswordDto): Promise<ApiResponseModel<Admin>>;

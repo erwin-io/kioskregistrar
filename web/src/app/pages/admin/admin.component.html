@@ -32,7 +32,12 @@
                 <mat-icon>notifications</mat-icon>
             </button>
           </div>
-          <img src="./../../../assets/img/banner.png">
+          <div class="profile-picture">
+            <div class="profile-loader" *ngIf="!userProfilePicLoaded">
+              <mat-spinner></mat-spinner>
+            </div>
+            <img [hidden]="!userProfilePicLoaded" (error)="profilePicErrorHandler($event)" [src]="profile?.user?.profileFile?.url" (load)="userProfilePicLoaded = true">
+          </div>
           <h4 routerLink="/profile" class="profile-item" style="cursor: pointer">{{profile.fullName}}</h4>
           <h4 class="profile-item" style="opacity: 0.8;font-weight: 100;">&#64;{{profile.user.userName}}</h4>
         </div>

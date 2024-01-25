@@ -53,10 +53,14 @@ let RequestService = class RequestService {
                 this.requestRepo.find({
                     relations: {
                         requestedBy: {
-                            user: true,
+                            user: {
+                                profileFile: true,
+                            },
                         },
                         assignedAdmin: {
-                            user: true,
+                            user: {
+                                profileFile: true,
+                            },
                         },
                         requestType: {
                             requestRequirements: true,
@@ -85,10 +89,14 @@ let RequestService = class RequestService {
             },
             relations: {
                 requestedBy: {
-                    user: true,
+                    user: {
+                        profileFile: true,
+                    },
                 },
                 assignedAdmin: {
-                    user: true,
+                    user: {
+                        profileFile: true,
+                    },
                 },
                 requestType: {
                     requestRequirements: true,

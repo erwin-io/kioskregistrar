@@ -28,7 +28,8 @@ export class AdminComponent {
   loading = false;
   drawerDefaultOpened = false;
   details = false;
-  profile: Admin | Member;
+  profile: Admin;
+  userProfilePicLoaded = false;
   constructor(
     private titleService:Title,
     private authService: AuthService,
@@ -38,7 +39,11 @@ export class AdminComponent {
     private route: ActivatedRoute,
     private routeService: RouteService
     ) {
-      this.profile = this.storageService.getLoginProfile();
+      const profile = this.storageService.getLoginProfile();
+      if(!profile || !profile?.user || !profile?.user?.userId) {
+        this.router.navigate(['/auth/admin']);
+      }
+      this.profile = profile as Admin;
       this.onResize();
       this.routeService.data$.subscribe((res: { title: string; admin: boolean; details: boolean; icon: string }) => {
         this.title = res.title;
@@ -91,5 +96,9 @@ export class AdminComponent {
     } else {
       this.drawerDefaultOpened = false;
     }
+  }
+
+  profilePicErrorHandler(event) {
+    event.target.src = '../../../assets/person.png';
   }
 }

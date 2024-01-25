@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateAdminUserDto = exports.CreateAdminUserDto = exports.DefaultAdminUserDto = exports.CreateAdminUserAccessDto = void 0;
+exports.UpdateAdminUserProfileDto = exports.UpdateAdminUserDto = exports.CreateAdminUserDto = exports.DefaultAdminUserDto = exports.CreateAdminUserAccessDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
@@ -75,18 +75,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], DefaultAdminUserDto.prototype, "mobileNumber", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        isArray: true,
-        type: CreateAdminUserAccessDto
-    }),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.ArrayNotEmpty)(),
-    (0, class_validator_1.IsArray)(),
-    (0, class_transformer_1.Type)(() => CreateAdminUserAccessDto),
-    (0, class_validator_1.ValidateNested)(),
-    __metadata("design:type", Array)
-], DefaultAdminUserDto.prototype, "access", void 0);
 exports.DefaultAdminUserDto = DefaultAdminUserDto;
 class CreateAdminUserDto extends DefaultAdminUserDto {
 }
@@ -104,12 +92,39 @@ __decorate([
     __metadata("design:type", String)
 ], CreateAdminUserDto.prototype, "password", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", Object)
-], CreateAdminUserDto.prototype, "userProfilePic", void 0);
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: CreateAdminUserAccessDto
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.ArrayNotEmpty)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => CreateAdminUserAccessDto),
+    (0, class_validator_1.ValidateNested)(),
+    __metadata("design:type", Array)
+], CreateAdminUserDto.prototype, "access", void 0);
 exports.CreateAdminUserDto = CreateAdminUserDto;
 class UpdateAdminUserDto extends DefaultAdminUserDto {
 }
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        isArray: true,
+        type: CreateAdminUserAccessDto
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.ArrayNotEmpty)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_transformer_1.Type)(() => CreateAdminUserAccessDto),
+    (0, class_validator_1.ValidateNested)(),
+    __metadata("design:type", Array)
+], UpdateAdminUserDto.prototype, "access", void 0);
 exports.UpdateAdminUserDto = UpdateAdminUserDto;
+class UpdateAdminUserProfileDto extends DefaultAdminUserDto {
+}
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], UpdateAdminUserProfileDto.prototype, "profileFile", void 0);
+exports.UpdateAdminUserProfileDto = UpdateAdminUserProfileDto;
 //# sourceMappingURL=users-admin.dto.js.map

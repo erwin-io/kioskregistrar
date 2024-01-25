@@ -1,4 +1,4 @@
-import * as firebaseConfig from "./emotional-wellness-9969b-firebase-adminsdk-905uy-4d26d895ee.json";
+import * as firebaseConfig from "./kioskregistrar-firebase-adminsdk-bd72b-84ab12e6da.json";
 
 export default {
   type: firebaseConfig.type,

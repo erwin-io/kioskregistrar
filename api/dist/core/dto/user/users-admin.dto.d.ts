@@ -8,12 +8,15 @@ export declare class DefaultAdminUserDto {
     firstName: string;
     lastName: string;
     mobileNumber: string;
-    access: CreateAdminUserAccessDto[];
 }
 export declare class CreateAdminUserDto extends DefaultAdminUserDto {
     userName: string;
     password: string;
-    userProfilePic: any;
+    access: CreateAdminUserAccessDto[];
 }
 export declare class UpdateAdminUserDto extends DefaultAdminUserDto {
+    access: CreateAdminUserAccessDto[];
+}
+export declare class UpdateAdminUserProfileDto extends DefaultAdminUserDto {
+    profileFile: any;
 }

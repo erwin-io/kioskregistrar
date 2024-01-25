@@ -45,6 +45,9 @@ export class EditProfileComponent implements AfterViewInit {
     private formBuilder: FormBuilder,
     private authService: AuthService) {
       this.profile = this.storageService.getLoginProfile();
+      if(!this.profile || !this.profile?.user || !this.profile?.user?.userId) {
+        this.router.navigate(['/auth/']);
+      }
 
   }
 
@@ -98,7 +101,7 @@ export class EditProfileComponent implements AfterViewInit {
       try {
         let res;
         if(this.profile.user.userType.toUpperCase() === "ADMIN") {
-          res = await this.userService.updateAdmin(this.profile["adminCode"], params).toPromise();
+          res = await this.userService.updateAdminProfile(this.profile["adminCode"], params).toPromise();
         } else {
           res = await this.userService.updateMember(this.profile["memberCode"], params).toPromise();
         }

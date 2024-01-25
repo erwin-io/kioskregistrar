@@ -63,17 +63,6 @@ export class DefaultAdminUserDto {
     return obj[key].toString();
   })
   mobileNumber: string;
-
-  @ApiProperty({
-    isArray: true,
-    type: CreateAdminUserAccessDto
-  })
-  @IsNotEmpty()
-  @ArrayNotEmpty()
-  @IsArray()
-  @Type(() => CreateAdminUserAccessDto)
-  @ValidateNested()
-  access: CreateAdminUserAccessDto[];
 }
 
 export class CreateAdminUserDto extends DefaultAdminUserDto {
@@ -88,10 +77,34 @@ export class CreateAdminUserDto extends DefaultAdminUserDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
-  @IsOptional()
-  userProfilePic: any;
+  @ApiProperty({
+    isArray: true,
+    type: CreateAdminUserAccessDto
+  })
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  @IsArray()
+  @Type(() => CreateAdminUserAccessDto)
+  @ValidateNested()
+  access: CreateAdminUserAccessDto[];
 }
 
 export class UpdateAdminUserDto extends DefaultAdminUserDto {
+
+  @ApiProperty({
+    isArray: true,
+    type: CreateAdminUserAccessDto
+  })
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  @IsArray()
+  @Type(() => CreateAdminUserAccessDto)
+  @ValidateNested()
+  access: CreateAdminUserAccessDto[];
+}
+
+export class UpdateAdminUserProfileDto extends DefaultAdminUserDto {
+  @ApiProperty()
+  @IsOptional()
+  profileFile: any;
 }

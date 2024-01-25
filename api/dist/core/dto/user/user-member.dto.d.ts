@@ -19,7 +19,7 @@ export declare class DefaultMemberDto {
     secondarySchoolName: string;
     secondarySyGraduated: string;
     birthCertFile: any;
-    userProfilePic: any;
+    profileFile: any;
 }
 export declare class UpdateMemberUserDto extends DefaultMemberDto {
 }

@@ -45,7 +45,7 @@ let FirebaseProvider = class FirebaseProvider {
         this.config = config;
         this.app = admin.initializeApp({
             credential: admin.credential.cert(firebase_config_1.default),
-            storageBucket: "emotional-wellness-9969b.appspot.com",
+            storageBucket: "kioskregistrar.appspot.com",
         });
     }
 };

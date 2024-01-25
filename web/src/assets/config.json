@@ -35,6 +35,14 @@
         "urlPropertyName": "url"
       },
       {
+        "name": "requestedByProfile",
+        "label": "Profile Picture",
+        "type": "image",
+        "style": {
+          "width": "100px"
+        }
+      },
+      {
         "name": "requestedBy",
         "label": "Requested By",
         "apiNotation": "requestedBy.fullName",
@@ -227,6 +235,14 @@
         "urlPropertyName": "url"
       },
       {
+        "name": "profile",
+        "label": "Profile Picture",
+        "type": "image",
+        "style": {
+          "width": "100px"
+        }
+      },
+      {
         "name": "userName",
         "label": "Username",
         "apiNotation": "user.userName",
@@ -263,6 +279,14 @@
           "placeholder": "Full name"
         },
         "urlPropertyName": "url"
+      },
+      {
+        "name": "profile",
+        "label": "Profile Picture",
+        "type": "image",
+        "style": {
+          "width": "100px"
+        }
       },
       {
         "name": "courseTaken",
@@ -340,6 +364,14 @@
         "style": {
           "width": "120px",
           "left": "0px"
+        }
+      },
+      {
+        "name": "profile",
+        "label": "Profile Picture",
+        "type": "image",
+        "style": {
+          "width": "100px"
         }
       },
       {
@@ -491,6 +523,7 @@
       "getMemberById": "/users/member/",
       "createAdmin": "/users/admin/",
       "updateAdmin": "/users/admin/",
+      "updateAdminProfile": "/users/admin/",
       "getAdminByAdvanceSearch": "/users/admin/page",
       "getMemberByAdvanceSearch": "/users/member/page/",
       "approveMember": "/users/member/approve",

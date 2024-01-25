@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const firebaseConfig = __importStar(require("./emotional-wellness-9969b-firebase-adminsdk-905uy-4d26d895ee.json"));
+const firebaseConfig = __importStar(require("./kioskregistrar-firebase-adminsdk-bd72b-84ab12e6da.json"));
 exports.default = {
     type: firebaseConfig.type,
     projectId: firebaseConfig.project_id,

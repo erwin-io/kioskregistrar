@@ -105,4 +105,8 @@ export class MemberDocumentRequestDetailsComponent implements OnInit, AfterViewI
       this.spinner.hide();
     }
   }
+
+  profilePicErrorHandler(event) {
+    event.target.src = '../../../../../assets/img/person.png';
+  }
 }

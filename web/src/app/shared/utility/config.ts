@@ -44,6 +44,7 @@ export interface AppConfig {
         getMemberById: string;
         createAdmin: string;
         updateAdmin: string;
+        updateAdminProfile: string;
         getAdminByAdvanceSearch: string;
         getMemberByAdvanceSearch: string;
         updateAdminPassword: string;

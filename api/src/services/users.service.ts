@@ -25,12 +25,16 @@ import {
 import {
   CreateAdminUserDto,
   UpdateAdminUserDto,
+  UpdateAdminUserProfileDto,
 } from "src/core/dto/user/users-admin.dto";
 import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
 import { Admin } from "src/db/entities/Admin";
+import { Files } from "src/db/entities/Files";
 import { Member } from "src/db/entities/Member";
 import { Users } from "src/db/entities/Users";
 import { Repository, getManager } from "typeorm";
+import { v4 as uuid } from "uuid";
+import { extname } from "path";
 
 @Injectable()
 export class UsersService {
@@ -272,6 +276,103 @@ export class UsersService {
     });
   }
 
+  async updateAdminProfile(adminCode, dto: UpdateAdminUserProfileDto) {
+    return await this.userRepo.manager.transaction(async (entityManager) => {
+      let admin = await entityManager.findOne(Admin, {
+        where: {
+          adminCode,
+          user: {
+            active: true,
+          },
+        },
+        relations: {
+          user: {
+            profileFile: true,
+          },
+        },
+      });
+
+      if (!admin) {
+        throw Error(USER_ERROR_ADMIN_NOT_FOUND);
+      }
+
+      admin.firstName = dto.firstName;
+      admin.lastName = dto.lastName;
+      admin.fullName = getFullName(dto.firstName, "", dto.lastName);
+      admin.mobileNumber = dto.mobileNumber;
+      let user: Users = admin.user;
+
+      if (dto.profileFile) {
+        const newFileName: string = uuid();
+        const bucket = this.firebaseProvoder.app.storage().bucket();
+        if (user.profileFile) {
+          try {
+            const deleteFile = bucket.file(
+              `profile/${user.profileFile.fileName}`
+            );
+            deleteFile.delete();
+          } catch (ex) {
+            console.log(ex);
+          }
+          const file = user.profileFile;
+          file.fileName = `${newFileName}${extname(dto.profileFile.fileName)}`;
+
+          const bucketFile = bucket.file(
+            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+          );
+          const img = Buffer.from(dto.profileFile.data, "base64");
+          await bucketFile.save(img).then(async (res) => {
+            console.log("res");
+            console.log(res);
+            const url = await bucketFile.getSignedUrl({
+              action: "read",
+              expires: "03-09-2500",
+            });
+
+            file.url = url[0];
+            user.profileFile = await entityManager.save(Files, file);
+          });
+        } else {
+          user.profileFile = new Files();
+          user.profileFile.fileName = `${newFileName}${extname(
+            dto.profileFile.fileName
+          )}`;
+          const bucketFile = bucket.file(
+            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+          );
+          const img = Buffer.from(dto.profileFile.data, "base64");
+          await bucketFile.save(img).then(async () => {
+            const url = await bucketFile.getSignedUrl({
+              action: "read",
+              expires: "03-09-2500",
+            });
+            user.profileFile.url = url[0];
+            user.profileFile = await entityManager.save(
+              Files,
+              user.profileFile
+            );
+          });
+        }
+      }
+
+      user = await entityManager.save(Users, user);
+
+      admin = await entityManager.save(Admin, admin);
+      admin = await entityManager.findOne(Admin, {
+        where: {
+          adminCode,
+        },
+        relations: {
+          user: {
+            profileFile: true,
+          },
+        },
+      });
+      delete admin.user.password;
+      return admin;
+    });
+  }
+
   async updateMember(memberCode, dto: UpdateMemberUserDto) {
     return await this.userRepo.manager.transaction(async (entityManager) => {
       let member = await entityManager.findOne(Member, {
@@ -314,6 +415,62 @@ export class UsersService {
       member.secondarySchoolName = dto.secondarySchoolName;
       member.secondarySyGraduated = dto.secondarySyGraduated;
 
+      let user: Users = member.user;
+
+      if (dto.profileFile) {
+        const newFileName: string = uuid();
+        const bucket = this.firebaseProvoder.app.storage().bucket();
+        if (user.profileFile) {
+          try {
+            const deleteFile = bucket.file(
+              `profile/${user.profileFile.fileName}`
+            );
+            deleteFile.delete();
+          } catch (ex) {
+            console.log(ex);
+          }
+          const file = user.profileFile;
+          file.fileName = `${newFileName}${extname(dto.profileFile.fileName)}`;
+
+          const bucketFile = bucket.file(
+            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+          );
+          const img = Buffer.from(dto.profileFile.data, "base64");
+          await bucketFile.save(img).then(async (res) => {
+            console.log("res");
+            console.log(res);
+            const url = await bucketFile.getSignedUrl({
+              action: "read",
+              expires: "03-09-2500",
+            });
+
+            file.url = url[0];
+            user.profileFile = await entityManager.save(Files, file);
+          });
+        } else {
+          user.profileFile = new Files();
+          user.profileFile.fileName = `${newFileName}${extname(
+            dto.profileFile.fileName
+          )}`;
+          const bucketFile = bucket.file(
+            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+          );
+          const img = Buffer.from(dto.profileFile.data, "base64");
+          await bucketFile.save(img).then(async () => {
+            const url = await bucketFile.getSignedUrl({
+              action: "read",
+              expires: "03-09-2500",
+            });
+            user.profileFile.url = url[0];
+            user.profileFile = await entityManager.save(
+              Files,
+              user.profileFile
+            );
+          });
+        }
+      }
+
+      user = await entityManager.save(Users, user);
       member = await entityManager.save(Member, member);
       member = await entityManager.findOne(Member, {
         where: {

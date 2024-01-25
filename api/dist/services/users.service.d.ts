@@ -1,6 +1,6 @@
 import { UpdateAdminUserResetPasswordDto, UpdateMemberUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
 import { MemberVerificationDto, UpdateMemberUserDto } from "src/core/dto/user/user-member.dto";
-import { CreateAdminUserDto, UpdateAdminUserDto } from "src/core/dto/user/users-admin.dto";
+import { CreateAdminUserDto, UpdateAdminUserDto, UpdateAdminUserProfileDto } from "src/core/dto/user/users-admin.dto";
 import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
 import { Admin } from "src/db/entities/Admin";
 import { Member } from "src/db/entities/Member";
@@ -34,6 +34,7 @@ export declare class UsersService {
     getAllAdmin(): Promise<Admin[]>;
     createAdmin(dto: CreateAdminUserDto): Promise<Admin>;
     updateAdmin(adminCode: any, dto: UpdateAdminUserDto): Promise<Admin>;
+    updateAdminProfile(adminCode: any, dto: UpdateAdminUserProfileDto): Promise<Admin>;
     updateMember(memberCode: any, dto: UpdateMemberUserDto): Promise<Member>;
     resetAdminPassword(adminCode: any, dto: UpdateAdminUserResetPasswordDto): Promise<Admin>;
     resetMemberPassword(memberCode: any, dto: UpdateMemberUserResetPasswordDto): Promise<Member>;

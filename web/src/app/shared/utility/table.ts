@@ -6,9 +6,10 @@ export class ColumnDefinition {
   style?: ColumnStyle;
   controls?: boolean;
   format?: {
-    type: "currency" | "date" | "date-time" | "number" | "custom";
+    type: "currency" | "date" | "date-time" | "number" | "custom" | "image";
     custom: string;
   };
+  class: string;
   hide?: boolean;
   type?: "string" | "boolean" | "date" | "number" = "string";
   filterOptions: ColumnDefinitionFilterOptions;
@@ -33,6 +34,7 @@ export class AdminTableColumn {
   userName: string;
   mobileNumber: string;
   enable: boolean;
+  profile?: string;
   url?: string;
 }
 
@@ -45,6 +47,7 @@ export class MemberTableColumn {
   birthDate: string;
   address: string;
   isAlumni: boolean;
+  profile?: string;
   url?: string;
 }
 
@@ -73,5 +76,6 @@ export class RequestTableColumn {
   requestType?: string;
   assignedAdminId?: string;
   assignedAdmin?: string;
+  requestedByProfile?: string;
   url?: string;
 }

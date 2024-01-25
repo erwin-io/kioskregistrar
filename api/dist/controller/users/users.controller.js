@@ -104,6 +104,20 @@ let UsersController = class UsersController {
             return res;
         }
     }
+    async updateAdminProfile(adminCode, dto) {
+        const res = {};
+        try {
+            res.data = await this.userService.updateAdminProfile(adminCode, dto);
+            res.success = true;
+            res.message = `Admin ${api_response_constant_1.UPDATE_SUCCESS}`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async updateAdmin(adminCode, updateAdminUserDto) {
         const res = {};
         try {
@@ -237,6 +251,14 @@ __decorate([
     __metadata("design:paramtypes", [users_admin_dto_1.CreateAdminUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "createAdmin", null);
+__decorate([
+    (0, common_1.Put)("/admin/:adminCode/profile"),
+    __param(0, (0, common_1.Param)("adminCode")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, users_admin_dto_1.UpdateAdminUserProfileDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateAdminProfile", null);
 __decorate([
     (0, common_1.Put)("/admin/:adminCode"),
     __param(0, (0, common_1.Param)("adminCode")),

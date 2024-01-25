@@ -142,7 +142,7 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Object)
-], DefaultMemberDto.prototype, "userProfilePic", void 0);
+], DefaultMemberDto.prototype, "profileFile", void 0);
 exports.DefaultMemberDto = DefaultMemberDto;
 class UpdateMemberUserDto extends DefaultMemberDto {
 }

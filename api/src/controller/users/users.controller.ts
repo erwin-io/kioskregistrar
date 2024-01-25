@@ -28,6 +28,7 @@ import {
 import {
   CreateAdminUserDto,
   UpdateAdminUserDto,
+  UpdateAdminUserProfileDto,
 } from "src/core/dto/user/users-admin.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
 import { Admin } from "src/db/entities/Admin";
@@ -139,6 +140,25 @@ export class UsersController {
       res.data = await this.userService.createAdmin(createAdminUserDto);
       res.success = true;
       res.message = `Admin ${SAVING_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @Put("/admin/:adminCode/profile")
+  //   @UseGuards(JwtAuthGuard)
+  async updateAdminProfile(
+    @Param("adminCode") adminCode: string,
+    @Body() dto: UpdateAdminUserProfileDto
+  ) {
+    const res: ApiResponseModel<Admin> = {} as any;
+    try {
+      res.data = await this.userService.updateAdminProfile(adminCode, dto);
+      res.success = true;
+      res.message = `Admin ${UPDATE_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;

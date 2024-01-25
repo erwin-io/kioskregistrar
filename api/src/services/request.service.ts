@@ -70,10 +70,14 @@ export class RequestService {
         this.requestRepo.find({
           relations: {
             requestedBy: {
-              user: true,
+              user: {
+                profileFile: true,
+              },
             },
             assignedAdmin: {
-              user: true,
+              user: {
+                profileFile: true,
+              },
             },
             requestType: {
               requestRequirements: true,
@@ -102,10 +106,14 @@ export class RequestService {
       },
       relations: {
         requestedBy: {
-          user: true,
+          user: {
+            profileFile: true,
+          },
         },
         assignedAdmin: {
-          user: true,
+          user: {
+            profileFile: true,
+          },
         },
         requestType: {
           requestRequirements: true,
