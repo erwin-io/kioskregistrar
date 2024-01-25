@@ -16,10 +16,10 @@ export class RequestService implements IServices {
 
   getByAdvanceSearch(params:{
     order: any,
-    columnDef: { apiNotation: string; filter: string }[],
+    columnDef: { apiNotation: string; filter: string; type?:string }[],
     pageSize: number,
     pageIndex: number,
-    assignedAdminId: string,
+    assignedAdminId?: string,
   }): Observable<ApiResponse<{ results: Request[], total: number}>> {
     return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.request.getByAdvanceSearch,
       params)

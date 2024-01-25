@@ -4,4 +4,5 @@ export declare class DashboardController {
     private readonly dashboardService;
     constructor(dashboardService: DashboardService);
     getMemberDashboard(memberId: string): Promise<ApiResponseModel<any>>;
+    getSummaryMemberUsers(): Promise<ApiResponseModel<any>>;
 }

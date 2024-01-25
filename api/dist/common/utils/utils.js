@@ -147,17 +147,17 @@ const columnDefToTypeORMCondition = (columnDef) => {
         }
         else if (col.type === "number-range") {
             const range = col.filter.split("-").map((x) => x === null || x === void 0 ? void 0 : x.trim());
-            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Between)(range[0], range[1])));
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Between)(Number(range[0]), Number(range[1]))));
+        }
+        else if (col.type === "number") {
+            const value = !isNaN(Number(col.filter)) ? Number(col.filter) : 0;
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, value));
         }
         else if (col.type === "precise") {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, col.filter));
         }
         else if (col.type === "not" || col.type === "except") {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Not)(col.filter)));
-        }
-        else if (col.type === "in" || col.type === "option-multi") {
-            const array = col.filter.toString().split(",");
-            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.In)(array)));
         }
         else {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ILike)(`%${col.filter}%`)));

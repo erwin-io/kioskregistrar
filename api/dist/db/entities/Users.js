@@ -45,6 +45,10 @@ __decorate([
     __metadata("design:type", Object)
 ], Users.prototype, "access", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "UserCode", nullable: true }),
+    __metadata("design:type", String)
+], Users.prototype, "userCode", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => Admin_1.Admin, (admin) => admin.user),
     __metadata("design:type", Array)
 ], Users.prototype, "admins", void 0);

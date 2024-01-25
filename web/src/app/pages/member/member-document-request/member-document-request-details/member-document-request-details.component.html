@@ -1,0 +1,170 @@
+
+<h4 mat-dialog-title >Details</h4>
+<div mat-dialog-content fxFlex="100" fxLayout="column">
+  <div style=" display: flex; width: 100%; justify-content: flex-start;">
+    <button mat-button [disabled]="isLoading" aria-label="Generate QR Code" matTooltip="Generate QR Code"  (click)="openQRCodeGeneratorDialog()">
+      <mat-icon>info</mat-icon>
+      QR Code
+    </button>
+  </div>
+  <div style=" display: flex; width: 100%; justify-content: flex-end;">
+    <button class="request-status {{requestDetails?.requestStatus?.toLowerCase()}}" aria-label="Close request" matTooltip="Pending" mat-fab extended disableRipple>
+      <mat-icon>{{
+      requestDetails?.requestStatus === 'PENDING' ? 'schedule' : '' ||
+      requestDetails?.requestStatus === 'TOPAY' ? 'credit_card' : '' ||
+      requestDetails?.requestStatus === 'PROCESSING' ? 'autorenew' : '' ||
+      requestDetails?.requestStatus === 'TOCOMPLETE' ? 'check_circle_outline' : '' ||
+      requestDetails?.requestStatus === 'CLOSED' ? 'check_circle_outline' : '' }}</mat-icon>
+      {{
+        requestDetails?.requestStatus === 'PENDING' ? 'Pending' : '' ||
+        requestDetails?.requestStatus === 'TOPAY' ? 'To pay' : '' ||
+        requestDetails?.requestStatus === 'PROCESSING' ? 'Processing' : '' ||
+        requestDetails?.requestStatus === 'TOCOMPLETE' ? 'To complete' : '' ||
+        requestDetails?.requestStatus === 'CLOSED' ? 'Closed' : '' }}
+    </button>
+  </div>
+  <mat-tab-group>
+    <mat-tab label="Tracker">
+      <mat-vertical-stepper #stepper>
+        <ng-template matStepperIcon="status">
+            <mat-icon>check</mat-icon>
+        </ng-template>
+        <mat-step
+          state="status"
+          completed="true"
+          *ngIf="requestDetails?.requestStatus === 'CLOSED'"
+          [aria-labelledby]="requestDetails && requestDetails?.requestStatus === 'CLOSED' ? 'updated-request' : ''">
+          <ng-template matStepLabel>Closed</ng-template>
+          <div fxFlex="100" *ngIf="requestDetails">
+            <p>{{requestDetails.dateClosed | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Request has been closed</p>
+          </div>
+        </mat-step>
+        <mat-step
+          state="status"
+          completed="true"
+          *ngIf="requestDetails?.dateCompleted || requestDetails?.requestStatus === 'TOCOMPLETE'"
+          [aria-labelledby]="requestDetails && !requestDetails?.dateClosed && requestDetails?.dateCompleted ? 'updated-request' : requestDetails?.dateCompleted ? 'request-done' : ''">
+          <ng-template matStepLabel>{{requestDetails?.dateProcessEnd && !requestDetails?.dateCompleted ? 'To complete' : 'Request completed'}}</ng-template>
+          <div fxFlex="100" *ngIf="requestDetails && requestDetails?.dateCompleted">
+            <p>{{requestDetails.dateCompleted | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Requested item was Completed</p>
+          </div>
+        </mat-step>
+        <mat-step
+          state="status"
+          completed="true"
+          *ngIf="requestDetails?.dateProcessStarted || requestDetails?.dateProcessEnd"
+          [aria-labelledby]="
+          requestDetails && !requestDetails?.dateCompleted && requestDetails?.dateProcessEnd ? 'updated-request' : requestDetails?.dateCompleted ? 'request-done' : ''">
+          <ng-template matStepLabel >{{requestDetails?.dateProcessEnd ? 'Process compeleted' : 'Processing'}}</ng-template>
+          <div fxFlex="100">
+            <p>{{requestDetails?.dateProcessEnd | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Process compeleted</p>
+          </div>
+        </mat-step>
+        <mat-step
+          state="status"
+          completed="true"
+          *ngIf="requestDetails?.dateProcessStarted"
+          [aria-labelledby]="
+          requestDetails && !requestDetails?.dateProcessEnd && requestDetails?.dateProcessStarted ? 'updated-request' : requestDetails?.dateProcessEnd ? 'request-done' : ''">
+          <ng-template matStepLabel>Process started</ng-template>
+          <div fxFlex="100" *ngIf="requestDetails && requestDetails?.dateProcessStarted">
+            <p>{{requestDetails?.dateProcessStarted | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Process started</p>
+          </div>
+        </mat-step>
+        <mat-step
+          state="status"
+          completed="true"
+          *ngIf="requestDetails?.datePaid || requestDetails?.requestStatus === 'TOPAY' || requestDetails?.dateAssigned"
+          [aria-labelledby]="requestDetails?.dateProcessStarted ? 'request-done' : ''">
+          <ng-template matStepLabel>{{ requestDetails?.datePaid ? 'Paid' : 'To pay'}}</ng-template>
+          <div fxFlex="100" *ngIf="requestDetails && requestDetails?.datePaid">
+            <p>{{requestDetails?.datePaid | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Request was Paid</p>
+          </div>
+        </mat-step>
+        <mat-step
+          state="status"
+          completed="true"
+          *ngIf="requestDetails?.dateAssigned || requestDetails?.requestStatus === 'PENDING'"
+          [aria-labelledby]="
+          requestDetails && requestDetails?.requestStatus === 'TOPAY' ? 'updated-request' : requestDetails?.dateProcessStarted ? 'request-done' : ''">
+          <ng-template matStepLabel>{{ requestDetails?.dateAssigned ? 'Assigned' : 'To assign'}}</ng-template>
+          <div fxFlex="100" *ngIf="requestDetails && requestDetails?.dateAssigned">
+            <p>{{requestDetails?.dateAssigned | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Request was assigned to {{requestDetails?.assignedAdmin.fullName}}</p>
+          </div>
+        </mat-step>
+        <mat-step state="status" completed="true" [aria-labelledby]="
+          requestDetails && requestDetails?.requestStatus === 'PENDING' ? 'updated-request' : requestDetails?.dateAssigned ? 'request-done' : ''">
+          <ng-template matStepLabel>Created</ng-template>
+          <div fxFlex="100" *ngIf="requestDetails">
+            <p>{{requestDetails?.dateRequested | date: 'MMM dd, yyyy h:mm a'}}</p>
+            <p>Request was created</p>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </mat-tab>
+    <mat-tab label="Details">
+      <div fxFlex="100">
+        <div fxFlex="100" fxLayout="row">
+          <div fxFlex="100" fxLayout="column" fxLayoutGap="16px">
+            <div fxLayout="column" fxLayoutGap="5px">
+              <h4><strong>Type</strong></h4>
+              <h3>{{requestDetails?.requestType?.name}}</h3>
+            </div>
+            <div fxLayout="column" fxLayoutGap="5px">
+              <h4><strong>Requested date</strong></h4>
+              <h4 class="value">{{requestDetails?.dateRequested | date: 'MMM dd, yyyy h:mm a'}}</h4>
+            </div>
+            <div fxLayout="column" fxLayoutGap="5px">
+              <h4><strong>Description</strong></h4>
+              <h4 class="value"
+                *ngIf="requestDetails?.requestStatus !== 'PENDING';else desscriptionField"
+                >{{requestDetails?.description}}</h4>
+                <ng-template #desscriptionField>
+                  <mat-form-field
+                    appearance="outline"
+                    fxFlex="100"
+                    class="cell"
+                    [ngClass.gt-sm]="{ isLargeScreen: true }">
+                    <textarea
+                      matInput
+                      placeholder="Description"
+                      [formControl]="descriptionCtrl">
+                    </textarea>
+                    <mat-error *ngIf="descriptionCtrl.errors !== (null || undefined)" >
+                      {{descriptionCtrl.errors && descriptionCtrl.errors.required ? "Please enter description" : ""}}
+                    </mat-error>
+                  </mat-form-field>
+                </ng-template>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div mat-dialog-actions>
+  <div flxFlex fxLayout="row" style="flex-grow: 1;"  fxLayoutAlign="end">
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="onDismiss()">
+      Close
+    </button>
+    <button
+      *ngIf="descriptionCtrl.dirty && descriptionCtrl.valid && descriptionCtrl.touched"
+      mat-raised-button
+      color="primary"
+      cdkFocusInitial
+      (click)="onUpdateDescription()">
+      Update description
+    </button>
+  </div>
+</div>

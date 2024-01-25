@@ -24,31 +24,31 @@ export const routes: Routes = [
     path: 'pending',
     pathMatch: 'full',
     component: RequestManagementComponent,
-    data: { title: "Pending", reviewer: true, tab: 0 }
+    data: { title: "Pending", reviewer: true, tab: 0, icon: "assignment_turned_in" }
   },
   {
     path: 'to-process',
     pathMatch: 'full',
     component: RequestManagementComponent,
-    data: { title: "To process", tab: 1 }
+    data: { title: "To process", tab: 1, icon: "assignment_turned_in" }
   },
   {
     path: 'processing',
     pathMatch: 'full',
     component: RequestManagementComponent,
-    data: { title: "Processing", tab: 2 }
+    data: { title: "Processing", tab: 2, icon: "assignment_turned_in" }
   },
   {
     path: 'tocomplete',
     pathMatch: 'full',
     component: RequestManagementComponent,
-    data: { title: "To complete", tab: 3 }
+    data: { title: "To complete", tab: 3, icon: "assignment_turned_in" }
   },
   {
     path: 'closed',
     pathMatch: 'full',
     component: RequestManagementComponent,
-    data: { title: "Closed", tab: 4 }
+    data: { title: "Closed", tab: 4, icon: "assignment_turned_in" }
   },
   {
     path: 'details/:requestNo',
@@ -65,6 +65,10 @@ export const routes: Routes = [
     RequestFormComponent,
     RequestPaymentFormComponent,
     RequestAssignFormComponent
+  ],
+  exports: [
+    StatusTrackerComponent,
+    RequestFormComponent,
   ],
   imports: [
     CommonModule,

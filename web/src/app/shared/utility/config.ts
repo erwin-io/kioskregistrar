@@ -51,6 +51,8 @@ export interface AppConfig {
         toggleGrantAccess: string;
         approveMember: string;
         updateMember: string;
+        resetAdminPassword: string;
+        resetMemberPassword: string;
       };
       requestType: {
         getByAdvanceSearch: string;
@@ -73,7 +75,15 @@ export interface AppConfig {
         updateStatus: string;
         getById: string;
       };
-      dashboard: {};
+      notifications: {
+        getByAdvanceSearch: string;
+        getUnreadByUser: string;
+        marAsRead: string;
+      };
+      dashboard: {
+        getMemberDashboard: string;
+        getSummaryMemberUsers: string;
+      };
       message: { create: string };
     };
   }

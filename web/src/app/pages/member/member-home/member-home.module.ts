@@ -1,3 +1,4 @@
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MemberHomeComponent } from './member-home.component';
@@ -20,6 +21,7 @@ export const routes: Routes = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    NgxSkeletonLoaderModule,
     RouterModule.forChild(routes),
   ]
 })

@@ -41,54 +41,58 @@ export class RequestService {
     columnDef,
     assignedAdminId,
   }) {
-    const skip =
-      Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
-    const take = Number(pageSize);
+    try {
+      const skip =
+        Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
+      const take = Number(pageSize);
 
-    let condition = columnDefToTypeORMCondition(columnDef);
-    if (
-      columnDef &&
-      columnDef.find((x) => x.apiNotation === "requestStatus") &&
-      columnDef.find((x) => x.apiNotation === "requestStatus").type ===
-        "precise" &&
-      columnDef.find((x) => x.apiNotation === "requestStatus").filter !==
-        "PENDING" &&
-      (!condition?.assignedAdmin?.adminId ||
-        condition?.assignedAdmin?.adminId === "")
-    ) {
-      if (assignedAdminId && assignedAdminId !== "") {
-        condition = {
-          ...condition,
-          assignedAdmin: {
-            adminId: assignedAdminId,
-          },
-        };
+      let condition = columnDefToTypeORMCondition(columnDef);
+      if (
+        columnDef &&
+        columnDef.find((x) => x.apiNotation === "requestStatus") &&
+        columnDef.find((x) => x.apiNotation === "requestStatus").type ===
+          "precise" &&
+        columnDef.find((x) => x.apiNotation === "requestStatus").filter !==
+          "PENDING" &&
+        (!condition?.assignedAdmin?.adminId ||
+          condition?.assignedAdmin?.adminId === "")
+      ) {
+        if (assignedAdminId && assignedAdminId !== "") {
+          condition = {
+            ...condition,
+            assignedAdmin: {
+              adminId: assignedAdminId,
+            },
+          };
+        }
       }
+      const [results, total] = await Promise.all([
+        this.requestRepo.find({
+          relations: {
+            requestedBy: {
+              user: true,
+            },
+            assignedAdmin: {
+              user: true,
+            },
+            requestType: {
+              requestRequirements: true,
+            },
+          },
+          where: condition,
+          skip,
+          take,
+          order,
+        }),
+        this.requestRepo.count({ where: condition }),
+      ]);
+      return {
+        results,
+        total,
+      };
+    } catch (ex) {
+      throw ex;
     }
-    const [results, total] = await Promise.all([
-      this.requestRepo.find({
-        relations: {
-          requestedBy: {
-            user: true,
-          },
-          assignedAdmin: {
-            user: true,
-          },
-          requestType: {
-            requestRequirements: true,
-          },
-        },
-        where: condition,
-        skip,
-        take,
-        order,
-      }),
-      this.requestRepo.count({ where: condition }),
-    ]);
-    return {
-      results,
-      total,
-    };
   }
 
   async getByRequestNo(requestNo) {

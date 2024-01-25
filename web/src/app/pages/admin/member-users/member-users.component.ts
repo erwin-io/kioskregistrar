@@ -17,6 +17,7 @@ import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { DataTableComponent } from 'src/app/shared/data-table/data-table.component';
 import { convertNotationToObject } from 'src/app/shared/utility/utility';
+import { DashboardService } from 'src/app/services/dashboard.service';
 
 @Component({
   selector: 'app-member-users',
@@ -49,7 +50,10 @@ export class MemberUsersComponent {
     modify: false,
   };
   @ViewChild('dataTable', { static: true}) dataTable: DataTableComponent;
+  totalVerified = 0;
+  totalUnVerified = 0;
   constructor(
+    private dashboardService: DashboardService,
     private userService: UserService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -76,8 +80,11 @@ export class MemberUsersComponent {
     this.currentMemberCode = profile && profile["memberCode"];
   }
 
-  ngAfterViewInit() {
-    this.getUsers();
+  async ngAfterViewInit() {
+    await Promise.all([
+      this.getUsers(),
+      this.getSummaryMemberUsers(),
+    ])
   }
 
   filterChange(event: {
@@ -107,6 +114,33 @@ export class MemberUsersComponent {
   }
 
   async rowControlChange(event) {
+  }
+
+  async getSummaryMemberUsers() {
+    try{
+      this.isLoading = true;
+      await this.dashboardService.getSummaryMemberUsers()
+      .subscribe(async res => {
+        if(res.success){
+          this.totalVerified = res.data.verified;
+          this.totalUnVerified = res.data.unVerified;
+          this.isLoading = false;
+        }
+        else{
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
+          this.isLoading = false;
+        }
+      }, async (err) => {
+        this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+        this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
+        this.isLoading = false;
+      });
+    }
+    catch(e){
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.open(this.error, 'close', {panelClass: ['style-error']});
+    }
   }
 
   async getUsers(){

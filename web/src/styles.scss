@@ -81,8 +81,8 @@ p, label, input, textarea, span, div, button {
         column-gap: 10px;
     }
     &.side-bar-open {
-        margin-left: 250px!important;
-        width: calc(100% - 250px)!important;
+        margin-left: 300px!important;
+        width: calc(100% - 300px)!important;
     }
 }
 
@@ -96,8 +96,72 @@ p, label, input, textarea, span, div, button {
     background-color: unset;
     position: static!important;
     z-index: 9!important;
+    .user-profile {
+      display: flex;
+      height: 200px!important;
+      background-image: url("./assets/img/landing-page.png"); /* The image used */
+      background-color: #cccccc; /* Used if the image is unavailable */
+      background-position: center; /* Center the image */
+      background-repeat: no-repeat; /* Do not repeat the image */
+      background-size: cover; /* Resize the background image to cover the entire container */
+      backdrop-filter: blur(5px); /* apply the blur */
+      position: relative;
+      &::after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        backdrop-filter: blur(5px); /* apply the blur */
+        pointer-events: none; /* make the overlay click-through */
+        z-index: 0;
+        background-image: linear-gradient(to bottom,rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0,0) 10%,
+        rgba(0, 0, 0,0) 30%,
+        rgba(0, 0, 0,0) 50%,
+        rgba(0, 0, 0,0) 70%,
+        rgba(0, 0, 0,.5) 90%,
+        rgba(0, 0, 0,.9) 100%);
+      }
+      .user-profile-container {
+        display: flex;
+        row-gap: 10px;
+        position: absolute;
+        z-index: 99;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 20px;
+        box-sizing: border-box;
+        .user-profile-controls {
+          display: flex;
+          position: fixed;
+          z-index: 99;
+          top: 10px;
+          right: 10px;
+          button {
+            color: #fff;
+            .mat-badge-content {
+              top: 0!important;
+              right: 0px!important;
+              font-size: 1rem!important;
+            }
+          }
+        }
+        img {
+          display: flex;
+          width: 80px;
+          height: 80px;
+        }
+        .profile-item {
+          line-height: 1;
+          margin: 0;
+          color: #fff;
+        }
+      }
+    }
     .mat-sidenav {
-        width: 250px!important;
+        width: 300px!important;
         z-index: 999;
         &.mat-drawer-opened {
             &:not(.mat-drawer-over) {
@@ -154,6 +218,10 @@ p, label, input, textarea, span, div, button {
 #banner {
     width: 40px;
     height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 #title {
     margin-left: 10px!important;
@@ -377,3 +445,18 @@ mat-mdc-dialog-container {
       font-size: 15px !important;
     }
   }
+
+
+  ::ng-deep .mdc-text-field--invalid:not(form){
+    border: 1px solid red;
+    .mat-error {
+      color: red!important;
+    }
+  }
+
+  ::ng-deep .hidden {
+    display: none !important;
+  }
+  .mdc-floating-label--float-above {
+      font-size: inherit!important;
+    }

@@ -12,11 +12,12 @@ const dashboard_controller_1 = require("./dashboard.controller");
 const dashboard_service_1 = require("../../services/dashboard.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const Request_1 = require("../../db/entities/Request");
+const Member_1 = require("../../db/entities/Member");
 let DashboardModule = class DashboardModule {
 };
 DashboardModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Request_1.Request])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([Request_1.Request, Member_1.Member])],
         controllers: [dashboard_controller_1.DashboardController],
         providers: [dashboard_service_1.DashboardService],
         exports: [dashboard_service_1.DashboardService],

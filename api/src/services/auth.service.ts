@@ -10,6 +10,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {
   compare,
+  generateAdminCode,
   generateMemberCode,
   getFullName,
   hash,
@@ -65,7 +66,9 @@ export class AuthService {
             member.primarySyGraduated = dto.primarySyGraduated;
             member.secondarySchoolName = dto.secondarySchoolName;
             member.secondarySyGraduated = dto.secondarySyGraduated;
-            user = await transactionalEntityManager.save(user);
+            user = await transactionalEntityManager.save(Users, user);
+            user.userCode = generateAdminCode(user.userId);
+            user = await transactionalEntityManager.save(Users, user);
             member.user = user;
             member = await transactionalEntityManager.save(member);
             member.memberCode = generateMemberCode(member.memberId);
@@ -112,7 +115,9 @@ export class AuthService {
       member.secondarySyGraduated = dto.secondarySyGraduated;
       member = await this.userRepo.manager.transaction(
         async (transactionalEntityManager) => {
-          user = await transactionalEntityManager.save(user);
+          user = await transactionalEntityManager.save(Users, user);
+          user.userCode = generateAdminCode(user.userId);
+          user = await transactionalEntityManager.save(Users, user);
           member.user = user;
           member = await transactionalEntityManager.save(member);
           member.memberCode = generateMemberCode(member.memberId);

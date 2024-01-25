@@ -53,39 +53,25 @@ export class UsersService {
     }
     const [results, total] = await Promise.all([
       this.userRepo.manager.find(Admin, {
-        select: {
-          user: {
-            userId: true,
-            userName: true,
-            userType: true,
-            active: true,
-            accessGranted: true,
-            profileFile: {
-              fileId: true,
-              fileName: true,
-              url: true,
-            },
-          },
-          adminId: true,
-          adminCode: true,
-          fullName: true,
-          firstName: true,
-          lastName: true,
-        },
-        // where: condition,
+        where: condition,
         relations: {
-          user: true,
+          user: {
+            profileFile: true,
+          },
         },
         skip,
         take,
         order,
       }),
       this.userRepo.manager.count(Admin, {
-        // where: condition,
+        where: condition,
       }),
     ]);
     return {
-      results,
+      results: results.map((x) => {
+        delete x.user.password;
+        return x;
+      }),
       total,
     };
   }
@@ -108,23 +94,11 @@ export class UsersService {
     condition.isVerified = verified;
     const [results, total] = await Promise.all([
       this.userRepo.manager.find(Member, {
-        select: {
-          user: {
-            userId: true,
-            userName: true,
-            userType: true,
-            active: true,
-            accessGranted: true,
-            profileFile: {
-              fileId: true,
-              fileName: true,
-              url: true,
-            },
-          },
-        },
         where: condition,
         relations: {
-          user: true,
+          user: {
+            profileFile: true,
+          },
         },
         skip,
         take,
@@ -135,7 +109,10 @@ export class UsersService {
       }),
     ]);
     return {
-      results,
+      results: results.map((x) => {
+        delete x.user.password;
+        return x;
+      }),
       total,
     };
   }
@@ -201,20 +178,6 @@ export class UsersService {
 
   async getAllAdmin() {
     return this.userRepo.manager.find(Admin, {
-      select: {
-        user: {
-          userId: true,
-          userName: true,
-          userType: true,
-          active: true,
-          accessGranted: true,
-          profileFile: {
-            fileId: true,
-            fileName: true,
-            url: true,
-          },
-        },
-      },
       where: {
         user: {
           active: true,
@@ -241,7 +204,9 @@ export class UsersService {
       admin.lastName = dto.lastName;
       admin.fullName = getFullName(dto.firstName, "", dto.lastName);
       admin.mobileNumber = dto.mobileNumber;
-      user = await entityManager.save(user);
+      user = await entityManager.save(Users, user);
+      user.userCode = generateAdminCode(user.userId);
+      user = await entityManager.save(Users, user);
       admin.user = user;
       admin = await entityManager.save(admin);
       admin.adminCode = generateAdminCode(admin.adminId);
@@ -292,6 +257,16 @@ export class UsersService {
       user.access = JSON.parse(JSON.stringify(dto.access));
       user = await entityManager.save(Users, user);
       admin = await entityManager.save(Admin, admin);
+      admin = await entityManager.findOne(Admin, {
+        where: {
+          adminCode,
+        },
+        relations: {
+          user: {
+            profileFile: true,
+          },
+        },
+      });
       delete admin.user.password;
       return admin;
     });
@@ -340,6 +315,16 @@ export class UsersService {
       member.secondarySyGraduated = dto.secondarySyGraduated;
 
       member = await entityManager.save(Member, member);
+      member = await entityManager.findOne(Member, {
+        where: {
+          memberCode,
+        },
+        relations: {
+          user: {
+            profileFile: true,
+          },
+        },
+      });
       delete member.user.password;
       return member;
     });

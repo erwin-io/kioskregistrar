@@ -16,11 +16,15 @@ import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.c
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  styleUrls: ['./admin.component.scss'],
+  host: {
+    class: "component-wrapper"
+  }
 })
 export class AdminComponent {
   appName = "";
   title = "";
+  pageIcon = "";
   loading = false;
   drawerDefaultOpened = false;
   details = false;
@@ -36,9 +40,10 @@ export class AdminComponent {
     ) {
       this.profile = this.storageService.getLoginProfile();
       this.onResize();
-      this.routeService.data$.subscribe((res: { title: string; admin: boolean; details: boolean }) => {
+      this.routeService.data$.subscribe((res: { title: string; admin: boolean; details: boolean; icon: string }) => {
         this.title = res.title;
         this.details = res.details;
+        this.pageIcon = res.icon;
       });
   }
   ngOnInit(): void {

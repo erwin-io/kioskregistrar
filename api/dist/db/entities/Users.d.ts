@@ -9,6 +9,7 @@ export declare class Users {
     active: boolean;
     accessGranted: boolean;
     access: object;
+    userCode: string | null;
     admins: Admin[];
     members: Member[];
     profileFile: Files;

@@ -33,6 +33,19 @@ let DashboardController = class DashboardController {
             return res;
         }
     }
+    async getSummaryMemberUsers() {
+        const res = {};
+        try {
+            res.data = await this.dashboardService.getSummaryMemberUsers();
+            res.success = true;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
 };
 __decorate([
     (0, common_1.Get)("getMemberDashboard/:memberId/"),
@@ -41,6 +54,12 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], DashboardController.prototype, "getMemberDashboard", null);
+__decorate([
+    (0, common_1.Get)("getSummaryMemberUsers"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], DashboardController.prototype, "getSummaryMemberUsers", null);
 DashboardController = __decorate([
     (0, swagger_1.ApiTags)("dashboard"),
     (0, common_1.Controller)("dashboard"),

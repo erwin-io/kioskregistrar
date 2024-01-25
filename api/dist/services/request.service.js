@@ -31,47 +31,52 @@ let RequestService = class RequestService {
     }
     async getRequestPagination({ pageSize, pageIndex, order, columnDef, assignedAdminId, }) {
         var _a, _b;
-        const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
-        const take = Number(pageSize);
-        let condition = (0, utils_1.columnDefToTypeORMCondition)(columnDef);
-        if (columnDef &&
-            columnDef.find((x) => x.apiNotation === "requestStatus") &&
-            columnDef.find((x) => x.apiNotation === "requestStatus").type ===
-                "precise" &&
-            columnDef.find((x) => x.apiNotation === "requestStatus").filter !==
-                "PENDING" &&
-            (!((_a = condition === null || condition === void 0 ? void 0 : condition.assignedAdmin) === null || _a === void 0 ? void 0 : _a.adminId) ||
-                ((_b = condition === null || condition === void 0 ? void 0 : condition.assignedAdmin) === null || _b === void 0 ? void 0 : _b.adminId) === "")) {
-            if (assignedAdminId && assignedAdminId !== "") {
-                condition = Object.assign(Object.assign({}, condition), { assignedAdmin: {
-                        adminId: assignedAdminId,
-                    } });
+        try {
+            const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
+            const take = Number(pageSize);
+            let condition = (0, utils_1.columnDefToTypeORMCondition)(columnDef);
+            if (columnDef &&
+                columnDef.find((x) => x.apiNotation === "requestStatus") &&
+                columnDef.find((x) => x.apiNotation === "requestStatus").type ===
+                    "precise" &&
+                columnDef.find((x) => x.apiNotation === "requestStatus").filter !==
+                    "PENDING" &&
+                (!((_a = condition === null || condition === void 0 ? void 0 : condition.assignedAdmin) === null || _a === void 0 ? void 0 : _a.adminId) ||
+                    ((_b = condition === null || condition === void 0 ? void 0 : condition.assignedAdmin) === null || _b === void 0 ? void 0 : _b.adminId) === "")) {
+                if (assignedAdminId && assignedAdminId !== "") {
+                    condition = Object.assign(Object.assign({}, condition), { assignedAdmin: {
+                            adminId: assignedAdminId,
+                        } });
+                }
             }
+            const [results, total] = await Promise.all([
+                this.requestRepo.find({
+                    relations: {
+                        requestedBy: {
+                            user: true,
+                        },
+                        assignedAdmin: {
+                            user: true,
+                        },
+                        requestType: {
+                            requestRequirements: true,
+                        },
+                    },
+                    where: condition,
+                    skip,
+                    take,
+                    order,
+                }),
+                this.requestRepo.count({ where: condition }),
+            ]);
+            return {
+                results,
+                total,
+            };
         }
-        const [results, total] = await Promise.all([
-            this.requestRepo.find({
-                relations: {
-                    requestedBy: {
-                        user: true,
-                    },
-                    assignedAdmin: {
-                        user: true,
-                    },
-                    requestType: {
-                        requestRequirements: true,
-                    },
-                },
-                where: condition,
-                skip,
-                take,
-                order,
-            }),
-            this.requestRepo.count({ where: condition }),
-        ]);
-        return {
-            results,
-            total,
-        };
+        catch (ex) {
+            throw ex;
+        }
     }
     async getByRequestNo(requestNo) {
         return await this.requestRepo.findOne({

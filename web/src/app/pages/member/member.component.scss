@@ -25,8 +25,8 @@
       }
     }
   }
-  
-  
+
+
   ::ng-deep .page-wrapper {
     display: flex;
     flex-direction: column;
@@ -54,15 +54,13 @@
           margin-right: auto!important;
           width: 100%;
           box-sizing: border-box!important;
-          h1, h2 ,h3, h4, h5, h6, p, label, span {
-              color: #272d65
-          }
           .intro {
             width: 100%;
             display: flex;
             flex-direction: column;
             .intro-title {
                 margin: 0!important;
+                opacity: 0.7!important;
             }
             .intro-sub-title {
                 margin: 0!important;
@@ -80,7 +78,7 @@
         }
     }
   }
-  
+
   ::ng-deep .mat-mdc-tab-nav-bar {
     bottom: 0;
     width: 100%;
@@ -100,6 +98,9 @@
         height: 100%;
         flex-grow: 1;
         text-decoration: none!important;
+        .mdc-tab__text-label{
+          flex-direction: column;
+        }
         &.active-link {
           font-weight: 600!important;
           .mdc-tab__text-label{
@@ -109,5 +110,21 @@
       }
     }
   }
-  
+
+
+  .component-floating-actions {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    z-index: 8;
+    @media only screen and (max-width: 600px)  {
+      bottom: 80px!important;
+    }
+    &.vertical-actions {
+      row-gap: 10px;
+      flex-direction: column;
+    }
+}
+
 }

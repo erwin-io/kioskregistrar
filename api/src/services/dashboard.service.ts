@@ -3,11 +3,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Request } from "src/db/entities/Request";
 import { CONST_REQUEST_STATUS_ENUM } from "src/common/constant/request.constant";
+import { Member } from "src/db/entities/Member";
 
 @Injectable()
 export class DashboardService {
   constructor(
-    @InjectRepository(Request) private readonly requestRepo: Repository<Request>
+    @InjectRepository(Request) private readonly requestRepo: Repository<Request>,
+    @InjectRepository(Member) private readonly memberRepo: Repository<Member>,
   ) {}
 
   async getMemberDashboard(memberId) {
@@ -126,5 +128,24 @@ export class DashboardService {
         prio: res[7],
       },
     };
+  }
+
+  async getSummaryMemberUsers() {
+    const [verified, unVerified] = await Promise.all([
+      this.memberRepo.count({
+        where: {
+          isVerified: true,
+        },
+      }),
+      this.memberRepo.count({
+        where: {
+          isVerified: false,
+        },
+      }),
+    ]);
+    return {
+      verified,
+      unVerified,
+    }
   }
 }

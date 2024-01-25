@@ -3,6 +3,7 @@ import { Files } from "./files";
 
 export class Users {
     userId: string;
+    userCode: string;
     userName: string;
     userType: string;
     access: Access[];

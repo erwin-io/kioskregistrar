@@ -91,6 +91,22 @@ export class UserService implements IServices {
     );
   }
 
+  resetAdminPassword(userCode: string, data: any): Observable<ApiResponse<Admin | Member>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.resetAdminPassword + userCode + "/resetPassword", data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  resetMemberPassword(userCode: string, data: any): Observable<ApiResponse<Admin | Member>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.resetMemberPassword + userCode + "/resetPassword", data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
   toggleGrantAccess(data: any): Observable<ApiResponse<Admin>> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.toggleGrantAccess, data)
     .pipe(

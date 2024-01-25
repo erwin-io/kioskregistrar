@@ -100,6 +100,14 @@ __decorate([
     __metadata("design:type", Date)
 ], Request.prototype, "rAssignedDate", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "RejectReason", nullable: true }),
+    __metadata("design:type", String)
+], Request.prototype, "rejectReason", void 0);
+__decorate([
+    (0, typeorm_1.Column)("character varying", { name: "CancelReason", nullable: true }),
+    __metadata("design:type", String)
+], Request.prototype, "cancelReason", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => Admin_1.Admin, (admin) => admin.requests),
     (0, typeorm_1.JoinColumn)([{ name: "AssignedAdminId", referencedColumnName: "adminId" }]),
     __metadata("design:type", Admin_1.Admin)

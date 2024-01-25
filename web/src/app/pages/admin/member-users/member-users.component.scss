@@ -6,3 +6,12 @@
     }
   }
 }
+
+.unverified {
+  position: relative;
+  .mat-badge-content {
+    position: fixed;
+    top: 2px;
+    right: 2px;
+  }
+}

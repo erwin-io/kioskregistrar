@@ -9,34 +9,42 @@
   </div>
   <div class="document-request-wrapper">
     <div class="document-request">
-      <div class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/pending">
+      <div *ngIf="!isLoading; else loadingSummaryCards" class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/pending">
         <div class="document-request-icon">
           <mat-icon>schedule</mat-icon>
         </div>
         <h4 class="document-request-title">Pending</h4>
-        <h1 class="document-request-value">2</h1>
+        <h1 class="document-request-value">{{pending.total}}</h1>
       </div>
-      <div class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/to-pay">
+      <div *ngIf="!isLoading; else loadingSummaryCards" class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/to-pay">
         <div class="document-request-icon">
           <mat-icon>credit_card</mat-icon>
         </div>
         <h4 class="document-request-title">To Pay</h4>
-        <h1 class="document-request-value">9</h1>
+        <h1 class="document-request-value">{{toPay.total}}</h1>
       </div>
-      <div class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/processing">
+      <div *ngIf="!isLoading; else loadingSummaryCards" class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/processing">
         <div class="document-request-icon">
           <mat-icon>autorenew</mat-icon>
         </div>
         <h4 class="document-request-title">Processing</h4>
-        <h1 class="document-request-value">20</h1>
+        <h1 class="document-request-value">{{processing.total}}</h1>
       </div>
-      <div class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/tocomplete">
+      <div *ngIf="!isLoading; else loadingSummaryCards" class="document-request-status" matRipple [matRippleCentered]="true" [matRippleUnbounded]="true" routerLink="/member/document-request/tocomplete">
         <div class="document-request-icon">
           <mat-icon>check_circle_outline</mat-icon>
         </div>
         <h4 class="document-request-title">To Complete</h4>
-        <h1 class="document-request-value">1</h1>
+        <h1 class="document-request-value">{{toComplete.total}}</h1>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #loadingSummaryCards>
+  <ngx-skeleton-loader animation="true" [theme]="{
+    'border-radius': '40px',
+    height: '200px',
+    width: '230px',
+  }"/>
+  </ng-template>

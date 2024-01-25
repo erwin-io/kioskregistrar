@@ -18,9 +18,11 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const Request_1 = require("../db/entities/Request");
 const request_constant_1 = require("../common/constant/request.constant");
+const Member_1 = require("../db/entities/Member");
 let DashboardService = class DashboardService {
-    constructor(requestRepo) {
+    constructor(requestRepo, memberRepo) {
         this.requestRepo = requestRepo;
+        this.memberRepo = memberRepo;
     }
     async getMemberDashboard(memberId) {
         const res = await Promise.all([
@@ -139,11 +141,31 @@ let DashboardService = class DashboardService {
             },
         };
     }
+    async getSummaryMemberUsers() {
+        const [verified, unVerified] = await Promise.all([
+            this.memberRepo.count({
+                where: {
+                    isVerified: true,
+                },
+            }),
+            this.memberRepo.count({
+                where: {
+                    isVerified: false,
+                },
+            }),
+        ]);
+        return {
+            verified,
+            unVerified,
+        };
+    }
 };
 DashboardService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(Request_1.Request)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(Member_1.Member)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], DashboardService);
 exports.DashboardService = DashboardService;
 //# sourceMappingURL=dashboard.service.js.map

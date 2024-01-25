@@ -8,6 +8,7 @@ import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 export class OptionSheetComponent {
   isUserAccount = false;
   isConfirmYesNoCancel = false;
+  @Output() confirmAccount = new EventEmitter();
   @Output() confirmLogOut = new EventEmitter();
   @Output() confirmYesNoCancel = new EventEmitter();
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: {isUserAccount: boolean; isConfirmYesNoCancel: boolean}) {

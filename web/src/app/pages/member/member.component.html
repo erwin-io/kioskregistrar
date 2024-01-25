@@ -43,7 +43,7 @@
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
-      <button mat-menu-item routerLink="/">
+      <button mat-menu-item routerLink="/profile">
         <mat-icon>person</mat-icon><span>My Account</span>
       </button>
       <button mat-menu-item routerLink="/">
@@ -61,19 +61,19 @@
         <router-outlet (activate)="onActivate($event)"> </router-outlet>
     </div>
   </div>
-  
+
 <nav mat-tab-nav-bar ngClass="tabs"
 [ngStyle]="{ 'display' : view === 'desktop' ? 'none' : ''}" >
   <a mat-tab-link routerLink="/member/home" routerLinkActive="active-link">
-    <span *ngIf="view === 'tablet'">Home</span>
-    <mat-icon *ngIf="view === 'mobile'">home</mat-icon>
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
   </a>
   <a mat-tab-link routerLink="/member/document-request" routerLinkActive="active-link">
-    <span *ngIf="view === 'tablet'">Request</span>
-    <mat-icon *ngIf="view === 'mobile'">assignment_turned_in</mat-icon>
+    <mat-icon >assignment_turned_in</mat-icon>
+    <span>Request</span>
     </a>
   <a mat-tab-link routerLink="/member/archived-documents" routerLinkActive="active-link">
-    <span *ngIf="view === 'tablet'">Archive</span>
-    <mat-icon *ngIf="view === 'mobile'">library_books</mat-icon>
+    <mat-icon>library_books</mat-icon>
+    <span>Archive</span>
 </a>
 </nav>

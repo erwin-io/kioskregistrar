@@ -18,6 +18,8 @@ export declare class Request {
     isReAssigned: boolean | null;
     reAssignedAdminId: string | null;
     rAssignedDate: Date | null;
+    rejectReason: string | null;
+    cancelReason: string | null;
     assignedAdmin: Admin;
     requestType: RequestType;
     requestedBy: Member;

@@ -1,0 +1,154 @@
+
+<h4 mat-dialog-title>New Request</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <form
+    [formGroup]="requestForm"
+    fxLayout="row wrap"
+    id="requestForm"
+    (ngSubmit)="onSubmit()">
+      <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+        <div
+          fxLayout="column"
+          fxFlex="100"
+          style="gap: 16px">
+          <div
+          fxLayout="column"
+          fxFlex="100">
+            <mat-form-field
+              appearance="outline">
+              <mat-label>Select Request Type</mat-label>
+              <input
+                matInput
+                readonly
+                [value]="requestType?.name"
+                placeholder="Select Request Type"/>
+                <mat-icon
+                  class="icon-right"
+                  style="cursor: pointer;"
+                  matSuffix
+                  matTooltip="Select Request Type"
+                  (click)="onShowSelectRequestTypeDialog()">
+                  search
+                </mat-icon>
+            </mat-form-field>
+            <span
+              style="color: #f44336;font-size: 14px!important;"
+              *ngIf="f['requestTypeId'].touched && f['requestTypeId'].dirty && f['requestTypeId'].errors">Please select Request type</span>
+          </div>
+          <mat-form-field
+            appearance="outline"
+            [ngClass.gt-sm]="{ isLargeScreen: true }">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              placeholder="Description"
+              formControlName="description"
+            ></textarea>
+            <mat-error
+              *ngIf="getError('description') !== (null || undefined)"
+              >{{
+                (getError("description") &&
+                getError("description")["required"]
+                  ? "Please enter Description"
+                  : "")
+              }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="dialogRef.close(false)">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!formIsValid || !formIsReady"
+      color="primary"
+      type="submit"
+      form="requestForm">
+      Save
+    </button>
+  </div>
+</div>
+
+
+<ng-template #selectRequestTypeDialog>
+  <h4 mat-dialog-title>What do you want to request?</h4>
+<div mat-dialog-content>
+  <div class="request-type-search-box">
+    <mat-form-field
+      fxFlex="100"
+      appearance="outline">
+      <mat-label>Search Request Type</mat-label>
+      <input
+        matInput
+        #searchBox
+        placeholder="Search Request Type"/>
+        <mat-icon
+          class="icon-right"
+          style="cursor: pointer;"
+          matSuffix
+          matTooltip="Search Request Type"
+          (click)="requestTypePageIndex = 0;requestTypePageSize=10;getRequestType(searchBox.value)">
+          search
+        </mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="request-type-list">
+    <div class="request-type-list-item"
+      *ngFor="let item of requestTypeList"
+      [ngClass]="{'selected': requestTypeDialog.componentInstance?.requestType && requestTypeDialog.componentInstance?.requestType?.requestTypeId === item.requestTypeId}"
+      (click)="requestTypeDialog.componentInstance?.requestType && requestTypeDialog.componentInstance.requestType?.requestTypeId === item.requestTypeId ? requestTypeDialog.componentInstance.requestType = null : requestTypeDialog.componentInstance.requestType = item">
+      <div class="request-type-list-item-content">
+        <mat-icon>check_circle</mat-icon>
+        <div class="title">
+          <h4>{{item.name}}</h4>
+        </div>
+      </div>
+    </div>
+    <div
+      class="load-more"
+      *ngIf="requestTypeList && requestTypeList.length >= requestTypePageSize && requestTypeList.length < requestTypeTotal">
+      <div
+      (click)="requestTypePageIndex=requestTypePageIndex+1;getRequestType(searchBox.value, false)"
+      class="load-more-button"
+      matRipple
+      [matRippleCentered]="true"
+      [matRippleUnbounded]="false">
+      Load more
+    </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="onCloseSelectRequestTypeDialog()">
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!requestTypeDialog.componentInstance?.requestType || !requestTypeDialog.componentInstance?.requestType?.requestTypeId"
+      (click)="onConfirmSelectRequestTypeDialog()">
+      Select
+    </button>
+  </div>
+</div>
+
+</ng-template>
+
+

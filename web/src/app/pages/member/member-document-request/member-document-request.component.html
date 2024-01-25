@@ -1,5 +1,9 @@
 <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event);">
-  <mat-tab label="Pending">
+  <mat-tab >
+    <ng-template mat-tab-label>
+      <span class="tab-label" matBadge="{{total.pending > 99 ? '99+' : total.pending }}" *ngIf="total.pending > 0; else matLablePending" matBadgeOverlap="false">Pending</span>
+      <ng-template #matLablePending>Pending</ng-template>
+    </ng-template>
     <div class="page-content">
       <div class="intro">
         <h3 class="intro-title">Pending</h3>
@@ -7,11 +11,30 @@
           You can view all your pending document requests here.
         </p>
       </div>
-      <div class="">
+      <div class="list">
+        <ng-container *ngIf="!isLoading['pending']; else loadingList">
+          <app-member-request-item *ngFor="let item of data['pending']" [requestDetails]="item" (click)="openDetailsDialog(item)"></app-member-request-item>
+        </ng-container>
+        <div
+          class="load-more"
+          *ngIf="data['pending'] && data['pending'].length >= pageSize['pending'] && data['pending'].length < total['pending']">
+          <div
+            (click)="pageIndex['pending']=pageIndex['pending']+1;initTable('pending', false)"
+            class="load-more-button"
+            matRipple
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="false">
+            Load more
+          </div>
+        </div>
       </div>
     </div>
   </mat-tab>
-  <mat-tab label="To pay">
+  <mat-tab >
+    <ng-template mat-tab-label>
+      <span class="tab-label" matBadge="{{total.topay > 99 ? '99+' : total.topay }}" *ngIf="total.topay > 0; else matLableToPay" matBadgeOverlap="false">To Pay</span>
+      <ng-template #matLableToPay>To Pay</ng-template>
+    </ng-template>
     <div class="page-content">
       <div class="intro">
         <h3 class="intro-title">To Pay</h3>
@@ -19,11 +42,30 @@
           You can check here for all pending payments for document requests.
         </p>
       </div>
-      <div class="">
+      <div class="list">
+        <ng-container *ngIf="!isLoading['topay']; else loadingList">
+          <app-member-request-item *ngFor="let item of data['topay']" [requestDetails]="item" (click)="openDetailsDialog(item)"></app-member-request-item>
+        </ng-container>
+        <div
+          class="load-more"
+          *ngIf="data['topay'] && data['topay'].length >= pageSize['topay'] && data['topay'].length < total['topay']">
+          <div
+            (click)="pageIndex['topay']=pageIndex['topay']+1;initTable('topay', false)"
+            class="load-more-button"
+            matRipple
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="false">
+            Load more
+          </div>
+        </div>
       </div>
     </div>
   </mat-tab>
-  <mat-tab label="Processing">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="tab-label" matBadge="{{total.processing > 99 ? '99+' : total.processing }}" *ngIf="total.processing > 0; else matLableProcessing" matBadgeOverlap="false">Processing</span>
+      <ng-template #matLableProcessing>Processing</ng-template>
+    </ng-template>
     <div class="page-content">
       <div class="intro">
         <h3 class="intro-title">Processing</h3>
@@ -31,11 +73,30 @@
           You can view here all the document request the are being processed.
         </p>
       </div>
-      <div class="">
+      <div class="list">
+        <ng-container *ngIf="!isLoading['processing']; else loadingList">
+          <app-member-request-item *ngFor="let item of data['processing']" [requestDetails]="item" (click)="openDetailsDialog(item)"></app-member-request-item>
+        </ng-container>
+        <div
+          class="load-more"
+          *ngIf="data['processing'] && data['processing'].length >= pageSize['processing'] && data['processing'].length < total['processing']">
+          <div
+            (click)="pageIndex['processing']=pageIndex['processing']+1;initTable('processing', false)"
+            class="load-more-button"
+            matRipple
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="false">
+            Load more
+          </div>
+        </div>
       </div>
     </div>
   </mat-tab>
-  <mat-tab label="To Complete">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="tab-label" matBadge="{{total.tocomplete > 99 ? '99+' : total.tocomplete }}" *ngIf="total.tocomplete > 0; else matLableToComplete" matBadgeOverlap="false">To Complete</span>
+      <ng-template #matLableToComplete>To Complete</ng-template>
+    </ng-template>
     <div class="page-content">
       <div class="intro">
         <h3 class="intro-title">To Complete</h3>
@@ -43,8 +104,32 @@
           You can check here for all the ready-tocomplete document requests.
         </p>
       </div>
-      <div class="">
+      <div class="list">
+        <ng-container *ngIf="!isLoading['tocomplete']; else loadingList">
+          <app-member-request-item *ngFor="let item of data['tocomplete']" [requestDetails]="item" (click)="openDetailsDialog(item)"></app-member-request-item>
+        </ng-container>
+        <div
+          class="load-more"
+          *ngIf="data['tocomplete'] && data['tocomplete'].length >= pageSize['tocomplete'] && data['tocomplete'].length < total['tocomplete']">
+          <div
+            (click)="pageIndex['tocomplete']=pageIndex['tocomplete']+1;initTable('tocomplete', false)"
+            class="load-more-button"
+            matRipple
+            [matRippleCentered]="true"
+            [matRippleUnbounded]="false">
+            Load more
+          </div>
+        </div>
       </div>
     </div>
   </mat-tab>
 </mat-tab-group>
+
+<div class="component-floating-actions vertical-actions">
+  <button mat-fab color="primary" aria-label="New Request" matTooltip="New Request" (click)="onNewRequest()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<ng-template #loadingList>
+
+</ng-template>

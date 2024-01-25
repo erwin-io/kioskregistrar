@@ -17,6 +17,7 @@ import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { QrCodeScannerComponent } from 'src/app/shared/qr-code-scanner/qr-code-scanner.component';
+import { RouteService } from 'src/app/services/route.service';
 
 @Component({
   selector: 'app-request-management',
@@ -140,6 +141,7 @@ export class RequestManagementComponent {
   constructor(
     private spinner: SpinnerVisibilityService,
     private titleService: Title,
+    private routeService: RouteService,
     private requestService: RequestService,
     private userService: UserService,
     private snackBar: MatSnackBar,
@@ -332,6 +334,7 @@ export class RequestManagementComponent {
         this._location.go("/admin/request-management/to-process");
       }
       this.titleService.setTitle(`To process | ${this.appConfig.config.appName}`);
+      this.routeService.changeData({ title: "Processing", admin: true, details: false, icon: "assignment_turned_in" });
       table = 'to-process';
       hiddenColumn = ["dateProcessStarted", "dateProcessEnd"];
     } else if(index === 2) {
@@ -339,6 +342,7 @@ export class RequestManagementComponent {
         this._location.go("/admin/request-management/processing");
       }
       this.titleService.setTitle(`Processing | ${this.appConfig.config.appName}`);
+      this.routeService.changeData({ title: "Processing", admin: true, details: false, icon: "assignment_turned_in" });
       table = 'processing';
       hiddenColumn = ["dateProcessEnd", "dateCompleted"];
     } else if(index === 3) {
@@ -346,6 +350,7 @@ export class RequestManagementComponent {
         this._location.go("/admin/request-management/tocomplete");
       }
       this.titleService.setTitle(`To complete | ${this.appConfig.config.appName}`);
+      this.routeService.changeData({ title: "To complete", admin: true, details: false, icon: "assignment_turned_in" });
       hiddenColumn = ["dateCompleted"];
       table = 'tocomplete';
     } else if(index === 4) {
@@ -353,12 +358,14 @@ export class RequestManagementComponent {
         this._location.go("/admin/request-management/closed");
       }
       this.titleService.setTitle(`Closed | ${this.appConfig.config.appName}`);
+      this.routeService.changeData({ title: "Closed", admin: true, details: false, icon: "assignment_turned_in" });
       table = 'closed';
     } else {
       if(redirect) {
         this._location.go("/admin/request-management/pending");
       }
       this.titleService.setTitle(`Pending | ${this.appConfig.config.appName}`);
+      this.routeService.changeData({ title: "Pending", admin: true, details: false, icon: "assignment_turned_in" });
       table = 'pending';
       hiddenColumn = ["dateAssigned", "datePaid", "dateProcessStarted", "dateProcessEnd", "dateCompleted", "assignedAdmin"]
     }

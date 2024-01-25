@@ -1,0 +1,13 @@
+
+<div class="list-item">
+  <div class="list-item-icon">
+  </div>
+  <div class="list-item-left">
+    <div class="list-item-title"><h3>{{requestDetails?.requestType?.name}}</h3></div>
+    <div class="list-item-desc"><span>{{requestDetails?.description}}</span></div>
+    <div class="list-item-desc"><span>{{requestDetails?.dateRequested | date: 'dd MMM yyyy, hh:mm a'}}</span></div>
+  </div>
+  <div class="list-item-right">
+    <div class="list-item-title"><h4>{{requestDetails?.requestType?.fee| currency: 'PHP'}}</h4></div>
+  </div>
+</div>

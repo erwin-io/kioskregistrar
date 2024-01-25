@@ -27,6 +27,7 @@ import { SpinnerVisibilityService } from 'ng-http-loader';
 import { filter } from 'rxjs';
 import { AppConfigService } from 'src/app/services/app-config.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { RouteService } from 'src/app/services/route.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
@@ -49,12 +50,17 @@ export class MemberComponent implements OnInit {
     private spinner: SpinnerVisibilityService,
     private router: Router,
     private bottomSheet: MatBottomSheet,
+    private routeService: RouteService,
     private appconfig: AppConfigService,
   ) {
     this.onResize();
     this.onScroll();
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.routeService.data$.subscribe((res: { title: string;}) => {
+      this.title = res.title;
+    });
+  }
   onActivate(event) {
     const title = this.titleService.getTitle();
     this.title = title ? title.replace(this.appconfig.config.appName, "").trim() : title;
@@ -66,11 +72,16 @@ export class MemberComponent implements OnInit {
       behavior: 'smooth',
     });
   }
-  
+
   openUserAccountMenuSheet() {
     const sheet = this.bottomSheet.open(OptionSheetComponent, {
-      closeOnNavigation: true, 
+      closeOnNavigation: true,
       data: { isUserAccount: true },
+    });
+
+    sheet.instance.confirmAccount.subscribe(res=> {
+      sheet.dismiss();
+      this.router.navigate(["/profile"]);
     });
     sheet.instance.confirmLogOut.subscribe(res=> {
       sheet.dismiss();
@@ -79,9 +90,9 @@ export class MemberComponent implements OnInit {
   }
 
   public logOut() {
-    
+
     const sheet = this.bottomSheet.open(OptionSheetComponent, {
-      closeOnNavigation: true, 
+      closeOnNavigation: true,
       data: { isConfirmYesNoCancel: true },
     });
     sheet.instance.confirmYesNoCancel.subscribe(res=> {

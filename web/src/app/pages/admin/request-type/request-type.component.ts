@@ -71,7 +71,7 @@ export class RequestTypeComponent {
   }
 
   ngAfterViewInit() {
-    this.getUsers();
+    this.getRequestType();
 
   }
 
@@ -82,23 +82,23 @@ export class RequestTypeComponent {
     type: string;
   }[]) {
     this.filter = event;
-    this.getUsers();
+    this.getRequestType();
   }
 
   async pageChange(event: { pageIndex: number, pageSize: number }) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    await this.getUsers();
+    await this.getRequestType();
   }
 
   async sortChange(event: { active: string, direction: string }) {
     const { active, direction } = event;
     const { apiNotation } = this.appConfig.config.tableColumns.requestType.find(x=>x.name === active);
     this.order = convertNotationToObject(apiNotation, direction.toUpperCase());
-    this.getUsers()
+    this.getRequestType()
   }
 
-  async getUsers(){
+  async getRequestType(){
     try{
       this.isLoading = true;
       this.spinner.show();
@@ -147,7 +147,9 @@ export class RequestTypeComponent {
   }
 
   showAddDialog() {
-    this.dialog.open(this.requestTypeFormDialogTemp)
+    this.dialog.open(this.requestTypeFormDialogTemp, {
+      disableClose: true
+    })
   }
 
   closeNewRequestTypeDialog() {

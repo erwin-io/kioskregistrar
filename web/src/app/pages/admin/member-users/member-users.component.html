@@ -3,9 +3,11 @@
       <a mat-tab-link routerLink="/admin/members/view/verified" routerLinkActive="active-link">
         <span>Verified</span>
       </a>
-      <a mat-tab-link routerLink="/admin/members/view/un-verified" routerLinkActive="active-link">
-        <span>Un-verified</span>
-      </a>
+      <div class="unverified" matBadge="{{totalUnVerified > 99 ? '99+' : totalUnVerified }}">
+        <a mat-tab-link  routerLink="/admin/members/view/un-verified" routerLinkActive="active-link">
+          <span>Un-verified</span>
+        </a>
+      </div>
     </nav>
 </mat-toolbar>
 

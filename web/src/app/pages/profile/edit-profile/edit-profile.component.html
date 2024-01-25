@@ -1,1 +1,37 @@
-<p>edit-profile works!</p>
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <span id="title">Edit Profile</span>
+  <span class="toolbar-item-spacer"></span>
+  <div class="toolbar-action">
+    <button
+      mat-raised-button
+      color="primary"
+      matTooltip="Update profile"
+      form="adminForm"
+      *ngIf="profile.user.userType === 'ADMIN'"
+      type="submit"
+      [disabled]="!adminForm.formIsValid">
+      Update profile
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      matTooltip="Update profile"
+      form="memberForm"
+      *ngIf="profile.user.userType === 'MEMBER'"
+      type="submit"
+      [disabled]="!memberForm.formIsValid ">
+      Update profile
+    </button>
+  </div>
+</mat-toolbar>
+<div class="content">
+  <div class="inner-content">
+    <h4 class="inner-content-title">Identity</h4>
+    <mat-card>
+      <mat-card-content>
+        <app-edit-admin-form [hidden]="profile.user.userType !== 'ADMIN'" #adminForm></app-edit-admin-form>
+        <app-edit-member-form [hidden]="profile.user.userType !== 'MEMBER'" #memberForm></app-edit-member-form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
