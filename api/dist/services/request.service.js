@@ -158,6 +158,18 @@ let RequestService = class RequestService {
                 where: {
                     requestNo,
                 },
+                relations: {
+                    assignedAdmin: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                    requestedBy: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                },
             });
             if (!request) {
                 throw Error(request_constant_1.REQUEST_ERROR_NOT_FOUND);
@@ -181,6 +193,11 @@ let RequestService = class RequestService {
             const assignedAdmin = await entityManager.findOne(Admin_1.Admin, {
                 where: {
                     adminId: dto.assignedAdminId,
+                },
+                relations: {
+                    user: {
+                        profileFile: true,
+                    },
                 },
             });
             if (!assignedAdmin) {
@@ -221,6 +238,18 @@ let RequestService = class RequestService {
             let request = await entityManager.findOne(Request_1.Request, {
                 where: {
                     requestNo,
+                },
+                relations: {
+                    assignedAdmin: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                    requestedBy: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
                 },
             });
             if (!request) {
@@ -279,6 +308,18 @@ let RequestService = class RequestService {
                 where: {
                     requestNo,
                 },
+                relations: {
+                    assignedAdmin: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                    requestedBy: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                },
             });
             if (!request) {
                 throw Error(request_constant_1.REQUEST_ERROR_NOT_FOUND);
@@ -332,6 +373,18 @@ let RequestService = class RequestService {
             let request = await entityManager.findOne(Request_1.Request, {
                 where: {
                     requestNo,
+                },
+                relations: {
+                    assignedAdmin: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                    requestedBy: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
                 },
             });
             if (!request) {
@@ -388,6 +441,18 @@ let RequestService = class RequestService {
             let request = await entityManager.findOne(Request_1.Request, {
                 where: {
                     requestNo,
+                },
+                relations: {
+                    assignedAdmin: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                    requestedBy: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
                 },
             });
             if (!request) {
@@ -504,6 +569,18 @@ let RequestService = class RequestService {
             let request = await entityManager.findOne(Request_1.Request, {
                 where: {
                     requestNo,
+                },
+                relations: {
+                    assignedAdmin: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
+                    requestedBy: {
+                        user: {
+                            profileFile: true,
+                        },
+                    },
                 },
             });
             if (!request) {

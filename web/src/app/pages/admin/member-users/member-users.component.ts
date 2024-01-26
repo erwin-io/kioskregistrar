@@ -163,7 +163,7 @@ export class MemberUsersComponent {
               birthDate: d.birthDate,
               address: d.address,
               isAlumni: d.isAlumni,
-              profile: d.user?.profileFile?.url,
+              profile: d?.user?.profileFile ? d?.user?.profileFile?.url : d.gender.toUpperCase() === "FEMALE" ? './assets/img/person-female.png' : './assets/img/person.png',
               url: `/admin/members/${d.memberCode}`,
             } as MemberTableColumn
           });

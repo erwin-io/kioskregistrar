@@ -189,6 +189,18 @@ export class RequestService {
         where: {
           requestNo,
         },
+        relations: {
+          assignedAdmin: {
+            user: {
+              profileFile: true,
+            },
+          },
+          requestedBy: {
+            user: {
+              profileFile: true,
+            },
+          },
+        },
       });
       if (!request) {
         throw Error(REQUEST_ERROR_NOT_FOUND);
@@ -218,6 +230,11 @@ export class RequestService {
       const assignedAdmin = await entityManager.findOne(Admin, {
         where: {
           adminId: dto.assignedAdminId,
+        },
+        relations: {
+          user: {
+            profileFile: true,
+          },
         },
       });
       if (!assignedAdmin) {
@@ -268,6 +285,18 @@ export class RequestService {
       let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
+        },
+        relations: {
+          assignedAdmin: {
+            user: {
+              profileFile: true,
+            },
+          },
+          requestedBy: {
+            user: {
+              profileFile: true,
+            },
+          },
         },
       });
       if (!request) {
@@ -331,6 +360,18 @@ export class RequestService {
       let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
+        },
+        relations: {
+          assignedAdmin: {
+            user: {
+              profileFile: true,
+            },
+          },
+          requestedBy: {
+            user: {
+              profileFile: true,
+            },
+          },
         },
       });
       if (!request) {
@@ -396,6 +437,18 @@ export class RequestService {
       let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
+        },
+        relations: {
+          assignedAdmin: {
+            user: {
+              profileFile: true,
+            },
+          },
+          requestedBy: {
+            user: {
+              profileFile: true,
+            },
+          },
         },
       });
       if (!request) {
@@ -465,6 +518,18 @@ export class RequestService {
       let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
+        },
+        relations: {
+          assignedAdmin: {
+            user: {
+              profileFile: true,
+            },
+          },
+          requestedBy: {
+            user: {
+              profileFile: true,
+            },
+          },
         },
       });
       if (!request) {
@@ -612,6 +677,18 @@ export class RequestService {
       let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
+        },
+        relations: {
+          assignedAdmin: {
+            user: {
+              profileFile: true,
+            },
+          },
+          requestedBy: {
+            user: {
+              profileFile: true,
+            },
+          },
         },
       });
       if (!request) {

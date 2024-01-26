@@ -296,7 +296,7 @@ export class RequestManagementComponent {
               assignedAdminId: d.assignedAdmin?.adminId.toString(),
               assignedAdmin: d.assignedAdmin?.fullName,
               requestType: d.requestType.name,
-              requestedByProfile: d.requestedBy?.user?.profileFile?.url,
+              requestedByProfile: d.requestedBy?.user?.profileFile ? d.requestedBy?.user?.profileFile?.url : d.requestedBy.gender.toUpperCase() === "FEMALE" ? './assets/img/person-female.png' : './assets/img/person.png',
               url: `/admin/request-management/details/${d.requestNo}`
              } as RequestTableColumn
           });

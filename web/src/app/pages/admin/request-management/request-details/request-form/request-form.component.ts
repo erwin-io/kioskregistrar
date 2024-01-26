@@ -29,7 +29,7 @@ export class RequestFormComponent {
 
   getDeafaultProfilePicture() {
     if(this.requestDetails && this.requestDetails?.requestedBy?.gender?.toUpperCase() === "FEMALE") {
-      return '../../../../../../assets/person-female.png';
+      return '../../../../../../assets/img/person-female.png';
     } else {
       return '../../../../../../assets/img/person.png';
     }
