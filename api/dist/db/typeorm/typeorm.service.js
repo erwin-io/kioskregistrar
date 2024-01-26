@@ -20,6 +20,7 @@ const Users_1 = require("../entities/Users");
 const config_1 = require("@nestjs/config");
 const common_1 = require("@nestjs/common");
 const Request_1 = require("../entities/Request");
+const Notifications_1 = require("../entities/Notifications");
 let TypeOrmConfigService = class TypeOrmConfigService {
     createTypeOrmOptions() {
         const ssl = this.config.get("SSL");
@@ -39,6 +40,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 RequestType_1.RequestType,
                 RequestRequirements_1.RequestRequirements,
                 Request_1.Request,
+                Notifications_1.Notifications
             ],
             synchronize: false,
             ssl: ssl.toLocaleLowerCase().includes("true"),

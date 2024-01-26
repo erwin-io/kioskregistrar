@@ -114,6 +114,18 @@ export class MemberComponent implements OnInit {
       }
     });
   }
+
+  profilePicErrorHandler(event) {
+    event.target.src = this.getDeafaultProfilePicture();
+  }
+
+  getDeafaultProfilePicture() {
+    if(this.profile && this.profile.gender?.toUpperCase() === "FEMALE") {
+      return '../../../assets/img/person-female.png';
+    } else {
+      return '../../../assets/img/person.png';
+    }
+  }
   @HostListener('window:resize', ['$event'])
   onResize(event?) {
     if(window.innerWidth <= 480 ) {

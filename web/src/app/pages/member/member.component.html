@@ -41,8 +41,7 @@
       [matMenuTriggerFor]="view === 'desktop' ? userAccountMenu : null"
       (click)="view !== 'desktop' ? openUserAccountMenuSheet() : false"
     >
-      <mat-icon *ngIf="!profileLoaded">account_circle</mat-icon>
-      <img [hidden]="!profileLoaded" style="width: 50px;height: 50px;" (load)="profileLoaded = true" (error)="profileLoaded = false" [src]="profile.user.profileFile?.url">
+      <img style="width: 50px;height: 50px;" (error)="profilePicErrorHandler($event)" [src]="profile.user.profileFile?.url">
     </button>
     <mat-menu #userAccountMenu [overlapTrigger]="false" yPosition="below">
       <button mat-menu-item routerLink="/profile">

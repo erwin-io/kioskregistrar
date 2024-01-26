@@ -3,7 +3,7 @@
         display: flex;
         box-sizing: border-box;
         flex-direction: column;
-        width: 400px;
+        width: 720px;
         max-width: 100%;
         position: relative;
         border-top-left-radius: 4px;
@@ -27,13 +27,16 @@
             height: 100% !important;
             flex-direction: column;
             box-sizing: border-box;
+            overflow: hidden;
             .form {
+              overflow: hidden;
               display: flex;
               flex-direction: column;
               flex-grow: 1;
               box-sizing: border-box;
               width: 100%;
               .fieldset {
+                overflow: auto;
                 border: none;
                 width: 100%;
                 min-width: 0!important;
@@ -54,5 +57,5 @@
           }
         }
       }
-      
+
   }

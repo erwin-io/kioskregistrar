@@ -3,9 +3,7 @@ import { Users } from "./Users";
 import { Request } from "./Request";
 export declare class Member {
     memberId: string;
-    firstName: string;
-    middleName: string | null;
-    lastName: string;
+    fullName: string;
     email: string | null;
     mobileNumber: string;
     birthDate: string;
@@ -19,7 +17,6 @@ export declare class Member {
     primarySyGraduated: string | null;
     secondarySchoolName: string | null;
     secondarySyGraduated: string | null;
-    fullName: string;
     isVerified: boolean;
     memberCode: string;
     birthCertFile: Files;

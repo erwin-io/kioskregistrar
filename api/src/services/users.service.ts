@@ -204,9 +204,7 @@ export class UsersService {
       user.access = JSON.parse(JSON.stringify(dto.access));
       user.accessGranted = true;
       let admin = new Admin();
-      admin.firstName = dto.firstName;
-      admin.lastName = dto.lastName;
-      admin.fullName = getFullName(dto.firstName, "", dto.lastName);
+      admin.fullName = dto.fullName;
       admin.mobileNumber = dto.mobileNumber;
       user = await entityManager.save(Users, user);
       user.userCode = generateAdminCode(user.userId);
@@ -253,9 +251,7 @@ export class UsersService {
         throw Error(USER_ERROR_ADMIN_NOT_FOUND);
       }
 
-      admin.firstName = dto.firstName;
-      admin.lastName = dto.lastName;
-      admin.fullName = getFullName(dto.firstName, "", dto.lastName);
+      admin.fullName = dto.fullName;
       admin.mobileNumber = dto.mobileNumber;
       let user: Users = admin.user;
       user.access = JSON.parse(JSON.stringify(dto.access));
@@ -296,9 +292,7 @@ export class UsersService {
         throw Error(USER_ERROR_ADMIN_NOT_FOUND);
       }
 
-      admin.firstName = dto.firstName;
-      admin.lastName = dto.lastName;
-      admin.fullName = getFullName(dto.firstName, "", dto.lastName);
+      admin.fullName = dto.fullName;
       admin.mobileNumber = dto.mobileNumber;
       let user: Users = admin.user;
 
@@ -393,14 +387,7 @@ export class UsersService {
         throw Error(USER_ERROR_MEMBER_NOT_FOUND);
       }
 
-      member.firstName = dto.firstName;
-      member.middleName = dto.middleName;
-      member.lastName = dto.lastName;
-      member.fullName = getFullName(
-        dto.firstName,
-        dto.middleName,
-        dto.lastName
-      );
+      member.fullName = dto.fullName;
       member.email = dto.email;
       member.mobileNumber = dto.mobileNumber;
       member.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");

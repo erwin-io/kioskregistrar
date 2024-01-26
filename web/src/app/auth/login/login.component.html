@@ -4,7 +4,7 @@
             <mat-toolbar color="primary" class="mat-elevation-z2" >
                 Login
             </mat-toolbar>
-            
+
             <mat-card-content>
                 <form [formGroup]="logInForm" (ngSubmit)="onSubmit()" class="form">
                     <fieldset [disabled]="isProcessing" class="fieldset">
@@ -38,12 +38,12 @@
                         <button mat-raised-button color="primary" type="submit" [disabled]="isProcessing">Login</button>
                         <mat-error class="form-error" *ngIf="error">{{ error }}</mat-error>
                         <div class="forgot-password">
-                            <span>Forgot password? Click  
+                            <span>Forgot password? Click
                                 <a [routerLink]="admin ? '/auth/admin/forgot-password' : '/auth/member/forgot-password'">here</a>
                             </span>
-                            <!-- <span *ngIf="!admin" >
+                            <span *ngIf="!admin" >
                                 <a routerLink="/auth/member/register">Create account</a>
-                            </span> -->
+                            </span>
                         </div>
                     </fieldset>
                 </form>

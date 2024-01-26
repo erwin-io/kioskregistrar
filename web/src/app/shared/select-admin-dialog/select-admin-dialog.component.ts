@@ -74,7 +74,7 @@ export class SelectAdminDialogComponent {
           return {
             adminCode: d.adminCode,
             userName: d.user.userName,
-            fullName: `${d.firstName} ${d.lastName}`,
+            fullName: d.fullName,
             mobileNumber: d.mobileNumber,
             enable: d.user.accessGranted,
             url: `/admin/admin-access/${d.adminCode}`,

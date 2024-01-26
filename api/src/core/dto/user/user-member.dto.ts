@@ -22,15 +22,7 @@ export class MemberVerificationDto {
 export class DefaultMemberDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @IsOptional()
-  middleName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastName: string;
+  fullName: string;
 
   @ApiProperty()
   @IsNotEmpty()

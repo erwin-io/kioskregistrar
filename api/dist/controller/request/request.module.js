@@ -12,14 +12,15 @@ const request_controller_1 = require("./request.controller");
 const request_service_1 = require("../../services/request.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const Request_1 = require("../../db/entities/Request");
+const pusher_service_1 = require("../../services/pusher.service");
 let RequestModule = class RequestModule {
 };
 RequestModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([Request_1.Request])],
         controllers: [request_controller_1.RequestController],
-        providers: [request_service_1.RequestService],
-        exports: [request_service_1.RequestService],
+        providers: [request_service_1.RequestService, pusher_service_1.PusherService],
+        exports: [request_service_1.RequestService, pusher_service_1.PusherService],
     })
 ], RequestModule);
 exports.RequestModule = RequestModule;

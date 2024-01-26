@@ -50,12 +50,8 @@ export class CreateAdminUserAccessDto {
 export class DefaultAdminUserDto {
   @ApiProperty()
   @IsNotEmpty()
-  firstName: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  lastName: string;
-
+  fullName: string;
+  
   @ApiProperty()
   @IsNotEmpty()
   @IsNumberString()

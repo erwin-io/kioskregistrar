@@ -158,11 +158,7 @@ export class AdminAccessDetailsComponent implements OnInit {
     if (this.isNew) {
       this.adminAccessForm = this.formBuilder.group(
         {
-          firstName: [
-            '',
-            [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
-          ],
-          lastName: [
+          fullName: [
             '',
             [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
           ],
@@ -194,8 +190,7 @@ export class AdminAccessDetailsComponent implements OnInit {
       })
     } else {
       this.adminAccessForm = this.formBuilder.group({
-        firstName: ['', [Validators.required]],
-        lastName: ['', [Validators.required]],
+        fullName: ['', [Validators.required]],
         mobileNumber: [
           '',
           [
@@ -210,8 +205,7 @@ export class AdminAccessDetailsComponent implements OnInit {
       });
       const res = await this.userService.getAdminById(this.id).toPromise();
       if (res.success) {
-        this.f['firstName'].setValue(res.data.firstName);
-        this.f['lastName'].setValue(res.data.lastName);
+        this.f['fullName'].setValue(res.data.fullName);
         this.f['mobileNumber'].setValue(res.data.mobileNumber);
         this.f['userName'].setValue(res.data.user.userName);
         this.f['access'].setValue(res.data.user.access);

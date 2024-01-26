@@ -45,14 +45,7 @@ export class AuthService {
             user.userType = "MEMBER";
             user.accessGranted = true;
             let member = new Member();
-            member.firstName = dto.firstName;
-            member.lastName = dto.lastName;
-            member.middleName = dto.middleName;
-            member.fullName = getFullName(
-              dto.firstName,
-              dto.middleName,
-              dto.lastName
-            );
+            member.fullName = dto.fullName;
             member.email = dto.email;
             member.mobileNumber = dto.mobileNumber;
             member.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");
@@ -92,14 +85,7 @@ export class AuthService {
       user.userType = "MEMBER";
       user.accessGranted = true;
       let member = new Member();
-      member.firstName = dto.firstName;
-      member.lastName = dto.lastName;
-      member.middleName = dto.middleName;
-      member.fullName = getFullName(
-        dto.firstName,
-        dto.middleName,
-        dto.lastName
-      );
+      member.fullName = dto.fullName;
       member.email = dto.email;
       member.mobileNumber = dto.mobileNumber;
       member.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");

@@ -180,9 +180,7 @@ let UsersService = class UsersService {
             user.access = JSON.parse(JSON.stringify(dto.access));
             user.accessGranted = true;
             let admin = new Admin_1.Admin();
-            admin.firstName = dto.firstName;
-            admin.lastName = dto.lastName;
-            admin.fullName = (0, utils_1.getFullName)(dto.firstName, "", dto.lastName);
+            admin.fullName = dto.fullName;
             admin.mobileNumber = dto.mobileNumber;
             user = await entityManager.save(Users_1.Users, user);
             user.userCode = (0, utils_1.generateAdminCode)(user.userId);
@@ -219,9 +217,7 @@ let UsersService = class UsersService {
             if (!admin) {
                 throw Error(user_error_constant_1.USER_ERROR_ADMIN_NOT_FOUND);
             }
-            admin.firstName = dto.firstName;
-            admin.lastName = dto.lastName;
-            admin.fullName = (0, utils_1.getFullName)(dto.firstName, "", dto.lastName);
+            admin.fullName = dto.fullName;
             admin.mobileNumber = dto.mobileNumber;
             let user = admin.user;
             user.access = JSON.parse(JSON.stringify(dto.access));
@@ -259,9 +255,7 @@ let UsersService = class UsersService {
             if (!admin) {
                 throw Error(user_error_constant_1.USER_ERROR_ADMIN_NOT_FOUND);
             }
-            admin.firstName = dto.firstName;
-            admin.lastName = dto.lastName;
-            admin.fullName = (0, utils_1.getFullName)(dto.firstName, "", dto.lastName);
+            admin.fullName = dto.fullName;
             admin.mobileNumber = dto.mobileNumber;
             let user = admin.user;
             if (dto.profileFile) {
@@ -339,10 +333,7 @@ let UsersService = class UsersService {
             if (!member) {
                 throw Error(user_error_constant_1.USER_ERROR_MEMBER_NOT_FOUND);
             }
-            member.firstName = dto.firstName;
-            member.middleName = dto.middleName;
-            member.lastName = dto.lastName;
-            member.fullName = (0, utils_1.getFullName)(dto.firstName, dto.middleName, dto.lastName);
+            member.fullName = dto.fullName;
             member.email = dto.email;
             member.mobileNumber = dto.mobileNumber;
             member.birthDate = (0, moment_1.default)(dto.birthDate.toString()).format("YYYY-MM-DD");

@@ -27,13 +27,16 @@
             height: 100% !important;
             flex-direction: column;
             box-sizing: border-box;
+            overflow: hidden;
             .form {
               display: flex;
               flex-direction: column;
               flex-grow: 1;
               box-sizing: border-box;
               width: 100%;
+              overflow: hidden;
               .fieldset {
+                overflow: auto;
                 border: none;
                 width: 100%;
                 min-width: 0!important;
@@ -54,5 +57,5 @@
           }
         }
       }
-      
+
   }

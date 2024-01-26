@@ -51,6 +51,14 @@ export class AuthService implements IServices {
     );
   }
 
+  registerMember(data: any): Observable<ApiResponse<Member>> {
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.registerMember, data)
+    .pipe(
+      tap(_ => this.log('register')),
+      catchError(this.handleError('register', []))
+    );
+  }
+
   redirectToPage(profile: Admin | Member, auth: boolean) {
     if (profile && profile !== undefined && profile.user && profile.user.userType === "ADMIN") {
         this.router.navigate([auth ? 'auth/admin' : 'admin'], { replaceUrl: true });

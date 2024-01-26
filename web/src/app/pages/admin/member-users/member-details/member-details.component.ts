@@ -63,8 +63,7 @@ export class MemberDetailsComponent {
       };
     }
     this.memberForm = this.formBuilder.group({
-      firstName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
-      lastName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
+      fullName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
       mobileNumber: ['', [ Validators.minLength(11), Validators.maxLength(11), Validators.pattern('^[0-9]*$'), Validators.required]],
       email: ['', [ Validators.email, Validators.required]],
       userName: [''],
@@ -115,8 +114,7 @@ export class MemberDetailsComponent {
   async initForm() {
     const res = await this.userService.getMemberById(this.id).toPromise();
     if (res.success) {
-      this.f['firstName'].setValue(res.data.firstName);
-      this.f['lastName'].setValue(res.data.lastName);
+      this.f['fullName'].setValue(res.data.fullName);
       this.f['mobileNumber'].setValue(res.data.mobileNumber);
       this.f['email'].setValue(res.data.email);
       this.f['userName'].setValue(res.data.user.userName);

@@ -40,8 +40,7 @@ export class EditMemberFormComponent {
     private authService: AuthService) {
 
     this.form = this.formBuilder.group({
-        firstName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
-        lastName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
+        fullName: ['', [ Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
         mobileNumber: ['', [ Validators.minLength(11), Validators.maxLength(11), Validators.pattern('^[0-9]*$'), Validators.required]],
         email: ['', [ Validators.email, Validators.required]],
         birthDate: [null, [ Validators.required]],
@@ -92,8 +91,7 @@ export class EditMemberFormComponent {
 
   init(value: Member) {
     this.form.setValue({
-      firstName: value.firstName,
-      lastName: value.lastName,
+      fullName: value.fullName,
       mobileNumber: value.mobileNumber,
       email: value.email,
       birthDate: value.birthDate,

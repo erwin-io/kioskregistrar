@@ -5,8 +5,7 @@ export declare class CreateAdminUserAccessDto {
     rights: string[];
 }
 export declare class DefaultAdminUserDto {
-    firstName: string;
-    lastName: string;
+    fullName: string;
     mobileNumber: string;
 }
 export declare class CreateAdminUserDto extends DefaultAdminUserDto {

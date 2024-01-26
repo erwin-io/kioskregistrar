@@ -48,49 +48,25 @@
               >
                 <mat-form-field
                   appearance="outline"
-                  fxFlex="50%"
+                  fxFlex="100"
                   class="cell"
                   [ngClass.gt-sm]="{ isLargeScreen: true }"
                 >
-                  <mat-label>First name</mat-label>
+                  <mat-label>Full name</mat-label>
                   <input
                     matInput
-                    placeholder="First name"
-                    formControlName="firstName"
+                    placeholder="Full name"
+                    formControlName="fullName"
                   />
                   <mat-error
-                    *ngIf="getError('firstName') !== (null || undefined)"
+                    *ngIf="getError('fullName') !== (null || undefined)"
                     >{{
-                      (getError("firstName") &&
-                      getError("firstName")["required"]
-                        ? "Please enter first name"
+                      (getError("fullName") &&
+                      getError("fullName")["required"]
+                        ? "Please enter full name"
                         : "") ||
-                        (getError("firstName") &&
-                        getError("firstName")["pattern"]
-                          ? "Invalid input"
-                          : "")
-                    }}</mat-error
-                  >
-                </mat-form-field>
-                <mat-form-field
-                  appearance="outline"
-                  fxFlex="50%"
-                  class="cell"
-                  [ngClass.gt-sm]="{ isLargeScreen: true }"
-                >
-                  <mat-label>Last name</mat-label>
-                  <input
-                    matInput
-                    placeholder="Last name"
-                    formControlName="lastName"
-                  />
-                  <mat-error
-                    *ngIf="getError('lastName') !== (null || undefined)"
-                    >{{
-                      (getError("lastName") && getError("lastName")["required"]
-                        ? "Please enter last name"
-                        : "") ||
-                        (getError("lastName") && getError("lastName")["pattern"]
+                        (getError("fullName") &&
+                        getError("fullName")["pattern"]
                           ? "Invalid input"
                           : "")
                     }}</mat-error

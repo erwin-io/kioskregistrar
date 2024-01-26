@@ -16,17 +16,11 @@ export class Admin {
   @PrimaryGeneratedColumn({ type: "bigint", name: "AdminId" })
   adminId: string;
 
-  @Column("character varying", { name: "FirstName" })
-  firstName: string;
-
-  @Column("character varying", { name: "LastName" })
-  lastName: string;
+  @Column("character varying", { name: "FullName" })
+  fullName: string;
 
   @Column("character varying", { name: "MobileNumber" })
   mobileNumber: string;
-
-  @Column("character varying", { name: "FullName", default: () => "''" })
-  fullName: string;
 
   @Column("character varying", { name: "AdminCode", default: () => "''" })
   adminCode: string;

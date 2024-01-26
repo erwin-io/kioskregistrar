@@ -14,7 +14,7 @@ import { RequestDto } from "src/core/dto/request/request.dto";
 import { Member } from "src/db/entities/Member";
 import { Request } from "src/db/entities/Request";
 import { RequestType } from "src/db/entities/RequestType";
-import { Repository } from "typeorm";
+import { EntityManager, Not, Repository } from "typeorm";
 import {
   AssignRequestDto,
   CancelRequestDto,
@@ -27,11 +27,20 @@ import {
 } from "src/core/dto/request/request-update.dto";
 import { Admin } from "src/db/entities/Admin";
 import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.constant";
+import { Notifications } from "src/db/entities/Notifications";
+import { Users } from "src/db/entities/Users";
+import {
+  NOTIF_TITLE,
+  NOTIF_TYPE,
+} from "src/common/constant/notifications.constant";
+import { PusherService } from "./pusher.service";
 
 @Injectable()
 export class RequestService {
   constructor(
-    @InjectRepository(Request) private readonly requestRepo: Repository<Request>
+    @InjectRepository(Request)
+    private readonly requestRepo: Repository<Request>,
+    private pusherService: PusherService
   ) {}
 
   async getRequestPagination({
@@ -152,7 +161,7 @@ export class RequestService {
 
   async updateDescription(requestNo, dto: UpdateRequestDescriptionDto) {
     return await this.requestRepo.manager.transaction(async (entityManager) => {
-      const request = await entityManager.findOne(Request, {
+      let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
         },
@@ -161,7 +170,16 @@ export class RequestService {
         throw Error(REQUEST_ERROR_NOT_FOUND);
       }
       request.description = dto.description;
-      return await entityManager.save(Request, request);
+      request = await entityManager.save(Request, request);
+      await this.logNotification(
+        [request.assignedAdmin.user],
+        request,
+        entityManager,
+        NOTIF_TITLE.REQUEST_DESCRIPTION_UPDATED,
+        `Request #${request.requestNo} description was updated by the requestor!`
+      );
+      await this.syncRealTime([request.assignedAdmin.user.userId], request);
+      return request;
     });
   }
 
@@ -215,6 +233,17 @@ export class RequestService {
       request.dateAssigned = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
+      await this.logNotification(
+        [request.assignedAdmin.user, request.requestedBy.user],
+        request,
+        entityManager,
+        NOTIF_TITLE.REQUEST_ASSIGNED,
+        `Request #${request.requestNo} is now assigned to ${request.assignedAdmin.fullName}!`
+      );
+      await this.syncRealTime(
+        [request.assignedAdmin.user.userId, request.requestedBy.user.userId],
+        request
+      );
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -335,6 +364,14 @@ export class RequestService {
       request.dateProcessEnd = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
+      await this.logNotification(
+        [request.requestedBy.user],
+        request,
+        entityManager,
+        NOTIF_TITLE.REQUEST_READY,
+        `Request #${request.requestNo} is now ready!`
+      );
+      await this.syncRealTime([request.requestedBy.user.userId], request);
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -393,6 +430,17 @@ export class RequestService {
       request.dateCompleted = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
+      await this.logNotification(
+        [request.requestedBy.user, request.assignedAdmin.user],
+        request,
+        entityManager,
+        NOTIF_TITLE.REQUEST_COMPLETED,
+        `Request #${request.requestNo} is now completed`
+      );
+      await this.syncRealTime(
+        [request.requestedBy.user.userId, request.assignedAdmin.user.userId],
+        request
+      );
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -452,6 +500,14 @@ export class RequestService {
       request.dateClosed = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
+      await this.logNotification(
+        [request.requestedBy.user],
+        request,
+        entityManager,
+        NOTIF_TITLE.REQUEST_CLOSED,
+        `Your request #${request.requestNo} is now closed`
+      );
+      await this.syncRealTime([request.requestedBy.user.userId], request);
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -476,6 +532,14 @@ export class RequestService {
       let request = await entityManager.findOne(Request, {
         where: {
           requestNo,
+        },
+        relations: {
+          requestedBy: {
+            user: true,
+          },
+          assignedAdmin: {
+            user: true,
+          },
         },
       });
       if (!request) {
@@ -515,6 +579,15 @@ export class RequestService {
         });
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
+
+      await this.logNotification(
+        [request.requestedBy.user],
+        request,
+        entityManager,
+        NOTIF_TITLE.REQUEST_REJECTED,
+        `Your request #${request.requestNo} was rejected`
+      );
+      await this.syncRealTime([request.assignedAdmin.user.userId], request);
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -589,5 +662,36 @@ export class RequestService {
         },
       });
     });
+  }
+
+  async logNotification(
+    users: Users[],
+    request: Request,
+    entityManager: EntityManager,
+    title: string,
+    description: string
+  ) {
+    const notifications: Notifications[] = [];
+
+    for (const user of users) {
+      notifications.push({
+        title,
+        description,
+        type: NOTIF_TYPE.REQUEST.toString(),
+        referenceId: request.requestNo.toString(),
+        isRead: false,
+        user: user,
+      } as Notifications);
+    }
+    await entityManager.save(Notifications, notifications);
+    await this.pusherService.sendNotif(
+      users.map((x) => x.userId),
+      title,
+      description
+    );
+  }
+
+  async syncRealTime(userIds: string[], request: Request) {
+    await this.pusherService.requestChanges(userIds, request);
   }
 }

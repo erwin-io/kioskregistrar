@@ -1,5 +1,6 @@
 import { Admin } from "./Admin";
 import { Member } from "./Member";
+import { Notifications } from "./Notifications";
 import { Files } from "./Files";
 export declare class Users {
     userId: string;
@@ -12,5 +13,6 @@ export declare class Users {
     userCode: string | null;
     admins: Admin[];
     members: Member[];
+    notifications: Notifications[];
     profileFile: Files;
 }

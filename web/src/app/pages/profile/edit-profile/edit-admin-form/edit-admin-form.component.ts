@@ -41,11 +41,7 @@ export class EditAdminFormComponent {
 
     this.form = this.formBuilder.group(
       {
-        firstName: [
-          '',
-          [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
-        ],
-        lastName: [
+        fullName: [
           '',
           [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
         ],
@@ -87,8 +83,7 @@ export class EditAdminFormComponent {
 
   init(value: Admin) {
     this.form.setValue({
-      firstName: value.firstName,
-      lastName: value.lastName,
+      fullName: value.fullName,
       mobileNumber: value.mobileNumber,
     });
     this.form.markAsPristine();

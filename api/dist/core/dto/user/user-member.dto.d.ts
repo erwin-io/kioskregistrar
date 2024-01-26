@@ -2,9 +2,7 @@ export declare class MemberVerificationDto {
     memberCodes: string[];
 }
 export declare class DefaultMemberDto {
-    firstName: string;
-    middleName: string;
-    lastName: string;
+    fullName: string;
     email: string;
     mobileNumber: string;
     birthDate: Date;

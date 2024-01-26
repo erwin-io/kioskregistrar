@@ -21,17 +21,9 @@ __decorate([
     __metadata("design:type", String)
 ], Member.prototype, "memberId", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FirstName" }),
+    (0, typeorm_1.Column)("character varying", { name: "FullName" }),
     __metadata("design:type", String)
-], Member.prototype, "firstName", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "MiddleName", nullable: true }),
-    __metadata("design:type", String)
-], Member.prototype, "middleName", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "LastName" }),
-    __metadata("design:type", String)
-], Member.prototype, "lastName", void 0);
+], Member.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("character varying", { name: "Email", nullable: true }),
     __metadata("design:type", String)
@@ -84,10 +76,6 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "SecondarySYGraduated", nullable: true }),
     __metadata("design:type", String)
 ], Member.prototype, "secondarySyGraduated", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
-    __metadata("design:type", String)
-], Member.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("boolean", { name: "IsVerified", default: () => "false" }),
     __metadata("design:type", Boolean)

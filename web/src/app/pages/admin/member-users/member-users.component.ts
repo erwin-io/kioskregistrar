@@ -156,7 +156,7 @@ export class MemberUsersComponent {
           let data = res.data.results.map((d)=>{
             return {
               memberCode: d.memberCode,
-              fullName: `${d.firstName} ${d.lastName}`,
+              fullName: d.fullName,
               courseTaken: d.courseTaken,
               email: d.email,
               mobileNumber: d.mobileNumber,

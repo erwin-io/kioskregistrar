@@ -99,6 +99,6 @@ export class AdminComponent {
   }
 
   profilePicErrorHandler(event) {
-    event.target.src = '../../../assets/person.png';
+    event.target.src = '../../../assets/img/person.png';
   }
 }

@@ -17,14 +17,8 @@ export class Member {
   @PrimaryGeneratedColumn({ type: "bigint", name: "MemberId" })
   memberId: string;
 
-  @Column("character varying", { name: "FirstName" })
-  firstName: string;
-
-  @Column("character varying", { name: "MiddleName", nullable: true })
-  middleName: string | null;
-
-  @Column("character varying", { name: "LastName" })
-  lastName: string;
+  @Column("character varying", { name: "FullName" })
+  fullName: string;
 
   @Column("character varying", { name: "Email", nullable: true })
   email: string | null;
@@ -64,9 +58,6 @@ export class Member {
 
   @Column("character varying", { name: "SecondarySYGraduated", nullable: true })
   secondarySyGraduated: string | null;
-
-  @Column("character varying", { name: "FullName", default: () => "''" })
-  fullName: string;
 
   @Column("boolean", { name: "IsVerified", default: () => "false" })
   isVerified: boolean;

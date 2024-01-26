@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Admin } from "./Admin";
 import { Member } from "./Member";
+import { Notifications } from "./Notifications";
 import { Files } from "./Files";
 
 @Index("u_user", ["active", "userName"], { unique: true })
@@ -44,6 +45,9 @@ export class Users {
 
   @OneToMany(() => Member, (member) => member.user)
   members: Member[];
+
+  @OneToMany(() => Notifications, (notifications) => notifications.user)
+  notifications: Notifications[];
 
   @ManyToOne(() => Files, (files) => files.users)
   @JoinColumn([{ name: "ProfileFileId", referencedColumnName: "fileId" }])

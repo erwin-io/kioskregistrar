@@ -20,21 +20,13 @@ __decorate([
     __metadata("design:type", String)
 ], Admin.prototype, "adminId", void 0);
 __decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FirstName" }),
+    (0, typeorm_1.Column)("character varying", { name: "FullName" }),
     __metadata("design:type", String)
-], Admin.prototype, "firstName", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "LastName" }),
-    __metadata("design:type", String)
-], Admin.prototype, "lastName", void 0);
+], Admin.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("character varying", { name: "MobileNumber" }),
     __metadata("design:type", String)
 ], Admin.prototype, "mobileNumber", void 0);
-__decorate([
-    (0, typeorm_1.Column)("character varying", { name: "FullName", default: () => "''" }),
-    __metadata("design:type", String)
-], Admin.prototype, "fullName", void 0);
 __decorate([
     (0, typeorm_1.Column)("character varying", { name: "AdminCode", default: () => "''" }),
     __metadata("design:type", String)

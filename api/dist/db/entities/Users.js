@@ -13,6 +13,7 @@ exports.Users = void 0;
 const typeorm_1 = require("typeorm");
 const Admin_1 = require("./Admin");
 const Member_1 = require("./Member");
+const Notifications_1 = require("./Notifications");
 const Files_1 = require("./Files");
 let Users = class Users {
 };
@@ -56,6 +57,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Member_1.Member, (member) => member.user),
     __metadata("design:type", Array)
 ], Users.prototype, "members", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Notifications_1.Notifications, (notifications) => notifications.user),
+    __metadata("design:type", Array)
+], Users.prototype, "notifications", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Files_1.Files, (files) => files.users),
     (0, typeorm_1.JoinColumn)([{ name: "ProfileFileId", referencedColumnName: "fileId" }]),
