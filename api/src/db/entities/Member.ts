@@ -10,6 +10,7 @@ import {
 import { Files } from "./Files";
 import { Users } from "./Users";
 import { Request } from "./Request";
+import { SupportTickets } from "./SupportTickets";
 
 @Index("Member_pkey", ["memberId"], { unique: true })
 @Entity("Member", { schema: "dbo" })
@@ -75,4 +76,10 @@ export class Member {
 
   @OneToMany(() => Request, (request) => request.requestedBy)
   requests: Request[];
+
+  @OneToMany(
+    () => SupportTickets,
+    (supportTickets) => supportTickets.requestedByMember
+  )
+  supportTickets: SupportTickets[];
 }

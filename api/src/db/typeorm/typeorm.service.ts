@@ -10,6 +10,11 @@ import { ConfigService } from "@nestjs/config";
 import { Injectable, Inject } from "@nestjs/common";
 import { Request } from "../entities/Request";
 import { Notifications } from "../entities/Notifications";
+import { SubmittedRequirements } from "../entities/SubmittedRequirements";
+import { UserOneSignalSubscription } from "../entities/UserOneSignalSubscription";
+import { SupportTicketConvo } from "../entities/SupportTicketConvo";
+import { SupportTickets } from "../entities/SupportTickets";
+import { Courses } from "../entities/Courses";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -34,7 +39,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         RequestType,
         RequestRequirements,
         Request,
-        Notifications
+        Notifications,
+        SubmittedRequirements,
+        UserOneSignalSubscription,
+        SupportTickets,
+        SupportTicketConvo,
+        Courses
       ],
       synchronize: false, // never use TRUE in production!
       ssl: ssl.toLocaleLowerCase().includes("true"),

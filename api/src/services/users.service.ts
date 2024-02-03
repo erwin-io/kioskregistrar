@@ -297,22 +297,21 @@ export class UsersService {
       let user: Users = admin.user;
 
       if (dto.profileFile) {
-        const newFileName: string = uuid();
+        const newGUID: string = uuid();
         const bucket = this.firebaseProvoder.app.storage().bucket();
         if (user.profileFile) {
           try {
-            const deleteFile = bucket.file(
-              `profile/${user.profileFile.fileName}`
-            );
+            const deleteFile = bucket.file(`profile/${user.profileFile.name}`);
             deleteFile.delete();
           } catch (ex) {
             console.log(ex);
           }
           const file = user.profileFile;
-          file.fileName = `${newFileName}${extname(dto.profileFile.fileName)}`;
+          file.guid = newGUID;
+          file.name = `${newGUID}${extname(dto.profileFile.name)}`;
 
           const bucketFile = bucket.file(
-            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+            `profile/${newGUID}${extname(dto.profileFile.name)}`
           );
           const img = Buffer.from(dto.profileFile.data, "base64");
           await bucketFile.save(img).then(async (res) => {
@@ -328,11 +327,10 @@ export class UsersService {
           });
         } else {
           user.profileFile = new Files();
-          user.profileFile.fileName = `${newFileName}${extname(
-            dto.profileFile.fileName
-          )}`;
+          user.profileFile.guid = newGUID;
+          user.profileFile.name = `${newGUID}${extname(dto.profileFile.name)}`;
           const bucketFile = bucket.file(
-            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+            `profile/${newGUID}${extname(dto.profileFile.name)}`
           );
           const img = Buffer.from(dto.profileFile.data, "base64");
           await bucketFile.save(img).then(async () => {
@@ -405,22 +403,28 @@ export class UsersService {
       let user: Users = member.user;
 
       if (dto.profileFile) {
-        const newFileName: string = uuid();
+        const newGUID: string = uuid();
         const bucket = this.firebaseProvoder.app.storage().bucket();
         if (user.profileFile) {
           try {
             const deleteFile = bucket.file(
-              `profile/${user.profileFile.fileName}`
+              `profile/${user.profileFile.guid}${extname(
+                user.profileFile.name
+              )}`
             );
-            deleteFile.delete();
+            const exists = await deleteFile.exists();
+            if (exists[0]) {
+              deleteFile.delete();
+            }
           } catch (ex) {
             console.log(ex);
           }
           const file = user.profileFile;
-          file.fileName = `${newFileName}${extname(dto.profileFile.fileName)}`;
+          file.guid = newGUID;
+          file.name = `${dto.profileFile.name}`;
 
           const bucketFile = bucket.file(
-            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+            `profile/${newGUID}${extname(dto.profileFile.name)}`
           );
           const img = Buffer.from(dto.profileFile.data, "base64");
           await bucketFile.save(img).then(async (res) => {
@@ -436,11 +440,10 @@ export class UsersService {
           });
         } else {
           user.profileFile = new Files();
-          user.profileFile.fileName = `${newFileName}${extname(
-            dto.profileFile.fileName
-          )}`;
+          user.profileFile.guid = newGUID;
+          user.profileFile.name = `${dto.profileFile.name}`;
           const bucketFile = bucket.file(
-            `profile/${newFileName}${extname(dto.profileFile.fileName)}`
+            `profile/${newGUID}${extname(dto.profileFile.name)}`
           );
           const img = Buffer.from(dto.profileFile.data, "base64");
           await bucketFile.save(img).then(async () => {

@@ -44,6 +44,10 @@ const request_module_1 = require("./controller/request/request.module");
 const request_type_module_1 = require("./controller/request-type/request-type.module");
 const request_requirements_module_1 = require("./controller/request-requirements/request-requirements.module");
 const dashboard_module_1 = require("./controller/dashboard/dashboard.module");
+const user_one_signal_subscription_module_1 = require("./controller/user-one-signal-subscription/user-one-signal-subscription.module");
+const notifications_module_1 = require("./controller/notifications/notifications.module");
+const files_service_1 = require("./services/files.service");
+const course_module_1 = require("./controller/course/course.module");
 const envFilePath = (0, utils_1.getEnvPath)(`${__dirname}/common/envs`);
 let AppModule = class AppModule {
 };
@@ -65,8 +69,11 @@ AppModule = __decorate([
             request_type_module_1.RequestTypeModule,
             request_requirements_module_1.RequestRequirementsModule,
             dashboard_module_1.DashboardModule,
+            user_one_signal_subscription_module_1.UserOneSignalSubscriptionModule,
+            notifications_module_1.NotificationsModule,
+            course_module_1.CourseModule
         ],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, files_service_1.FilesService],
         controllers: [],
     })
 ], AppModule);

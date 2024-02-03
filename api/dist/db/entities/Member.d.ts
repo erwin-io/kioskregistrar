@@ -1,6 +1,7 @@
 import { Files } from "./Files";
 import { Users } from "./Users";
 import { Request } from "./Request";
+import { SupportTickets } from "./SupportTickets";
 export declare class Member {
     memberId: string;
     fullName: string;
@@ -22,4 +23,5 @@ export declare class Member {
     birthCertFile: Files;
     user: Users;
     requests: Request[];
+    supportTickets: SupportTickets[];
 }

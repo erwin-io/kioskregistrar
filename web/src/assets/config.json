@@ -492,6 +492,11 @@
         ]
       },
       {
+        "page": "Courses",
+        "view": false,
+        "modify": false
+      },
+      {
         "page": "Request Management",
         "view": false,
         "modify": false,
@@ -544,6 +549,13 @@
       "create": "/requestRequirements/",
       "update": "/requestRequirements/",
       "delete": "/requestRequirements/"
+    },
+    "courses": {
+      "getAll": "/courses/",
+      "getById": "/courses/",
+      "create": "/courses/",
+      "update": "/courses/",
+      "delete": "/courses/"
     },
     "request": {
       "getByAdvanceSearch": "/request/page/",

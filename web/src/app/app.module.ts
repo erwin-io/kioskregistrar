@@ -38,6 +38,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { WebcamModule } from 'ngx-webcam';
 import { ImageUploadDialogComponent } from './shared/image-upload-dialog/image-upload-dialog.component';
 import { ImageViewerDialogComponent } from './shared/image-viewer-dialog/image-viewer-dialog.component';
+import { PusherService } from './services/pusher.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +52,7 @@ import { ImageViewerDialogComponent } from './shared/image-viewer-dialog/image-v
     NoAccessComponent,
     SelectAdminDialogComponent,
     ImageUploadDialogComponent,
-    ImageViewerDialogComponent
+    ImageViewerDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +71,7 @@ import { ImageViewerDialogComponent } from './shared/image-viewer-dialog/image-v
     QrCodeGeneratorModule
   ],
   providers: [
+    PusherService,
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500} },
     {
       provide : APP_INITIALIZER,

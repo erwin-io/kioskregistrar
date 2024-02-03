@@ -9,7 +9,26 @@ import {
   IsEnum,
   IsIn,
   IsUppercase,
+  IsArray,
+  IsOptional,
 } from "class-validator";
+import { RequestRequirementsDto } from "./request.dto";
+
+export class UpdateRequestDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  description: string;
+  
+  @ApiProperty({
+    isArray: true,
+    type: RequestRequirementsDto
+  })
+  @IsOptional()
+  @IsArray()
+  @Type(() => RequestRequirementsDto)
+  @ValidateNested()
+  requirements: RequestRequirementsDto[];
+}
 
 export class UpdateRequestDescriptionDto {
   @ApiProperty()

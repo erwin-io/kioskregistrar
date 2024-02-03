@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   apiBaseUrl: "http://localhost:3000/api/v1",
   pusher: {
-    key: "1ad4b93854243ae307e6",
+    key: "21c010133c493e5d1b02",
     cluster: "ap1",
   }
 };

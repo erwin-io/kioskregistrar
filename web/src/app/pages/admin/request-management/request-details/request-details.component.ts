@@ -13,6 +13,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { QrCodeScannerComponent } from 'src/app/shared/qr-code-scanner/qr-code-scanner.component';
 import { QrCodeGeneratorComponent } from 'src/app/shared/qr-code-generator/qr-code-generator.component';
 import { Location } from '@angular/common';
+import { PusherService } from 'src/app/services/pusher.service';
+import { Admin } from 'src/app/model/admin';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-request-details',
@@ -33,6 +36,7 @@ export class RequestDetailsComponent {
   error;
   requestNo: any = 0;
   requestDetails: Request;
+  currentProfile: Admin;
 
   statusTrackerOrientation: 'vertical' | 'horizontal' = 'vertical'
 
@@ -47,10 +51,13 @@ export class RequestDetailsComponent {
     private _location: Location,
     private spinner: SpinnerVisibilityService,
     private formBuilder: FormBuilder,
+    private storageService: StorageService,
+    private pusherService: PusherService,
     private requestService: RequestService,
     private snackBar: MatSnackBar,
     public media: MediaObserver,
     private route: ActivatedRoute) {
+      this.currentProfile = this.storageService.getLoginProfile() as Admin;
       this.requestNo = this.route.snapshot.paramMap.get('requestNo');
       this.initDetails();
       if (this.route.snapshot.data) {
@@ -88,6 +95,14 @@ export class RequestDetailsComponent {
   }
 
   ngOnInit() {
+    const channel = this.pusherService.init(this.currentProfile.user.userId);
+    channel.bind('requestChanges', (res: any) => {
+      this.snackBar.open("Someone has updated this request.", "",{
+        announcementMessage: "Someone has updated this request.",
+        verticalPosition: "top"
+      });
+      this.initDetails();
+    });
   }
 
   initDetails() {

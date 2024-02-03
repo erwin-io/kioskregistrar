@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { IsNull, Repository } from "typeorm";
 import { Request } from "src/db/entities/Request";
 import { CONST_REQUEST_STATUS_ENUM } from "src/common/constant/request.constant";
 import { Member } from "src/db/entities/Member";
@@ -67,6 +67,7 @@ export class DashboardService {
           requestedBy: {
             memberId,
           },
+          dateCompleted: IsNull(),
         },
       }),
       this.requestRepo.manager.findOne(Request, {
@@ -75,6 +76,7 @@ export class DashboardService {
           requestedBy: {
             memberId,
           },
+          dateCompleted: IsNull(),
         },
         relations: {
           requestType: true,

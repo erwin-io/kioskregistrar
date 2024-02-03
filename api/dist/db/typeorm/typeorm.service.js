@@ -21,6 +21,11 @@ const config_1 = require("@nestjs/config");
 const common_1 = require("@nestjs/common");
 const Request_1 = require("../entities/Request");
 const Notifications_1 = require("../entities/Notifications");
+const SubmittedRequirements_1 = require("../entities/SubmittedRequirements");
+const UserOneSignalSubscription_1 = require("../entities/UserOneSignalSubscription");
+const SupportTicketConvo_1 = require("../entities/SupportTicketConvo");
+const SupportTickets_1 = require("../entities/SupportTickets");
+const Courses_1 = require("../entities/Courses");
 let TypeOrmConfigService = class TypeOrmConfigService {
     createTypeOrmOptions() {
         const ssl = this.config.get("SSL");
@@ -40,7 +45,12 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 RequestType_1.RequestType,
                 RequestRequirements_1.RequestRequirements,
                 Request_1.Request,
-                Notifications_1.Notifications
+                Notifications_1.Notifications,
+                SubmittedRequirements_1.SubmittedRequirements,
+                UserOneSignalSubscription_1.UserOneSignalSubscription,
+                SupportTickets_1.SupportTickets,
+                SupportTicketConvo_1.SupportTicketConvo,
+                Courses_1.Courses
             ],
             synchronize: false,
             ssl: ssl.toLocaleLowerCase().includes("true"),

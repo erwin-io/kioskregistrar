@@ -9,12 +9,17 @@ import {
   Raw,
   Not,
   In,
+  ArrayOverlap,
+  ArrayContains,
+  Equal,
+  IsNull,
 } from "typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
 import * as path from "path";
 import { Transform } from "class-transformer";
 import moment from "moment";
+import { isArray } from "class-validator";
 
 export const toPromise = <T>(data: T): Promise<T> => {
   return new Promise<T>((resolve) => {
@@ -164,13 +169,8 @@ export const columnDefToTypeORMCondition = (columnDef) => {
       conditionMapping.push(
         convertColumnNotationToObject(
           col.apiNotation,
-          Between(Number(range[0]), Number(range[1]))
+          Between(range[0], range[1])
         )
-      );
-    } else if (col.type === "number") {
-      const value = !isNaN(Number(col.filter)) ? Number(col.filter) : 0;
-      conditionMapping.push(
-        convertColumnNotationToObject(col.apiNotation, value)
       );
     } else if (col.type === "precise") {
       conditionMapping.push(
@@ -178,7 +178,15 @@ export const columnDefToTypeORMCondition = (columnDef) => {
       );
     } else if (col.type === "not" || col.type === "except") {
       conditionMapping.push(
-        convertColumnNotationToObject(col.apiNotation, Not(col.filter))
+        convertColumnNotationToObject(col.apiNotation, ArrayOverlap(col.filter))
+      );
+    } else if (col.type === "in" || col.type === "includes") {
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, In(col.filter))
+      );
+    } else if (col.type === "null") {
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, IsNull())
       );
     } else {
       conditionMapping.push(

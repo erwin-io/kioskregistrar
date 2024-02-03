@@ -31,6 +31,9 @@ let RequestTypeService = class RequestTypeService {
         const [results, total] = await Promise.all([
             this.requestTypeRepo.find({
                 where: Object.assign(Object.assign({}, condition), { active: true }),
+                relations: {
+                    requestRequirements: true,
+                },
                 skip,
                 take,
                 order,

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RequestRequirements = void 0;
 const typeorm_1 = require("typeorm");
 const RequestType_1 = require("./RequestType");
+const SubmittedRequirements_1 = require("./SubmittedRequirements");
 let RequestRequirements = class RequestRequirements {
 };
 __decorate([
@@ -41,6 +42,10 @@ __decorate([
     ]),
     __metadata("design:type", RequestType_1.RequestType)
 ], RequestRequirements.prototype, "requestType", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => SubmittedRequirements_1.SubmittedRequirements, (submittedRequirements) => submittedRequirements.requestRequirements),
+    __metadata("design:type", Array)
+], RequestRequirements.prototype, "submittedRequirements", void 0);
 RequestRequirements = __decorate([
     (0, typeorm_1.Index)("u_requestRequirement", ["active", "name", "requestTypeId"], {
         unique: true,

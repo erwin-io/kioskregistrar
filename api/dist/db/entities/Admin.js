@@ -13,6 +13,7 @@ exports.Admin = void 0;
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./Users");
 const Request_1 = require("./Request");
+const SupportTickets_1 = require("./SupportTickets");
 let Admin = class Admin {
 };
 __decorate([
@@ -40,6 +41,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Request_1.Request, (request) => request.assignedAdmin),
     __metadata("design:type", Array)
 ], Admin.prototype, "requests", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => SupportTickets_1.SupportTickets, (supportTickets) => supportTickets.assignedAdmin),
+    __metadata("design:type", Array)
+], Admin.prototype, "supportTickets", void 0);
 Admin = __decorate([
     (0, typeorm_1.Index)("Admin_pkey", ["adminId"], { unique: true }),
     (0, typeorm_1.Entity)("Admin", { schema: "dbo" })

@@ -1,5 +1,6 @@
 import { Users } from "./Users";
 import { Request } from "./Request";
+import { SupportTickets } from "./SupportTickets";
 export declare class Admin {
     adminId: string;
     fullName: string;
@@ -7,4 +8,5 @@ export declare class Admin {
     adminCode: string;
     user: Users;
     requests: Request[];
+    supportTickets: SupportTickets[];
 }

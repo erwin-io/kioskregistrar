@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Files_1 = require("./Files");
 const Users_1 = require("./Users");
 const Request_1 = require("./Request");
+const SupportTickets_1 = require("./SupportTickets");
 let Member = class Member {
 };
 __decorate([
@@ -98,6 +99,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Request_1.Request, (request) => request.requestedBy),
     __metadata("design:type", Array)
 ], Member.prototype, "requests", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => SupportTickets_1.SupportTickets, (supportTickets) => supportTickets.requestedByMember),
+    __metadata("design:type", Array)
+], Member.prototype, "supportTickets", void 0);
 Member = __decorate([
     (0, typeorm_1.Index)("Member_pkey", ["memberId"], { unique: true }),
     (0, typeorm_1.Entity)("Member", { schema: "dbo" })

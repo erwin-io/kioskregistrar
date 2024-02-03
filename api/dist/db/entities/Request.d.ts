@@ -1,6 +1,7 @@
 import { Admin } from "./Admin";
 import { RequestType } from "./RequestType";
 import { Member } from "./Member";
+import { SubmittedRequirements } from "./SubmittedRequirements";
 export declare class Request {
     requestId: string;
     dateRequested: Date;
@@ -23,4 +24,5 @@ export declare class Request {
     assignedAdmin: Admin;
     requestType: RequestType;
     requestedBy: Member;
+    submittedRequirements: SubmittedRequirements[];
 }

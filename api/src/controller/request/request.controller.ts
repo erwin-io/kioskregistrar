@@ -18,6 +18,7 @@ import {
   MarkRequestAsPaidDto,
   MarkRequestAsProcessedDto,
   UpdateRequestDescriptionDto,
+  UpdateRequestDto,
 } from "src/core/dto/request/request-update.dto";
 import { RequestType } from "src/db/entities/RequestType";
 
@@ -72,9 +73,28 @@ export class RequestController {
     }
   }
 
-  @Put("/:requestNo/updateDescription")
+  @Put("/:requestNo")
   //   @UseGuards(JwtAuthGuard)
   async update(
+    @Param("requestNo") requestNo: string,
+    @Body() dto: UpdateRequestDto
+  ) {
+    const res: ApiResponseModel<Request> = {} as any;
+    try {
+      res.data = await this.requestService.update(requestNo, dto);
+      res.success = true;
+      res.message = `Request ${UPDATE_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @Put("/:requestNo/updateDescription")
+  //   @UseGuards(JwtAuthGuard)
+  async updateDescription(
     @Param("requestNo") requestNo: string,
     @Body() dto: UpdateRequestDescriptionDto
   ) {

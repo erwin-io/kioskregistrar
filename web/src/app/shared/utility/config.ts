@@ -62,6 +62,13 @@ export interface AppConfig {
         update: string;
         delete: string;
       };
+      courses: {
+        getAll: string;
+        getById: string;
+        create: string;
+        update: string;
+        delete: string;
+      };
       requestRequirements: {
         get: string;
         getById: string;

@@ -52,6 +52,9 @@
           <mat-list-item *ngIf="showMenu('Request Type')" routerLink="request-type" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
               <mat-icon>library_books</mat-icon><span>Request Type</span>
           </mat-list-item>
+          <mat-list-item *ngIf="showMenu('Courses')" routerLink="courses" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+              <mat-icon>history_edu</mat-icon><span>Courses</span>
+          </mat-list-item>
           <mat-list-item *ngIf="showMenu('Support Management')" routerLink="support-management" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
               <mat-icon>help</mat-icon><span>Support Management</span>
           </mat-list-item>

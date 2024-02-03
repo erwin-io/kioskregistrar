@@ -1,0 +1,10 @@
+::ng-deep {
+  .course-dialog {
+    mat-form-field {
+      margin-top: 10px!important;
+    }
+  }
+}
+.mat-column-controls {
+  width: 0!important;
+}

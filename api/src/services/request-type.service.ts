@@ -29,6 +29,9 @@ export class RequestTypeService {
           ...condition,
           active: true,
         },
+        relations: {
+          requestRequirements: true,
+        },
         skip,
         take,
         order,

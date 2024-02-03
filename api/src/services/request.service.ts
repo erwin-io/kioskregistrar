@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { toPromise } from "./../common/utils/utils";
 import { REQUEST_TYPE_ERROR_NOT_FOUND } from "src/common/constant/request-type.constant";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -24,6 +26,7 @@ import {
   MarkRequestAsProcessedDto,
   RejectRequestDto,
   UpdateRequestDescriptionDto,
+  UpdateRequestDto,
 } from "src/core/dto/request/request-update.dto";
 import { Admin } from "src/db/entities/Admin";
 import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.constant";
@@ -34,13 +37,24 @@ import {
   NOTIF_TYPE,
 } from "src/common/constant/notifications.constant";
 import { PusherService } from "./pusher.service";
+import { RequestRequirements } from "src/db/entities/RequestRequirements";
+import { SubmittedRequirements } from "src/db/entities/SubmittedRequirements";
+import { Files } from "src/db/entities/Files";
+import { v4 as uuid } from "uuid";
+import { extname } from "path";
+import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
+import { type } from "os";
+import { title } from "process";
+import { OneSignalNotificationService } from "./one-signal-notification.service";
 
 @Injectable()
 export class RequestService {
   constructor(
+    private firebaseProvoder: FirebaseProvider,
     @InjectRepository(Request)
     private readonly requestRepo: Repository<Request>,
-    private pusherService: PusherService
+    private pusherService: PusherService,
+    private oneSignalNotificationService: OneSignalNotificationService
   ) {}
 
   async getRequestPagination({
@@ -109,7 +123,7 @@ export class RequestService {
   }
 
   async getByRequestNo(requestNo) {
-    return await this.requestRepo.findOne({
+    const request = await this.requestRepo.findOne({
       where: {
         requestNo,
       },
@@ -127,14 +141,42 @@ export class RequestService {
         requestType: {
           requestRequirements: true,
         },
+        submittedRequirements: {
+          requestRequirements: true,
+        },
       },
     });
+
+    const requestRequirements = await this.requestRepo.manager.find(
+      RequestRequirements,
+      {
+        where: {
+          requestType: {
+            requestTypeId: request.requestType?.requestTypeId,
+          },
+          active: true,
+        },
+      }
+    );
+    return {
+      ...request,
+      requestType: {
+        ...request?.requestType,
+        requestRequirements,
+      },
+    };
   }
 
   async create(dto: RequestDto) {
     return await this.requestRepo.manager.transaction(async (entityManager) => {
       const request = new Request();
       request.description = dto.description;
+      const timestamp = await entityManager
+        .query(CONST_QUERYCURRENT_TIMESTAMP)
+        .then((res) => {
+          return res[0]["timestamp"];
+        });
+      request.dateLastUpdated = timestamp;
       const requestedBy = await entityManager.findOne(Member, {
         where: {
           memberId: dto.requestedById,
@@ -155,7 +197,124 @@ export class RequestService {
       request.requestType = requestType;
       const _res = await entityManager.save(request);
       _res.requestNo = generateRequestNo(_res.requestId);
+      const bucket = this.firebaseProvoder.app.storage().bucket();
+      for (const item of dto.requirements) {
+        const newRequirement = new SubmittedRequirements();
+        const newRequirementFiles: Files[] = [];
+        for (const file of item?.files) {
+          const newFile = new Files();
+          newFile.guid = uuid();
+          newFile.name = `${file.name}`;
+          const bucketFile = bucket.file(
+            `request/submitted-requirements/${newFile.guid}${extname(
+              file.name
+            )}`
+          );
+          const fileData = Buffer.from(file.data, "base64");
+          await bucketFile.save(fileData).then(async () => {
+            const url = await bucketFile.getSignedUrl({
+              action: "read",
+              expires: "03-09-2500",
+            });
+            newFile.url = url[0];
+            newRequirementFiles.push(newFile);
+          });
+        }
+        newRequirement.files = newRequirementFiles;
+        newRequirement.request = _res;
+        newRequirement.requestRequirements = await entityManager.findOne(
+          RequestRequirements,
+          { where: { requestRequirementsId: item.requestRequirementsId } }
+        );
+        await entityManager.save(SubmittedRequirements, newRequirement);
+      }
       return await entityManager.save(Request, _res);
+    });
+  }
+
+  async update(requestNo, dto: UpdateRequestDto) {
+    return await this.requestRepo.manager.transaction(async (entityManager) => {
+      let request = await entityManager.findOne(Request, {
+        where: {
+          requestNo,
+        },
+      });
+      if (!request) {
+        throw Error(REQUEST_ERROR_NOT_FOUND);
+      }
+      request.description = dto.description;
+      const timestamp = await entityManager
+        .query(CONST_QUERYCURRENT_TIMESTAMP)
+        .then((res) => {
+          return res[0]["timestamp"];
+        });
+      request.dateLastUpdated = timestamp;
+      request = await entityManager.save(Request, request);
+      const bucket = this.firebaseProvoder.app.storage().bucket();
+      const submittedRequirements = await entityManager.find(
+        SubmittedRequirements,
+        {
+          where: {
+            request: {
+              requestId: request.requestId,
+            },
+          },
+        }
+      );
+      const files = submittedRequirements.map((x) => x.files as Files).flat(1);
+      await entityManager
+        .createQueryBuilder("SubmittedRequirements", '"SubmittedRequirements"')
+        .where('"SubmittedRequirements"."RequestId" = :requestId')
+        .setParameters({
+          requestId: request.requestId,
+        })
+        .delete()
+        .execute();
+      // await entityManager.query(
+      //   `delete from dbo."SubmittedRequirements" where "RequestId" = '${request.requestId}'`
+      // );
+      for (const item of files) {
+        try {
+          const bucketFile = bucket.file(
+            `request/submitted-requirements/${item.guid}${extname(item.name)}`
+          );
+          bucketFile.delete();
+        } catch (ex) {
+          console.log(ex);
+        }
+      }
+      for (const item of dto.requirements) {
+        const newRequirement = new SubmittedRequirements();
+        const newRequirementFiles: Files[] = [];
+        for (const file of item?.files) {
+          const newFile = new Files();
+          newFile.guid = uuid();
+          newFile.name = `${file.name}`;
+          const bucketFile = bucket.file(
+            `request/submitted-requirements/${newFile.guid}${extname(
+              file.name
+            )}`
+          );
+          const fileData = Buffer.from(file.data, "base64");
+          await bucketFile.save(fileData).then(async () => {
+            const url = await bucketFile.getSignedUrl({
+              action: "read",
+              expires: "03-09-2500",
+            });
+            newFile.url = url[0];
+            newRequirementFiles.push(newFile);
+          });
+        }
+        newRequirement.files = newRequirementFiles;
+        newRequirement.request = request;
+        newRequirement.requestRequirements = await entityManager.findOne(
+          RequestRequirements,
+          { where: { requestRequirementsId: item.requestRequirementsId } }
+        );
+        await entityManager.save(SubmittedRequirements, newRequirement);
+      }
+      request = await entityManager.save(Request, request);
+      return request;
     });
   }
 
@@ -170,6 +329,12 @@ export class RequestService {
         throw Error(REQUEST_ERROR_NOT_FOUND);
       }
       request.description = dto.description;
+      const timestamp = await entityManager
+        .query(CONST_QUERYCURRENT_TIMESTAMP)
+        .then((res) => {
+          return res[0]["timestamp"];
+        });
+      request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
       await this.logNotification(
         [request.assignedAdmin.user],
@@ -250,17 +415,31 @@ export class RequestService {
       request.dateAssigned = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
-      await this.logNotification(
+      const title = NOTIF_TITLE.REQUEST_ASSIGNED;
+      const desc = `Request #${request.requestNo} is now assigned to ${request.assignedAdmin.fullName}!`;
+      const notificationIds = await this.logNotification(
         [request.assignedAdmin.user, request.requestedBy.user],
         request,
         entityManager,
-        NOTIF_TITLE.REQUEST_ASSIGNED,
-        `Request #${request.requestNo} is now assigned to ${request.assignedAdmin.fullName}!`
+        title,
+        desc
       );
       await this.syncRealTime(
         [request.assignedAdmin.user.userId, request.requestedBy.user.userId],
         request
       );
+      const pushNotifResults: { userId: string; success: boolean }[] =
+        await Promise.all([
+          this.oneSignalNotificationService.sendToExternalUser(
+            request.requestedBy.user.userName,
+            "REQUEST",
+            request.requestId,
+            notificationIds,
+            title,
+            desc
+          ),
+        ]);
+      console.log("Push notif results ", JSON.stringify(pushNotifResults));
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -405,14 +584,28 @@ export class RequestService {
       request.dateProcessEnd = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
-      await this.logNotification(
+      const title = NOTIF_TITLE.REQUEST_READY;
+      const desc = `Request #${request.requestNo} is now ready!`;
+      const notificationIds = await this.logNotification(
         [request.requestedBy.user],
         request,
         entityManager,
-        NOTIF_TITLE.REQUEST_READY,
-        `Request #${request.requestNo} is now ready!`
+        title,
+        desc
       );
       await this.syncRealTime([request.requestedBy.user.userId], request);
+      const pushNotifResults: { userId: string; success: boolean }[] =
+        await Promise.all([
+          this.oneSignalNotificationService.sendToExternalUser(
+            request.requestedBy.user.userName,
+            "REQUEST",
+            request.requestId,
+            notificationIds,
+            title,
+            desc
+          ),
+        ]);
+      console.log("Push notif results ", JSON.stringify(pushNotifResults));
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -483,17 +676,31 @@ export class RequestService {
       request.dateCompleted = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
-      await this.logNotification(
+      const title = NOTIF_TITLE.REQUEST_COMPLETED;
+      const desc = `Request #${request.requestNo} is now completed`;
+      const notificationIds = await this.logNotification(
         [request.requestedBy.user, request.assignedAdmin.user],
         request,
         entityManager,
-        NOTIF_TITLE.REQUEST_COMPLETED,
-        `Request #${request.requestNo} is now completed`
+        title,
+        desc
       );
       await this.syncRealTime(
         [request.requestedBy.user.userId, request.assignedAdmin.user.userId],
         request
       );
+      const pushNotifResults: { userId: string; success: boolean }[] =
+        await Promise.all([
+          this.oneSignalNotificationService.sendToExternalUser(
+            request.requestedBy.user.userName,
+            "REQUEST",
+            request.requestId,
+            notificationIds,
+            title,
+            desc
+          ),
+        ]);
+      console.log("Push notif results ", JSON.stringify(pushNotifResults));
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -565,7 +772,9 @@ export class RequestService {
       request.dateClosed = timestamp;
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
-      await this.logNotification(
+      const title = NOTIF_TITLE.REQUEST_CLOSED;
+      const desc = `Your request #${request.requestNo} is now closed`;
+      const notificationIds = await this.logNotification(
         [request.requestedBy.user],
         request,
         entityManager,
@@ -573,6 +782,18 @@ export class RequestService {
         `Your request #${request.requestNo} is now closed`
       );
       await this.syncRealTime([request.requestedBy.user.userId], request);
+      const pushNotifResults: { userId: string; success: boolean }[] =
+        await Promise.all([
+          this.oneSignalNotificationService.sendToExternalUser(
+            request.requestedBy.user.userName,
+            "REQUEST",
+            request.requestId,
+            notificationIds,
+            title,
+            desc
+          ),
+        ]);
+      console.log("Push notif results ", JSON.stringify(pushNotifResults));
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -644,8 +865,9 @@ export class RequestService {
         });
       request.dateLastUpdated = timestamp;
       request = await entityManager.save(Request, request);
-
-      await this.logNotification(
+      const title = NOTIF_TITLE.REQUEST_REJECTED;
+      const desc = `Your request #${request.requestNo} was rejected`;
+      const notificationIds = await this.logNotification(
         [request.requestedBy.user],
         request,
         entityManager,
@@ -653,6 +875,18 @@ export class RequestService {
         `Your request #${request.requestNo} was rejected`
       );
       await this.syncRealTime([request.assignedAdmin.user.userId], request);
+      const pushNotifResults: { userId: string; success: boolean }[] =
+        await Promise.all([
+          this.oneSignalNotificationService.sendToExternalUser(
+            request.requestedBy.user.userName,
+            "REQUEST",
+            request.requestId,
+            notificationIds,
+            title,
+            desc
+          ),
+        ]);
+      console.log("Push notif results ", JSON.stringify(pushNotifResults));
       return await entityManager.findOne(Request, {
         where: {
           requestNo: request.requestNo,
@@ -760,12 +994,17 @@ export class RequestService {
         user: user,
       } as Notifications);
     }
-    await entityManager.save(Notifications, notifications);
+    const res: Notifications[] = await entityManager.save(
+      Notifications,
+      notifications
+    );
+    const notificationsIds = res.map((x) => x.notificationId);
     await this.pusherService.sendNotif(
       users.map((x) => x.userId),
       title,
       description
     );
+    return notificationsIds;
   }
 
   async syncRealTime(userIds: string[], request: Request) {

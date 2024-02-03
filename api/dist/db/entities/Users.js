@@ -14,6 +14,8 @@ const typeorm_1 = require("typeorm");
 const Admin_1 = require("./Admin");
 const Member_1 = require("./Member");
 const Notifications_1 = require("./Notifications");
+const SupportTicketConvo_1 = require("./SupportTicketConvo");
+const UserOneSignalSubscription_1 = require("./UserOneSignalSubscription");
 const Files_1 = require("./Files");
 let Users = class Users {
 };
@@ -61,6 +63,14 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => Notifications_1.Notifications, (notifications) => notifications.user),
     __metadata("design:type", Array)
 ], Users.prototype, "notifications", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => SupportTicketConvo_1.SupportTicketConvo, (supportTicketConvo) => supportTicketConvo.fromUser),
+    __metadata("design:type", Array)
+], Users.prototype, "supportTicketConvos", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => UserOneSignalSubscription_1.UserOneSignalSubscription, (userOneSignalSubscription) => userOneSignalSubscription.user),
+    __metadata("design:type", Array)
+], Users.prototype, "userOneSignalSubscriptions", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Files_1.Files, (files) => files.users),
     (0, typeorm_1.JoinColumn)([{ name: "ProfileFileId", referencedColumnName: "fileId" }]),

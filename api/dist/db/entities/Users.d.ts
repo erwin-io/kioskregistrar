@@ -1,6 +1,8 @@
 import { Admin } from "./Admin";
 import { Member } from "./Member";
 import { Notifications } from "./Notifications";
+import { SupportTicketConvo } from "./SupportTicketConvo";
+import { UserOneSignalSubscription } from "./UserOneSignalSubscription";
 import { Files } from "./Files";
 export declare class Users {
     userId: string;
@@ -14,5 +16,7 @@ export declare class Users {
     admins: Admin[];
     members: Member[];
     notifications: Notifications[];
+    supportTicketConvos: SupportTicketConvo[];
+    userOneSignalSubscriptions: UserOneSignalSubscription[];
     profileFile: Files;
 }

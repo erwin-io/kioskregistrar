@@ -1,13 +1,21 @@
 import { RequestDto } from "src/core/dto/request/request.dto";
+import { Member } from "src/db/entities/Member";
 import { Request } from "src/db/entities/Request";
 import { EntityManager, Repository } from "typeorm";
-import { AssignRequestDto, CancelRequestDto, MarkRequestAsClosedDto, MarkRequestAsCompletedDto, MarkRequestAsPaidDto, MarkRequestAsProcessedDto, RejectRequestDto, UpdateRequestDescriptionDto } from "src/core/dto/request/request-update.dto";
+import { AssignRequestDto, CancelRequestDto, MarkRequestAsClosedDto, MarkRequestAsCompletedDto, MarkRequestAsPaidDto, MarkRequestAsProcessedDto, RejectRequestDto, UpdateRequestDescriptionDto, UpdateRequestDto } from "src/core/dto/request/request-update.dto";
+import { Admin } from "src/db/entities/Admin";
 import { Users } from "src/db/entities/Users";
 import { PusherService } from "./pusher.service";
+import { RequestRequirements } from "src/db/entities/RequestRequirements";
+import { SubmittedRequirements } from "src/db/entities/SubmittedRequirements";
+import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
+import { OneSignalNotificationService } from "./one-signal-notification.service";
 export declare class RequestService {
+    private firebaseProvoder;
     private readonly requestRepo;
     private pusherService;
-    constructor(requestRepo: Repository<Request>, pusherService: PusherService);
+    private oneSignalNotificationService;
+    constructor(firebaseProvoder: FirebaseProvider, requestRepo: Repository<Request>, pusherService: PusherService, oneSignalNotificationService: OneSignalNotificationService);
     getRequestPagination({ pageSize, pageIndex, order, columnDef, assignedAdminId, }: {
         pageSize: any;
         pageIndex: any;
@@ -18,8 +26,41 @@ export declare class RequestService {
         results: Request[];
         total: number;
     }>;
-    getByRequestNo(requestNo: any): Promise<Request>;
+    getByRequestNo(requestNo: any): Promise<{
+        requestType: {
+            requestRequirements: RequestRequirements[];
+            requestTypeId: string;
+            name: string;
+            authorizeACopy: boolean;
+            fee: string;
+            isPaymentRequired: boolean;
+            active: boolean;
+            requests: Request[];
+        };
+        requestId: string;
+        dateRequested: Date;
+        dateAssigned: Date;
+        datePaid: Date;
+        dateProcessStarted: Date;
+        dateProcessEnd: Date;
+        dateCompleted: Date;
+        dateClosed: Date;
+        dateLastUpdated: Date;
+        requestStatus: string;
+        description: string;
+        requestNo: string;
+        isPaid: boolean;
+        isReAssigned: boolean;
+        reAssignedAdminId: string;
+        rAssignedDate: Date;
+        rejectReason: string;
+        cancelReason: string;
+        assignedAdmin: Admin;
+        requestedBy: Member;
+        submittedRequirements: SubmittedRequirements[];
+    }>;
     create(dto: RequestDto): Promise<Request>;
+    update(requestNo: any, dto: UpdateRequestDto): Promise<Request>;
     updateDescription(requestNo: any, dto: UpdateRequestDescriptionDto): Promise<Request>;
     assignRequest(requestNo: any, dto: AssignRequestDto): Promise<Request>;
     payRequest(requestNo: any, dto: MarkRequestAsPaidDto): Promise<Request>;
@@ -28,6 +69,6 @@ export declare class RequestService {
     closeRequest(requestNo: any, dto: MarkRequestAsClosedDto): Promise<Request>;
     rejectRequest(requestNo: any, dto: RejectRequestDto): Promise<Request>;
     cancelRequest(requestNo: any, dto: CancelRequestDto): Promise<Request>;
-    logNotification(users: Users[], request: Request, entityManager: EntityManager, title: string, description: string): Promise<void>;
+    logNotification(users: Users[], request: Request, entityManager: EntityManager, title: string, description: string): Promise<string[]>;
     syncRealTime(userIds: string[], request: Request): Promise<void>;
 }

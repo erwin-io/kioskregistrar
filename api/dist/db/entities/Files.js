@@ -20,13 +20,17 @@ __decorate([
     __metadata("design:type", String)
 ], Files.prototype, "fileId", void 0);
 __decorate([
-    (0, typeorm_1.Column)("text", { name: "FileName" }),
+    (0, typeorm_1.Column)("text", { name: "Name" }),
     __metadata("design:type", String)
-], Files.prototype, "fileName", void 0);
+], Files.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)("text", { name: "Url", nullable: true }),
     __metadata("design:type", String)
 ], Files.prototype, "url", void 0);
+__decorate([
+    (0, typeorm_1.Column)("text", { name: "GUID" }),
+    __metadata("design:type", String)
+], Files.prototype, "guid", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Member_1.Member, (member) => member.birthCertFile),
     __metadata("design:type", Array)

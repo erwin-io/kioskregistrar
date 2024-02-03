@@ -7,7 +7,36 @@ import {
   ValidateNested,
   IsBooleanString,
   IsEnum,
+  IsArray,
+  IsOptional,
 } from "class-validator";
+
+export class RequestRequirementsFileDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  data: any;
+}
+
+export class RequestRequirementsDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  requestRequirementsId: string;
+
+  @ApiProperty({
+    isArray: true,
+    type: RequestRequirementsFileDto
+  })
+  @IsOptional()
+  @IsArray()
+  @Type(() => RequestRequirementsFileDto)
+  @ValidateNested()
+  files: RequestRequirementsFileDto[];
+}
+
 export class RequestDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -20,4 +49,14 @@ export class RequestDto {
   @ApiProperty()
   @IsNotEmpty()
   description: string;
+  
+  @ApiProperty({
+    isArray: true,
+    type: RequestRequirementsDto
+  })
+  @IsOptional()
+  @IsArray()
+  @Type(() => RequestRequirementsDto)
+  @ValidateNested()
+  requirements: RequestRequirementsDto[];
 }

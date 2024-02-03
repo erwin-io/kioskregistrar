@@ -68,6 +68,13 @@ const routes: Routes = [
           ).then((m) => m.SupportManagementModule),
       },
       {
+        path: 'courses',
+        canActivate: [AdminAuthGuard],
+        data: { admin: true, title: 'Courses', icon: 'security' },
+        loadChildren: () =>
+          import('./pages/admin/courses/courses.module').then((m) => m.CoursesModule),
+      },
+      {
         path: 'admin-access',
         canActivate: [AdminAuthGuard],
         data: { admin: true, title: 'Admin access', icon: 'security' },

@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   apiBaseUrl: "https://kioskregistrar-api.vercel.app/api/v1",
   pusher: {
-    key: "1ad4b93854243ae307e6",
+    key: "21c010133c493e5d1b02",
     cluster: "ap1",
   }
 };

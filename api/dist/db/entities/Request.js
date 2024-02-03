@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Admin_1 = require("./Admin");
 const RequestType_1 = require("./RequestType");
 const Member_1 = require("./Member");
+const SubmittedRequirements_1 = require("./SubmittedRequirements");
 let Request = class Request {
 };
 __decorate([
@@ -124,6 +125,10 @@ __decorate([
     (0, typeorm_1.JoinColumn)([{ name: "RequestedById", referencedColumnName: "memberId" }]),
     __metadata("design:type", Member_1.Member)
 ], Request.prototype, "requestedBy", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => SubmittedRequirements_1.SubmittedRequirements, (submittedRequirements) => submittedRequirements.request),
+    __metadata("design:type", Array)
+], Request.prototype, "submittedRequirements", void 0);
 Request = __decorate([
     (0, typeorm_1.Index)("Request_pkey", ["requestId"], { unique: true }),
     (0, typeorm_1.Entity)("Request", { schema: "dbo" })

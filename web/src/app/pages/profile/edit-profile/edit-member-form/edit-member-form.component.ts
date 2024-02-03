@@ -127,7 +127,7 @@ export class EditMemberFormComponent {
       dialogRef.close();
 
       this.profileFile = {
-        fileName: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
+        name: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
         data: res.base64.toString().split(',')[1]
       };
     })
@@ -146,7 +146,7 @@ export class EditMemberFormComponent {
       dialogRef.close();
 
       this.profileFile = {
-        fileName: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
+        name: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
         data: res.base64.toString().split(',')[1]
       };
     })

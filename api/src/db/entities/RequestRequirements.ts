@@ -4,9 +4,11 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { RequestType } from "./RequestType";
+import { SubmittedRequirements } from "./SubmittedRequirements";
 
 @Index("u_requestRequirement", ["active", "name", "requestTypeId"], {
   unique: true,
@@ -37,4 +39,10 @@ export class RequestRequirements {
     { name: "RequestTypeId", referencedColumnName: "requestTypeId" },
   ])
   requestType: RequestType;
+
+  @OneToMany(
+    () => SubmittedRequirements,
+    (submittedRequirements) => submittedRequirements.requestRequirements
+  )
+  submittedRequirements: SubmittedRequirements[];
 }

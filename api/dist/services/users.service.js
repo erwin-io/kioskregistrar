@@ -259,19 +259,20 @@ let UsersService = class UsersService {
             admin.mobileNumber = dto.mobileNumber;
             let user = admin.user;
             if (dto.profileFile) {
-                const newFileName = (0, uuid_1.v4)();
+                const newGUID = (0, uuid_1.v4)();
                 const bucket = this.firebaseProvoder.app.storage().bucket();
                 if (user.profileFile) {
                     try {
-                        const deleteFile = bucket.file(`profile/${user.profileFile.fileName}`);
+                        const deleteFile = bucket.file(`profile/${user.profileFile.name}`);
                         deleteFile.delete();
                     }
                     catch (ex) {
                         console.log(ex);
                     }
                     const file = user.profileFile;
-                    file.fileName = `${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`;
-                    const bucketFile = bucket.file(`profile/${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`);
+                    file.guid = newGUID;
+                    file.name = `${newGUID}${(0, path_1.extname)(dto.profileFile.name)}`;
+                    const bucketFile = bucket.file(`profile/${newGUID}${(0, path_1.extname)(dto.profileFile.name)}`);
                     const img = Buffer.from(dto.profileFile.data, "base64");
                     await bucketFile.save(img).then(async (res) => {
                         console.log("res");
@@ -286,8 +287,9 @@ let UsersService = class UsersService {
                 }
                 else {
                     user.profileFile = new Files_1.Files();
-                    user.profileFile.fileName = `${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`;
-                    const bucketFile = bucket.file(`profile/${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`);
+                    user.profileFile.guid = newGUID;
+                    user.profileFile.name = `${newGUID}${(0, path_1.extname)(dto.profileFile.name)}`;
+                    const bucketFile = bucket.file(`profile/${newGUID}${(0, path_1.extname)(dto.profileFile.name)}`);
                     const img = Buffer.from(dto.profileFile.data, "base64");
                     await bucketFile.save(img).then(async () => {
                         const url = await bucketFile.getSignedUrl({
@@ -349,19 +351,23 @@ let UsersService = class UsersService {
             member.secondarySyGraduated = dto.secondarySyGraduated;
             let user = member.user;
             if (dto.profileFile) {
-                const newFileName = (0, uuid_1.v4)();
+                const newGUID = (0, uuid_1.v4)();
                 const bucket = this.firebaseProvoder.app.storage().bucket();
                 if (user.profileFile) {
                     try {
-                        const deleteFile = bucket.file(`profile/${user.profileFile.fileName}`);
-                        deleteFile.delete();
+                        const deleteFile = bucket.file(`profile/${user.profileFile.guid}${(0, path_1.extname)(user.profileFile.name)}`);
+                        const exists = await deleteFile.exists();
+                        if (exists[0]) {
+                            deleteFile.delete();
+                        }
                     }
                     catch (ex) {
                         console.log(ex);
                     }
                     const file = user.profileFile;
-                    file.fileName = `${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`;
-                    const bucketFile = bucket.file(`profile/${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`);
+                    file.guid = newGUID;
+                    file.name = `${dto.profileFile.name}`;
+                    const bucketFile = bucket.file(`profile/${newGUID}${(0, path_1.extname)(dto.profileFile.name)}`);
                     const img = Buffer.from(dto.profileFile.data, "base64");
                     await bucketFile.save(img).then(async (res) => {
                         console.log("res");
@@ -376,8 +382,9 @@ let UsersService = class UsersService {
                 }
                 else {
                     user.profileFile = new Files_1.Files();
-                    user.profileFile.fileName = `${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`;
-                    const bucketFile = bucket.file(`profile/${newFileName}${(0, path_1.extname)(dto.profileFile.fileName)}`);
+                    user.profileFile.guid = newGUID;
+                    user.profileFile.name = `${dto.profileFile.name}`;
+                    const bucketFile = bucket.file(`profile/${newGUID}${(0, path_1.extname)(dto.profileFile.name)}`);
                     const img = Buffer.from(dto.profileFile.data, "base64");
                     await bucketFile.save(img).then(async () => {
                         const url = await bucketFile.getSignedUrl({

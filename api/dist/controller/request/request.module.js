@@ -13,14 +13,21 @@ const request_service_1 = require("../../services/request.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const Request_1 = require("../../db/entities/Request");
 const pusher_service_1 = require("../../services/pusher.service");
+const firebase_provider_module_1 = require("../../core/provider/firebase/firebase-provider.module");
+const axios_1 = require("@nestjs/axios");
+const one_signal_notification_service_1 = require("../../services/one-signal-notification.service");
 let RequestModule = class RequestModule {
 };
 RequestModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Request_1.Request])],
+        imports: [
+            firebase_provider_module_1.FirebaseProviderModule,
+            axios_1.HttpModule,
+            typeorm_1.TypeOrmModule.forFeature([Request_1.Request]),
+        ],
         controllers: [request_controller_1.RequestController],
-        providers: [request_service_1.RequestService, pusher_service_1.PusherService],
-        exports: [request_service_1.RequestService, pusher_service_1.PusherService],
+        providers: [request_service_1.RequestService, pusher_service_1.PusherService, one_signal_notification_service_1.OneSignalNotificationService],
+        exports: [request_service_1.RequestService, pusher_service_1.PusherService, one_signal_notification_service_1.OneSignalNotificationService],
     })
 ], RequestModule);
 exports.RequestModule = RequestModule;

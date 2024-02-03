@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Users } from "./Users";
 import { Request } from "./Request";
+import { SupportTickets } from "./SupportTickets";
 
 @Index("Admin_pkey", ["adminId"], { unique: true })
 @Entity("Admin", { schema: "dbo" })
@@ -31,4 +32,10 @@ export class Admin {
 
   @OneToMany(() => Request, (request) => request.assignedAdmin)
   requests: Request[];
+
+  @OneToMany(
+    () => SupportTickets,
+    (supportTickets) => supportTickets.assignedAdmin
+  )
+  supportTickets: SupportTickets[];
 }

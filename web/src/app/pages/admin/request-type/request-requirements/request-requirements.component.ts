@@ -93,9 +93,9 @@ export class RequestRequirementsComponent {
       this.isProcessing = true;
       dialogRef.componentInstance.isProcessing = this.isProcessing;
       try {
-        let res = await this.requestRequirementsService.delete(this.id).toPromise();
+        let res = await this.requestRequirementsService.delete(id).toPromise();
         if (res.success) {
-          this.snackBar.open('Saved!', 'close', {
+          this.snackBar.open('Requirement deleted!', 'close', {
             panelClass: ['style-success'],
           });
           let requirements = await this.requestRequirementsService.get(this.requestType.requestTypeId).toPromise();

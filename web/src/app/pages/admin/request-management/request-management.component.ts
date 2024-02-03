@@ -18,6 +18,7 @@ import { Title } from '@angular/platform-browser';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { QrCodeScannerComponent } from 'src/app/shared/qr-code-scanner/qr-code-scanner.component';
 import { RouteService } from 'src/app/services/route.service';
+import { PusherService } from 'src/app/services/pusher.service';
 
 @Component({
   selector: 'app-request-management',
@@ -149,6 +150,7 @@ export class RequestManagementComponent {
     private _location: Location,
     public appConfig: AppConfigService,
     private storageService: StorageService,
+    private pusherService: PusherService,
     private route: ActivatedRoute,
     public router: Router) {
       this.reviewer = this.route.snapshot.data["reviewer"];
@@ -181,6 +183,17 @@ export class RequestManagementComponent {
   }
 
   async ngOnInit(): Promise<void> {
+    const channel = this.pusherService.init("all");
+    channel.bind("reSync", (res: any) => {
+      const { type, data } = res;
+      if(type && type === "REQUEST") {
+        this.initTable("pending");
+        this.initTable("to-process");
+        this.initTable("processing");
+        this.initTable("tocomplete");
+        this.initTable("closed");
+      }
+    });
     const profile = this.storageService.getLoginProfile();
     this.currentUserId = profile && profile.user.userId;
     let [getAllAdmin] = await Promise.all([

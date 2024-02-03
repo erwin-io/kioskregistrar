@@ -1,3 +1,8 @@
+import { RequestRequirementsDto } from "./request.dto";
+export declare class UpdateRequestDto {
+    description: string;
+    requirements: RequestRequirementsDto[];
+}
 export declare class UpdateRequestDescriptionDto {
     description: string;
 }

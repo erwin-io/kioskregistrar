@@ -1,6 +1,5 @@
 export class Files {
     fileId: string;
-    fileName: string;
+    name: string;
     url: string | null;
   }
-  

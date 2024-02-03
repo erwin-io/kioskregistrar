@@ -4,11 +4,13 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Admin } from "./Admin";
 import { RequestType } from "./RequestType";
 import { Member } from "./Member";
+import { SubmittedRequirements } from "./SubmittedRequirements";
 
 @Index("Request_pkey", ["requestId"], { unique: true })
 @Entity("Request", { schema: "dbo" })
@@ -99,4 +101,10 @@ export class Request {
   @ManyToOne(() => Member, (member) => member.requests)
   @JoinColumn([{ name: "RequestedById", referencedColumnName: "memberId" }])
   requestedBy: Member;
+
+  @OneToMany(
+    () => SubmittedRequirements,
+    (submittedRequirements) => submittedRequirements.request
+  )
+  submittedRequirements: SubmittedRequirements[];
 }

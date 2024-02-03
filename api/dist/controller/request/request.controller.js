@@ -67,6 +67,20 @@ let RequestController = class RequestController {
     async update(requestNo, dto) {
         const res = {};
         try {
+            res.data = await this.requestService.update(requestNo, dto);
+            res.success = true;
+            res.message = `Request ${api_response_constant_1.UPDATE_SUCCESS}`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
+    async updateDescription(requestNo, dto) {
+        const res = {};
+        try {
             res.data = await this.requestService.updateDescription(requestNo, dto);
             res.success = true;
             res.message = `Request ${api_response_constant_1.UPDATE_SUCCESS}`;
@@ -185,13 +199,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RequestController.prototype, "create", null);
 __decorate([
+    (0, common_1.Put)("/:requestNo"),
+    __param(0, (0, common_1.Param)("requestNo")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, request_update_dto_1.UpdateRequestDto]),
+    __metadata("design:returntype", Promise)
+], RequestController.prototype, "update", null);
+__decorate([
     (0, common_1.Put)("/:requestNo/updateDescription"),
     __param(0, (0, common_1.Param)("requestNo")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, request_update_dto_1.UpdateRequestDescriptionDto]),
     __metadata("design:returntype", Promise)
-], RequestController.prototype, "update", null);
+], RequestController.prototype, "updateDescription", null);
 __decorate([
     (0, common_1.Put)("/:requestNo/assignRequest"),
     __param(0, (0, common_1.Param)("requestNo")),

@@ -79,6 +79,7 @@ let DashboardService = class DashboardService {
                     requestedBy: {
                         memberId,
                     },
+                    dateCompleted: (0, typeorm_2.IsNull)(),
                 },
             }),
             this.requestRepo.manager.findOne(Request_1.Request, {
@@ -87,6 +88,7 @@ let DashboardService = class DashboardService {
                     requestedBy: {
                         memberId,
                     },
+                    dateCompleted: (0, typeorm_2.IsNull)(),
                 },
                 relations: {
                     requestType: true,
